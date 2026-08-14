@@ -6,7 +6,9 @@
 사용법:
     export FSS_API_KEY=발급받은키
     python ingest/fss_client.py            # 은행권(020000) 전 상품 다운로드
-    python ingest/fss_client.py --group 030300   # 저축은행
+
+대상 권역은 은행(020000)으로 고정한다 — 이 온톨로지는 은행권을 모델링하므로
+저축은행 등 다른 권역은 적재하지 않는다.
 
 결과: data/fss/{deposit,saving,mortgage,rent,credit}.json
 API 키는 환경변수로만 전달하며 저장소에 커밋하지 않는다.
@@ -59,11 +61,11 @@ def fetch_all_pages(endpoint: str, auth: str, top_fin_grp_no: str) -> dict:
     return {"baseList": base_list, "optionList": option_list}
 
 
+TOP_FIN_GRP_NO = "020000"  # 은행 권역 고정 (저축은행 030300 등은 대상 아님)
+
+
 def main() -> int:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--group", default="020000",
-                        help="권역코드 (020000 은행, 030300 저축은행 등)")
-    args = parser.parse_args()
+    argparse.ArgumentParser(description="은행권 상품 공시 다운로드").parse_args()
 
     auth = os.environ.get("FSS_API_KEY")
     if not auth:
@@ -72,8 +74,8 @@ def main() -> int:
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     for name, endpoint in ENDPOINTS.items():
-        print(f"[{name}] 다운로드 중...")
-        data = fetch_all_pages(endpoint, auth, args.group)
+        print(f"[{name}] 다운로드 중... (은행권)")
+        data = fetch_all_pages(endpoint, auth, TOP_FIN_GRP_NO)
         out = OUTPUT_DIR / f"{name}.json"
         out.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
         print(f"  상품 {len(data['baseList'])}개, 금리옵션 {len(data['optionList'])}개 "
