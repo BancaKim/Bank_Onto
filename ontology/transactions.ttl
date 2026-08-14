@@ -1,0 +1,180 @@
+@prefix : <https://w3id.org/bank-onto/transactions/> .
+@prefix core: <https://w3id.org/bank-onto/core/> .
+@prefix parties: <https://w3id.org/bank-onto/parties/> .
+@prefix accounts: <https://w3id.org/bank-onto/accounts/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+#################################################################
+# 은행권 온톨로지 - 거래 모듈 (Transactions)
+# 지급결제·이체·거래 채널 개념
+#################################################################
+
+<https://w3id.org/bank-onto/transactions/> a owl:Ontology ;
+    rdfs:label "은행권 온톨로지 - 거래 모듈"@ko , "Banking Ontology - Transactions Module"@en ;
+    dct:description "입출금, 이체, 지급결제, 외환거래 및 거래 채널을 정의한다."@ko ;
+    owl:versionInfo "0.1.0" ;
+    owl:imports <https://w3id.org/bank-onto/core/> , <https://w3id.org/bank-onto/parties/> , <https://w3id.org/bank-onto/accounts/> .
+
+#################################################################
+# 클래스: 거래
+#################################################################
+
+:Transaction a owl:Class ;
+    rdfs:label "거래"@ko , "Transaction"@en ;
+    skos:definition "계좌의 잔액 변동을 수반하는 금융 행위의 단위."@ko ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty :hasTransactionAmount ;
+        owl:minCardinality "1"^^xsd:nonNegativeInteger
+    ] .
+
+:DepositTransaction a owl:Class ;
+    rdfs:subClassOf :Transaction ;
+    rdfs:label "입금거래"@ko , "Deposit Transaction"@en ;
+    skos:definition "계좌에 자금이 입금되는 거래."@ko .
+
+:WithdrawalTransaction a owl:Class ;
+    rdfs:subClassOf :Transaction ;
+    rdfs:label "출금거래"@ko , "Withdrawal Transaction"@en ;
+    skos:definition "계좌에서 자금이 출금되는 거래."@ko .
+
+:TransferTransaction a owl:Class ;
+    rdfs:subClassOf :Transaction ;
+    rdfs:label "이체거래"@ko , "Transfer Transaction"@en ;
+    skos:definition "한 계좌에서 다른 계좌로 자금을 이동시키는 거래. 출금계좌와 입금계좌를 가진다."@ko .
+
+:AutoTransfer a owl:Class ;
+    rdfs:subClassOf :TransferTransaction ;
+    rdfs:label "자동이체"@ko , "Automatic Transfer"@en ;
+    skos:definition "약정된 주기·조건에 따라 자동으로 실행되는 이체."@ko .
+
+:StandingOrder a owl:Class ;
+    rdfs:label "자동이체 약정"@ko , "Standing Order"@en ;
+    skos:definition "자동이체의 실행 조건(주기, 금액, 상대계좌)을 정한 약정."@ko .
+
+:CardPaymentTransaction a owl:Class ;
+    rdfs:subClassOf :Transaction ;
+    rdfs:label "카드결제거래"@ko , "Card Payment Transaction"@en ;
+    skos:definition "카드를 매개로 한 대금 결제 거래."@ko .
+
+:FXTransaction a owl:Class ;
+    rdfs:subClassOf :Transaction ;
+    rdfs:label "외환거래"@ko , "Foreign Exchange Transaction"@en ;
+    skos:definition "서로 다른 통화 간 교환을 수반하는 거래."@ko .
+
+:OverseasRemittance a owl:Class ;
+    rdfs:subClassOf :FXTransaction ;
+    rdfs:label "해외송금"@ko , "Overseas Remittance"@en ;
+    skos:definition "국경을 넘는 자금 이체. SWIFT망 등을 이용한다."@ko .
+
+:InterestPayment a owl:Class ;
+    rdfs:subClassOf :Transaction ;
+    rdfs:label "이자지급"@ko , "Interest Payment"@en ;
+    skos:definition "예금 이자 지급 또는 대출 이자 수취 거래."@ko .
+
+#################################################################
+# 클래스: 거래 채널
+#################################################################
+
+:TransactionChannel a owl:Class ;
+    rdfs:label "거래 채널"@ko , "Transaction Channel"@en ;
+    skos:definition "거래가 발생한 접점 채널."@ko .
+
+:BranchChannel a :TransactionChannel ;
+    rdfs:label "영업점 창구"@ko , "Branch Counter"@en .
+
+:ATMChannel a :TransactionChannel ;
+    rdfs:label "ATM/CD기"@ko , "ATM"@en .
+
+:InternetBankingChannel a :TransactionChannel ;
+    rdfs:label "인터넷뱅킹"@ko , "Internet Banking"@en .
+
+:MobileBankingChannel a :TransactionChannel ;
+    rdfs:label "모바일뱅킹"@ko , "Mobile Banking"@en .
+
+:TelebankingChannel a :TransactionChannel ;
+    rdfs:label "텔레뱅킹"@ko , "Telebanking"@en .
+
+:OpenBankingChannel a :TransactionChannel ;
+    rdfs:label "오픈뱅킹"@ko , "Open Banking"@en ;
+    skos:definition "오픈뱅킹 공동망을 통한 타행 계좌 조회·이체 채널."@ko .
+
+#################################################################
+# 클래스: 거래 상태
+#################################################################
+
+:TransactionStatus a owl:Class ;
+    rdfs:label "거래 상태"@ko , "Transaction Status"@en .
+
+:PendingStatus a :TransactionStatus ; rdfs:label "처리중"@ko , "Pending"@en .
+:CompletedStatus a :TransactionStatus ; rdfs:label "완료"@ko , "Completed"@en .
+:FailedStatus a :TransactionStatus ; rdfs:label "실패"@ko , "Failed"@en .
+:CancelledStatus a :TransactionStatus ; rdfs:label "취소"@ko , "Cancelled"@en .
+
+#################################################################
+# 객체 속성
+#################################################################
+
+:hasTransactionAmount a owl:ObjectProperty ;
+    rdfs:label "거래금액을 가진다"@ko , "has transaction amount"@en ;
+    rdfs:domain :Transaction ;
+    rdfs:range core:MonetaryAmount .
+
+:hasSourceAccount a owl:ObjectProperty ;
+    rdfs:label "출금계좌를 가진다"@ko , "has source account"@en ;
+    rdfs:domain :Transaction ;
+    rdfs:range accounts:Account .
+
+:hasDestinationAccount a owl:ObjectProperty ;
+    rdfs:label "입금계좌를 가진다"@ko , "has destination account"@en ;
+    rdfs:domain :Transaction ;
+    rdfs:range accounts:Account .
+
+:isInitiatedBy a owl:ObjectProperty ;
+    rdfs:label "~가 개시한다"@ko , "is initiated by"@en ;
+    rdfs:domain :Transaction ;
+    rdfs:range parties:Party .
+
+:occursViaChannel a owl:ObjectProperty ;
+    rdfs:label "채널을 통해 발생한다"@ko , "occurs via channel"@en ;
+    rdfs:domain :Transaction ;
+    rdfs:range :TransactionChannel .
+
+:hasTransactionStatus a owl:ObjectProperty ;
+    rdfs:label "거래상태를 가진다"@ko , "has transaction status"@en ;
+    rdfs:domain :Transaction ;
+    rdfs:range :TransactionStatus .
+
+:executesStandingOrder a owl:ObjectProperty ;
+    rdfs:label "자동이체 약정을 실행한다"@ko , "executes standing order"@en ;
+    rdfs:domain :AutoTransfer ;
+    rdfs:range :StandingOrder .
+
+:hasExchangeRateApplied a owl:DatatypeProperty ;
+    rdfs:label "적용환율"@ko , "has exchange rate applied"@en ;
+    rdfs:domain :FXTransaction ;
+    rdfs:range xsd:decimal .
+
+#################################################################
+# 데이터 속성
+#################################################################
+
+:hasTransactionDateTime a owl:DatatypeProperty ;
+    rdfs:label "거래일시"@ko , "has transaction date-time"@en ;
+    rdfs:domain :Transaction ;
+    rdfs:range xsd:dateTime .
+
+:hasTransactionId a owl:DatatypeProperty ;
+    rdfs:label "거래번호"@ko , "has transaction ID"@en ;
+    rdfs:domain :Transaction ;
+    rdfs:range xsd:string .
+
+:hasDescription a owl:DatatypeProperty ;
+    rdfs:label "적요"@ko , "has description"@en ;
+    rdfs:domain :Transaction ;
+    rdfs:range xsd:string .

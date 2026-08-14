@@ -1,0 +1,197 @@
+@prefix : <https://w3id.org/bank-onto/core/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+#################################################################
+# 은행권 온톨로지 - 기반 모듈 (Core / Foundations)
+# FIBO FND (Foundations) 도메인에 대응
+#################################################################
+
+<https://w3id.org/bank-onto/core/> a owl:Ontology ;
+    rdfs:label "은행권 온톨로지 - 기반 모듈"@ko , "Banking Ontology - Core Module"@en ;
+    dct:title "Banking Ontology Core (Foundations)"@en ;
+    dct:description "계약, 금액, 통화, 식별자, 기간 등 은행 도메인 전반에서 공유되는 기반 개념을 정의한다. FIBO의 FND(Foundations) 도메인에 대응한다."@ko ;
+    dct:license <https://opensource.org/licenses/MIT> ;
+    owl:versionInfo "0.1.0" ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FND/> .
+
+#################################################################
+# 클래스: 독립 개념 (Independent Things)
+#################################################################
+
+:AutonomousAgent a owl:Class ;
+    rdfs:label "자율 행위자"@ko , "Autonomous Agent"@en ;
+    skos:definition "스스로 행위할 수 있는 주체. 사람, 조직, 시스템을 포괄하는 최상위 행위자 개념."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/Agents/AutonomousAgent> .
+
+:Thing a owl:Class ;
+    rdfs:label "대상"@ko , "Thing"@en ;
+    skos:definition "온톨로지에서 다루는 모든 대상의 최상위 클래스."@ko .
+
+#################################################################
+# 클래스: 계약 (Agreements & Contracts)
+#################################################################
+
+:Agreement a owl:Class ;
+    rdfs:label "합의"@ko , "Agreement"@en ;
+    skos:definition "둘 이상의 당사자 간 의사의 합치."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Agreements/Agreement> .
+
+:Contract a owl:Class ;
+    rdfs:subClassOf :Agreement ;
+    rdfs:label "계약"@ko , "Contract"@en ;
+    skos:definition "법적 구속력이 있는 합의. 은행의 모든 상품 가입·거래의 법적 기초가 된다."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/Contract> .
+
+:FinancialContract a owl:Class ;
+    rdfs:subClassOf :Contract ;
+    rdfs:label "금융계약"@ko , "Financial Contract"@en ;
+    skos:definition "금전 또는 금융자산의 이전·운용을 목적으로 하는 계약. 예금계약, 대출계약, 카드회원계약 등이 이에 속한다."@ko .
+
+:ContractParty a owl:Class ;
+    rdfs:label "계약당사자"@ko , "Contract Party"@en ;
+    skos:definition "계약에서 권리·의무를 가지는 당사자 역할."@ko .
+
+#################################################################
+# 클래스: 금액·통화·이율 (Money, Currency, Rates)
+#################################################################
+
+:MonetaryAmount a owl:Class ;
+    rdfs:label "금액"@ko , "Monetary Amount"@en ;
+    skos:definition "특정 통화로 표시된 화폐 금액. 수치와 통화의 쌍으로 구성된다."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/MonetaryAmount> .
+
+:Currency a owl:Class ;
+    rdfs:label "통화"@ko , "Currency"@en ;
+    skos:definition "ISO 4217 표준에 따른 통화 단위 (예: KRW, USD, EUR)."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/Currency> .
+
+:InterestRate a owl:Class ;
+    rdfs:label "이자율"@ko , "Interest Rate"@en ;
+    skos:definition "원금에 대한 이자의 비율. 연율(%) 기준으로 표현한다."@ko .
+
+:FixedInterestRate a owl:Class ;
+    rdfs:subClassOf :InterestRate ;
+    rdfs:label "고정금리"@ko , "Fixed Interest Rate"@en ;
+    skos:definition "계약기간 동안 변하지 않는 이자율."@ko .
+
+:VariableInterestRate a owl:Class ;
+    rdfs:subClassOf :InterestRate ;
+    rdfs:label "변동금리"@ko , "Variable Interest Rate"@en ;
+    skos:definition "기준금리(예: COFIX, 금융채 금리)에 연동하여 주기적으로 변동하는 이자율."@ko .
+
+:ReferenceRate a owl:Class ;
+    rdfs:subClassOf :InterestRate ;
+    rdfs:label "기준금리"@ko , "Reference Rate"@en ;
+    skos:definition "변동금리 산정의 기준이 되는 금리. 한국은행 기준금리, COFIX, KORIBOR 등."@ko .
+
+#################################################################
+# 클래스: 식별자·일자 (Identifiers & Dates)
+#################################################################
+
+:Identifier a owl:Class ;
+    rdfs:label "식별자"@ko , "Identifier"@en ;
+    skos:definition "특정 맥락에서 대상을 유일하게 식별하는 문자열 체계."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FND/Relations/Relations/Identifier> .
+
+:AccountNumber a owl:Class ;
+    rdfs:subClassOf :Identifier ;
+    rdfs:label "계좌번호"@ko , "Account Number"@en ;
+    skos:definition "은행 계좌를 유일하게 식별하는 번호."@ko .
+
+:ResidentRegistrationNumber a owl:Class ;
+    rdfs:subClassOf :Identifier ;
+    rdfs:label "주민등록번호"@ko , "Resident Registration Number"@en ;
+    skos:definition "대한민국 국민에게 부여되는 고유 식별번호. 개인 실명확인의 법적 기준."@ko .
+
+:BusinessRegistrationNumber a owl:Class ;
+    rdfs:subClassOf :Identifier ;
+    rdfs:label "사업자등록번호"@ko , "Business Registration Number"@en ;
+    skos:definition "사업자에게 부여되는 고유 식별번호."@ko .
+
+:SwiftCode a owl:Class ;
+    rdfs:subClassOf :Identifier ;
+    rdfs:label "SWIFT 코드"@ko , "SWIFT/BIC Code"@en ;
+    skos:definition "국제은행간통신협회(SWIFT)가 부여하는 은행 식별 코드(BIC)."@ko .
+
+:DatePeriod a owl:Class ;
+    rdfs:label "기간"@ko , "Date Period"@en ;
+    skos:definition "시작일과 종료일로 정의되는 기간. 계약기간, 만기 등을 표현한다."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/DatePeriod> .
+
+#################################################################
+# 객체 속성 (Object Properties)
+#################################################################
+
+:hasParty a owl:ObjectProperty ;
+    rdfs:label "당사자를 가진다"@ko , "has party"@en ;
+    rdfs:domain :Agreement ;
+    skos:definition "합의·계약이 특정 당사자를 가짐을 나타낸다."@ko .
+
+:hasCurrency a owl:ObjectProperty ;
+    rdfs:label "통화를 가진다"@ko , "has currency"@en ;
+    rdfs:domain :MonetaryAmount ;
+    rdfs:range :Currency .
+
+:hasInterestRate a owl:ObjectProperty ;
+    rdfs:label "이자율을 가진다"@ko , "has interest rate"@en ;
+    rdfs:range :InterestRate .
+
+:isLinkedToReferenceRate a owl:ObjectProperty ;
+    rdfs:label "기준금리에 연동된다"@ko , "is linked to reference rate"@en ;
+    rdfs:domain :VariableInterestRate ;
+    rdfs:range :ReferenceRate .
+
+:hasIdentifier a owl:ObjectProperty ;
+    rdfs:label "식별자를 가진다"@ko , "has identifier"@en ;
+    rdfs:range :Identifier .
+
+:hasContractPeriod a owl:ObjectProperty ;
+    rdfs:label "계약기간을 가진다"@ko , "has contract period"@en ;
+    rdfs:domain :Contract ;
+    rdfs:range :DatePeriod .
+
+#################################################################
+# 데이터 속성 (Datatype Properties)
+#################################################################
+
+:hasAmountValue a owl:DatatypeProperty ;
+    rdfs:label "금액 값"@ko , "has amount value"@en ;
+    rdfs:domain :MonetaryAmount ;
+    rdfs:range xsd:decimal .
+
+:hasCurrencyCode a owl:DatatypeProperty ;
+    rdfs:label "통화 코드"@ko , "has currency code (ISO 4217)"@en ;
+    rdfs:domain :Currency ;
+    rdfs:range xsd:string .
+
+:hasRateValue a owl:DatatypeProperty ;
+    rdfs:label "이율 값(연 %)"@ko , "has rate value (annual %)"@en ;
+    rdfs:domain :InterestRate ;
+    rdfs:range xsd:decimal .
+
+:hasIdentifierValue a owl:DatatypeProperty ;
+    rdfs:label "식별자 값"@ko , "has identifier value"@en ;
+    rdfs:domain :Identifier ;
+    rdfs:range xsd:string .
+
+:hasStartDate a owl:DatatypeProperty ;
+    rdfs:label "시작일"@ko , "has start date"@en ;
+    rdfs:range xsd:date .
+
+:hasEndDate a owl:DatatypeProperty ;
+    rdfs:label "종료일"@ko , "has end date"@en ;
+    rdfs:range xsd:date .
+
+:hasEffectiveDate a owl:DatatypeProperty ;
+    rdfs:label "효력발생일"@ko , "has effective date"@en ;
+    rdfs:domain :Contract ;
+    rdfs:range xsd:date .
+
+:hasMaturityDate a owl:DatatypeProperty ;
+    rdfs:label "만기일"@ko , "has maturity date"@en ;
+    rdfs:range xsd:date .

@@ -1,0 +1,222 @@
+@prefix : <https://w3id.org/bank-onto/parties/> .
+@prefix core: <https://w3id.org/bank-onto/core/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+#################################################################
+# 은행권 온톨로지 - 당사자 모듈 (Parties)
+# FIBO BE (Business Entities) 도메인에 대응
+#################################################################
+
+<https://w3id.org/bank-onto/parties/> a owl:Ontology ;
+    rdfs:label "은행권 온톨로지 - 당사자 모듈"@ko , "Banking Ontology - Parties Module"@en ;
+    dct:description "은행, 고객, 개인·법인 등 은행 업무의 주체와 그 역할(Role)을 정의한다. FIBO의 BE(Business Entities) 도메인에 대응하며, FIBO의 당사자-역할(Party-Role) 패턴을 따른다."@ko ;
+    owl:versionInfo "0.1.0" ;
+    owl:imports <https://w3id.org/bank-onto/core/> ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/BE/> .
+
+#################################################################
+# 클래스: 당사자 (Parties)
+#################################################################
+
+:Party a owl:Class ;
+    rdfs:subClassOf core:AutonomousAgent ;
+    rdfs:label "당사자"@ko , "Party"@en ;
+    skos:definition "법률행위의 주체가 될 수 있는 자연인 또는 법인."@ko .
+
+:NaturalPerson a owl:Class ;
+    rdfs:subClassOf :Party ;
+    owl:disjointWith :Organization ;
+    rdfs:label "자연인"@ko , "Natural Person"@en ;
+    skos:definition "권리능력을 가진 개인(사람)."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/People/Person> .
+
+:Organization a owl:Class ;
+    rdfs:subClassOf :Party ;
+    rdfs:label "조직"@ko , "Organization"@en ;
+    skos:definition "공동의 목적을 위해 구성된 사람들의 집합체."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FND/Organizations/Organizations/Organization> .
+
+:LegalEntity a owl:Class ;
+    rdfs:subClassOf :Organization ;
+    rdfs:label "법인"@ko , "Legal Entity"@en ;
+    skos:definition "법률에 의해 권리능력이 부여된 조직."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LegalPersons/LegalEntity> .
+
+:SoleProprietor a owl:Class ;
+    rdfs:subClassOf :Party ;
+    rdfs:label "개인사업자"@ko , "Sole Proprietor"@en ;
+    skos:definition "법인격 없이 개인 명의로 사업을 영위하는 사업자."@ko .
+
+#################################################################
+# 클래스: 금융기관 (Financial Institutions)
+#################################################################
+
+:FinancialInstitution a owl:Class ;
+    rdfs:subClassOf :LegalEntity ;
+    rdfs:label "금융기관"@ko , "Financial Institution"@en ;
+    skos:definition "금융업을 영위하도록 인가받은 법인."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FBC/FunctionalEntities/FinancialServicesEntities/FinancialInstitution> .
+
+:Bank a owl:Class ;
+    rdfs:subClassOf :FinancialInstitution ;
+    rdfs:label "은행"@ko , "Bank"@en ;
+    skos:definition "은행법에 따라 은행업을 영위하는 금융기관. 예금 수입, 대출, 지급결제 업무를 수행한다."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FBC/FunctionalEntities/FinancialServicesEntities/Bank> .
+
+:CommercialBank a owl:Class ;
+    rdfs:subClassOf :Bank ;
+    rdfs:label "시중은행"@ko , "Commercial Bank"@en ;
+    skos:definition "전국을 영업구역으로 하는 일반은행."@ko .
+
+:RegionalBank a owl:Class ;
+    rdfs:subClassOf :Bank ;
+    rdfs:label "지방은행"@ko , "Regional Bank"@en ;
+    skos:definition "특정 지역을 주된 영업구역으로 하는 일반은행."@ko .
+
+:InternetOnlyBank a owl:Class ;
+    rdfs:subClassOf :Bank ;
+    rdfs:label "인터넷전문은행"@ko , "Internet-only Bank"@en ;
+    skos:definition "인터넷전문은행법에 따라 비대면 채널 중심으로 영업하는 은행."@ko .
+
+:SpecialBank a owl:Class ;
+    rdfs:subClassOf :Bank ;
+    rdfs:label "특수은행"@ko , "Special Bank"@en ;
+    skos:definition "개별 특별법에 따라 설립된 은행 (예: 한국산업은행, 중소기업은행, 수출입은행)."@ko .
+
+:CentralBank a owl:Class ;
+    rdfs:subClassOf :FinancialInstitution ;
+    rdfs:label "중앙은행"@ko , "Central Bank"@en ;
+    skos:definition "통화정책을 수행하고 발권 기능을 가진 국가의 중앙은행 (대한민국: 한국은행)."@ko .
+
+:BankBranch a owl:Class ;
+    rdfs:subClassOf :Organization ;
+    rdfs:label "은행 지점"@ko , "Bank Branch"@en ;
+    skos:definition "은행의 영업점 단위 조직."@ko .
+
+:RegulatoryAgency a owl:Class ;
+    rdfs:subClassOf :Organization ;
+    rdfs:label "감독기관"@ko , "Regulatory Agency"@en ;
+    skos:definition "금융기관을 감독·규제하는 기관 (예: 금융위원회, 금융감독원)."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FBC/FunctionalEntities/RegulatoryAgencies/RegulatoryAgency> .
+
+#################################################################
+# 클래스: 역할 (Party Roles) - FIBO의 Party-Role 패턴
+#################################################################
+
+:PartyRole a owl:Class ;
+    rdfs:label "당사자 역할"@ko , "Party Role"@en ;
+    skos:definition "특정 맥락(계약, 거래)에서 당사자가 수행하는 역할. 동일 당사자가 여러 역할을 동시에 가질 수 있다."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FND/Parties/Roles/PartyRole> .
+
+:Customer a owl:Class ;
+    rdfs:subClassOf :PartyRole ;
+    rdfs:label "고객"@ko , "Customer"@en ;
+    skos:definition "은행과 거래관계를 맺은 당사자의 역할."@ko .
+
+:RetailCustomer a owl:Class ;
+    rdfs:subClassOf :Customer ;
+    rdfs:label "개인고객"@ko , "Retail Customer"@en ;
+    skos:definition "개인 자격으로 은행과 거래하는 고객."@ko .
+
+:CorporateCustomer a owl:Class ;
+    rdfs:subClassOf :Customer ;
+    rdfs:label "기업고객"@ko , "Corporate Customer"@en ;
+    skos:definition "법인 또는 사업자 자격으로 은행과 거래하는 고객."@ko .
+
+:AccountHolder a owl:Class ;
+    rdfs:subClassOf :Customer ;
+    rdfs:label "예금주"@ko , "Account Holder"@en ;
+    skos:definition "계좌의 명의인인 고객 역할."@ko .
+
+:Depositor a owl:Class ;
+    rdfs:subClassOf :Customer ;
+    rdfs:label "예금자"@ko , "Depositor"@en ;
+    skos:definition "예금계약의 고객 측 당사자 역할."@ko .
+
+:Borrower a owl:Class ;
+    rdfs:subClassOf :Customer ;
+    rdfs:label "차주(대출자)"@ko , "Borrower"@en ;
+    skos:definition "대출계약에서 자금을 차입하는 당사자 역할."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/Borrower> .
+
+:Lender a owl:Class ;
+    rdfs:subClassOf :PartyRole ;
+    rdfs:label "대주(대출기관)"@ko , "Lender"@en ;
+    skos:definition "대출계약에서 자금을 대여하는 당사자 역할. 통상 은행이 수행한다."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/Lender> .
+
+:Guarantor a owl:Class ;
+    rdfs:subClassOf :PartyRole ;
+    rdfs:label "보증인"@ko , "Guarantor"@en ;
+    skos:definition "채무자의 채무 이행을 보증하는 당사자 역할."@ko .
+
+:CardMember a owl:Class ;
+    rdfs:subClassOf :Customer ;
+    rdfs:label "카드회원"@ko , "Card Member"@en ;
+    skos:definition "카드회원계약을 체결한 고객 역할."@ko .
+
+:BeneficialOwner a owl:Class ;
+    rdfs:subClassOf :PartyRole ;
+    rdfs:label "실제소유자"@ko , "Beneficial Owner"@en ;
+    skos:definition "거래의 실질적 이익 귀속 주체. 자금세탁방지(AML) 고객확인 시 확인 대상."@ko .
+
+#################################################################
+# 객체 속성
+#################################################################
+
+:playsRole a owl:ObjectProperty ;
+    rdfs:label "역할을 수행한다"@ko , "plays role"@en ;
+    rdfs:domain :Party ;
+    rdfs:range :PartyRole ;
+    owl:inverseOf :isPlayedBy ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FND/Parties/Parties/playsRole> .
+
+:isPlayedBy a owl:ObjectProperty ;
+    rdfs:label "역할의 수행자"@ko , "is played by"@en ;
+    rdfs:domain :PartyRole ;
+    rdfs:range :Party .
+
+:isCustomerOf a owl:ObjectProperty ;
+    rdfs:label "~의 고객이다"@ko , "is customer of"@en ;
+    rdfs:domain :Customer ;
+    rdfs:range :FinancialInstitution .
+
+:hasBranch a owl:ObjectProperty ;
+    rdfs:label "지점을 가진다"@ko , "has branch"@en ;
+    rdfs:domain :Bank ;
+    rdfs:range :BankBranch .
+
+:isRegulatedBy a owl:ObjectProperty ;
+    rdfs:label "~의 감독을 받는다"@ko , "is regulated by"@en ;
+    rdfs:domain :FinancialInstitution ;
+    rdfs:range :RegulatoryAgency .
+
+#################################################################
+# 데이터 속성
+#################################################################
+
+:hasName a owl:DatatypeProperty ;
+    rdfs:label "이름"@ko , "has name"@en ;
+    rdfs:domain :Party ;
+    rdfs:range xsd:string .
+
+:hasDateOfBirth a owl:DatatypeProperty ;
+    rdfs:label "생년월일"@ko , "has date of birth"@en ;
+    rdfs:domain :NaturalPerson ;
+    rdfs:range xsd:date .
+
+:hasCustomerId a owl:DatatypeProperty ;
+    rdfs:label "고객번호"@ko , "has customer ID"@en ;
+    rdfs:domain :Customer ;
+    rdfs:range xsd:string .
+
+:hasBankCode a owl:DatatypeProperty ;
+    rdfs:label "은행 코드"@ko , "has bank code"@en ;
+    rdfs:domain :Bank ;
+    rdfs:range xsd:string ;
+    skos:definition "금융결제원이 부여하는 은행 표준 코드 (예: 004 국민, 088 신한)."@ko .

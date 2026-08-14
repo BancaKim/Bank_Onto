@@ -1,0 +1,82 @@
+# 은행권 온톨로지 SPARQL 예시 쿼리 모음
+# 실행: python scripts/query.py 또는 Apache Jena / GraphDB 등에서 실행
+
+# ------------------------------------------------------------------
+# Q1. 특정 고객(김민준)이 보유한 모든 계좌와 상태 조회
+# ------------------------------------------------------------------
+PREFIX parties: <https://w3id.org/bank-onto/parties/>
+PREFIX accounts: <https://w3id.org/bank-onto/accounts/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?account ?accountType ?status
+WHERE {
+  ?person parties:hasName "김민준" ;
+          parties:playsRole ?holderRole .
+  ?account accounts:hasAccountHolder ?holderRole ;
+           a ?accountType .
+  OPTIONAL { ?account accounts:hasAccountStatus ?status . }
+}
+
+# ------------------------------------------------------------------
+# Q2. 예금자보호 대상 수신상품과 기본금리 조회
+# ------------------------------------------------------------------
+PREFIX products: <https://w3id.org/bank-onto/products/>
+PREFIX core: <https://w3id.org/bank-onto/core/>
+
+SELECT ?product ?name ?rate
+WHERE {
+  ?product a/rdfs:subClassOf* products:DepositProduct ;
+           products:hasProductName ?name ;
+           products:isProtectedByDepositInsurance true .
+  OPTIONAL {
+    ?product products:hasBaseRate ?rateObj .
+    ?rateObj core:hasRateValue ?rate .
+  }
+}
+
+# ------------------------------------------------------------------
+# Q3. 담보대출 계약의 LTV와 담보 감정가 조회
+# ------------------------------------------------------------------
+PREFIX loans: <https://w3id.org/bank-onto/loans/>
+PREFIX core: <https://w3id.org/bank-onto/core/>
+
+SELECT ?loan ?ltv ?collateral ?appraisal
+WHERE {
+  ?loan a/rdfs:subClassOf* loans:SecuredLoanContract ;
+        loans:isSecuredBy ?collateral .
+  OPTIONAL { ?loan loans:hasLTVValue ?ltv . }
+  OPTIONAL { ?collateral loans:hasAppraisalValue ?appraisal . }
+}
+
+# ------------------------------------------------------------------
+# Q4. 모바일뱅킹 채널로 발생한 완료된 이체거래 조회
+# ------------------------------------------------------------------
+PREFIX transactions: <https://w3id.org/bank-onto/transactions/>
+PREFIX core: <https://w3id.org/bank-onto/core/>
+
+SELECT ?txn ?datetime ?amount
+WHERE {
+  ?txn a transactions:TransferTransaction ;
+       transactions:occursViaChannel transactions:MobileBankingChannel ;
+       transactions:hasTransactionStatus transactions:CompletedStatus ;
+       transactions:hasTransactionDateTime ?datetime ;
+       transactions:hasTransactionAmount ?amountObj .
+  ?amountObj core:hasAmountValue ?amount .
+}
+
+# ------------------------------------------------------------------
+# Q5. 변동금리 상품과 연동된 기준금리 조회
+# ------------------------------------------------------------------
+PREFIX products: <https://w3id.org/bank-onto/products/>
+PREFIX core: <https://w3id.org/bank-onto/core/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?product ?name ?refRateLabel ?refRateValue
+WHERE {
+  ?product products:hasBaseRate ?rate ;
+           products:hasProductName ?name .
+  ?rate a core:VariableInterestRate ;
+        core:isLinkedToReferenceRate ?refRate .
+  ?refRate rdfs:label ?refRateLabel ;
+           core:hasRateValue ?refRateValue .
+}

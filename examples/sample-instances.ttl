@@ -1,0 +1,147 @@
+@prefix ex: <https://w3id.org/bank-onto/examples/> .
+@prefix core: <https://w3id.org/bank-onto/core/> .
+@prefix parties: <https://w3id.org/bank-onto/parties/> .
+@prefix products: <https://w3id.org/bank-onto/products/> .
+@prefix accounts: <https://w3id.org/bank-onto/accounts/> .
+@prefix loans: <https://w3id.org/bank-onto/loans/> .
+@prefix transactions: <https://w3id.org/bank-onto/transactions/> .
+@prefix risk: <https://w3id.org/bank-onto/risk/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+#################################################################
+# 예시 인스턴스: 가상의 은행 "한빛은행" 시나리오
+# - 고객 김민준이 정기예금 가입, 주택담보대출 실행, 이체 수행
+#################################################################
+
+### 통화
+ex:KRW a core:Currency ;
+    rdfs:label "대한민국 원"@ko ;
+    core:hasCurrencyCode "KRW" .
+
+### 은행 (가상)
+ex:HanbitBank a parties:CommercialBank ;
+    parties:hasName "한빛은행" ;
+    parties:hasBankCode "099" ;
+    parties:isRegulatedBy ex:FSS .
+
+ex:FSS a parties:RegulatoryAgency ;
+    parties:hasName "금융감독원" .
+
+ex:GangnamBranch a parties:BankBranch ;
+    parties:hasName "한빛은행 강남지점" .
+
+### 고객 (가상 인물)
+ex:KimMinjun a parties:NaturalPerson ;
+    parties:hasName "김민준" ;
+    parties:hasDateOfBirth "1990-03-15"^^xsd:date ;
+    parties:playsRole ex:KimMinjun_AsAccountHolder , ex:KimMinjun_AsBorrower .
+
+ex:KimMinjun_AsAccountHolder a parties:AccountHolder ;
+    rdfs:label "김민준의 예금주 역할"@ko ;
+    parties:hasCustomerId "C2024-001234" ;
+    parties:isCustomerOf ex:HanbitBank .
+
+ex:KimMinjun_AsBorrower a parties:Borrower ;
+    rdfs:label "김민준의 차주 역할"@ko ;
+    parties:isCustomerOf ex:HanbitBank .
+
+### 상품
+ex:HanbitTimeDeposit a products:TimeDepositProduct ;
+    products:hasProductName "한빛 정기예금" ;
+    products:hasProductCode "TD-001" ;
+    products:hasTermInMonths 12 ;
+    products:hasMinimumAmount 1000000 ;
+    products:isProtectedByDepositInsurance true ;
+    products:hasBaseRate ex:TimeDepositRate .
+
+ex:TimeDepositRate a core:FixedInterestRate ;
+    core:hasRateValue 3.50 .
+
+ex:HanbitMortgageLoan a products:MortgageLoanProduct ;
+    products:hasProductName "한빛 주택담보대출" ;
+    products:hasProductCode "ML-002" ;
+    products:hasBaseRate ex:MortgageRate .
+
+ex:MortgageRate a core:VariableInterestRate ;
+    core:hasRateValue 4.20 ;
+    core:isLinkedToReferenceRate ex:COFIX .
+
+ex:COFIX a core:ReferenceRate ;
+    rdfs:label "COFIX (신규취급액 기준)"@ko ;
+    core:hasRateValue 3.10 .
+
+### 계좌
+ex:Account_KimMinjun_TD a accounts:TimeDepositAccount ;
+    accounts:hasAccountHolder ex:KimMinjun_AsAccountHolder ;
+    accounts:isMaintainedBy ex:HanbitBank ;
+    accounts:isBasedOnProduct ex:HanbitTimeDeposit ;
+    accounts:hasAccountStatus accounts:ActiveStatus ;
+    accounts:hasOpeningDate "2025-01-10"^^xsd:date ;
+    accounts:hasAccountNumber ex:AccountNumber_TD ;
+    accounts:hasBalance ex:Balance_TD ;
+    core:hasMaturityDate "2026-01-10"^^xsd:date .
+
+ex:AccountNumber_TD a core:AccountNumber ;
+    core:hasIdentifierValue "099-12-345678" .
+
+ex:Balance_TD a core:MonetaryAmount ;
+    core:hasAmountValue 10000000 ;
+    core:hasCurrency ex:KRW .
+
+ex:Account_KimMinjun_DD a accounts:DemandDepositAccount ;
+    accounts:hasAccountHolder ex:KimMinjun_AsAccountHolder ;
+    accounts:isMaintainedBy ex:HanbitBank ;
+    accounts:hasAccountStatus accounts:ActiveStatus ;
+    accounts:hasOpeningDate "2020-05-02"^^xsd:date .
+
+### 대출계약 (주택담보대출)
+ex:LoanContract_KimMinjun a loans:MortgageLoanContract ;
+    loans:hasBorrower ex:KimMinjun_AsBorrower ;
+    loans:hasLender ex:HanbitBank_AsLender ;
+    loans:isBasedOnLoanProduct ex:HanbitMortgageLoan ;
+    loans:hasPrincipalAmount ex:LoanPrincipal ;
+    loans:isSecuredBy ex:ApartmentCollateral ;
+    loans:hasRepaymentMethod loans:EqualPrincipalAndInterest ;
+    loans:hasLoanTermInMonths 360 ;
+    loans:hasDisbursementDate "2025-03-01"^^xsd:date ;
+    loans:hasLTVValue 60.0 ;
+    loans:hasDSRValue 35.2 ;
+    loans:hasAssetQualityClassification loans:Normal ;
+    core:hasEffectiveDate "2025-03-01"^^xsd:date ;
+    core:hasMaturityDate "2055-03-01"^^xsd:date .
+
+ex:HanbitBank_AsLender a parties:Lender ;
+    rdfs:label "한빛은행의 대주 역할"@ko ;
+    parties:isPlayedBy ex:HanbitBank .
+
+ex:LoanPrincipal a core:MonetaryAmount ;
+    core:hasAmountValue 300000000 ;
+    core:hasCurrency ex:KRW .
+
+ex:ApartmentCollateral a loans:RealEstateCollateral ;
+    rdfs:label "서울시 소재 아파트 담보"@ko ;
+    loans:hasAppraisalValue 500000000 .
+
+### 거래 (이체)
+ex:Transfer_20250601 a transactions:TransferTransaction ;
+    transactions:hasTransactionId "TXN-20250601-00123" ;
+    transactions:hasSourceAccount ex:Account_KimMinjun_DD ;
+    transactions:hasDestinationAccount ex:Account_KimMinjun_TD ;
+    transactions:hasTransactionAmount ex:TransferAmount ;
+    transactions:isInitiatedBy ex:KimMinjun ;
+    transactions:occursViaChannel transactions:MobileBankingChannel ;
+    transactions:hasTransactionStatus transactions:CompletedStatus ;
+    transactions:hasTransactionDateTime "2025-06-01T10:30:00"^^xsd:dateTime ;
+    transactions:hasDescription "정기예금 추가 입금" .
+
+ex:TransferAmount a core:MonetaryAmount ;
+    core:hasAmountValue 5000000 ;
+    core:hasCurrency ex:KRW .
+
+### 규제준수 (KYC)
+ex:KYC_KimMinjun a risk:KYC ;
+    risk:isPerformedOnCustomer ex:KimMinjun_AsAccountHolder ;
+    risk:hasRiskLevel "저위험" .

@@ -1,0 +1,37 @@
+@prefix : <https://w3id.org/bank-onto/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+#################################################################
+# 은행권 온톨로지 - 통합 모듈 (Top-level Integration Module)
+# 모든 하위 모듈을 import 하는 진입점.
+# FIBO의 도메인-모듈 구조를 따른 모듈형 설계.
+#################################################################
+
+<https://w3id.org/bank-onto/> a owl:Ontology ;
+    rdfs:label "은행권 온톨로지"@ko , "Banking Ontology (Bank_Onto)"@en ;
+    dct:title "Bank_Onto: A FIBO-style Banking Ontology"@en ;
+    dct:description """FIBO(Financial Industry Business Ontology)의 설계 원칙을 따라 구축한 은행 도메인 온톨로지.
+모듈 구성:
+- core: 기반 개념 (계약, 금액, 통화, 식별자) — FIBO FND 대응
+- parties: 당사자·역할 (은행, 고객, 차주 등) — FIBO BE 대응
+- products: 금융상품 (수신·여신·카드·외환) — FIBO FBC 대응
+- accounts: 계좌 — FIBO FBC/CAE 대응
+- loans: 여신 (대출계약, 담보, 상환, 규제비율) — FIBO LOAN 대응
+- transactions: 거래·지급결제·채널
+- risk: 리스크·규제준수 (바젤, AML/KYC, 예금자보호)"""@ko ;
+    dct:creator "Bank_Onto Project" ;
+    dct:license <https://opensource.org/licenses/MIT> ;
+    owl:versionInfo "0.1.0" ;
+    owl:versionIRI <https://w3id.org/bank-onto/0.1.0/> ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/> ;
+    owl:imports
+        <https://w3id.org/bank-onto/core/> ,
+        <https://w3id.org/bank-onto/parties/> ,
+        <https://w3id.org/bank-onto/products/> ,
+        <https://w3id.org/bank-onto/accounts/> ,
+        <https://w3id.org/bank-onto/loans/> ,
+        <https://w3id.org/bank-onto/transactions/> ,
+        <https://w3id.org/bank-onto/risk/> .

@@ -1,0 +1,181 @@
+@prefix : <https://w3id.org/bank-onto/risk/> .
+@prefix core: <https://w3id.org/bank-onto/core/> .
+@prefix parties: <https://w3id.org/bank-onto/parties/> .
+@prefix transactions: <https://w3id.org/bank-onto/transactions/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+#################################################################
+# 은행권 온톨로지 - 리스크·규제준수 모듈 (Risk & Compliance)
+# 바젤 규제, 자금세탁방지, 예금자보호 개념
+#################################################################
+
+<https://w3id.org/bank-onto/risk/> a owl:Ontology ;
+    rdfs:label "은행권 온톨로지 - 리스크·규제준수 모듈"@ko , "Banking Ontology - Risk & Compliance Module"@en ;
+    dct:description "은행이 관리하는 리스크 유형, 바젤 자본규제, 자금세탁방지(AML/KYC), 예금자보호 등 규제준수 개념을 정의한다."@ko ;
+    owl:versionInfo "0.1.0" ;
+    owl:imports <https://w3id.org/bank-onto/core/> , <https://w3id.org/bank-onto/parties/> , <https://w3id.org/bank-onto/transactions/> .
+
+#################################################################
+# 클래스: 리스크 (Risk)
+#################################################################
+
+:Risk a owl:Class ;
+    rdfs:label "리스크"@ko , "Risk"@en ;
+    skos:definition "은행 경영에 손실을 초래할 수 있는 불확실성."@ko .
+
+:CreditRisk a owl:Class ;
+    rdfs:subClassOf :Risk ;
+    rdfs:label "신용리스크"@ko , "Credit Risk"@en ;
+    skos:definition "거래상대방의 채무불이행으로 인한 손실 위험."@ko .
+
+:MarketRisk a owl:Class ;
+    rdfs:subClassOf :Risk ;
+    rdfs:label "시장리스크"@ko , "Market Risk"@en ;
+    skos:definition "금리·환율·주가 등 시장가격 변동으로 인한 손실 위험."@ko .
+
+:OperationalRisk a owl:Class ;
+    rdfs:subClassOf :Risk ;
+    rdfs:label "운영리스크"@ko , "Operational Risk"@en ;
+    skos:definition "내부 프로세스·인력·시스템의 결함 또는 외부 사건으로 인한 손실 위험."@ko .
+
+:LiquidityRisk a owl:Class ;
+    rdfs:subClassOf :Risk ;
+    rdfs:label "유동성리스크"@ko , "Liquidity Risk"@en ;
+    skos:definition "자금 조달 불능 또는 비정상적 조건의 조달로 인한 손실 위험."@ko .
+
+:InterestRateRisk a owl:Class ;
+    rdfs:subClassOf :MarketRisk ;
+    rdfs:label "금리리스크"@ko , "Interest Rate Risk"@en .
+
+:FXRisk a owl:Class ;
+    rdfs:subClassOf :MarketRisk ;
+    rdfs:label "환리스크"@ko , "Foreign Exchange Risk"@en .
+
+#################################################################
+# 클래스: 바젤 자본규제 (Basel Capital Regulation)
+#################################################################
+
+:CapitalRequirement a owl:Class ;
+    rdfs:label "자본규제"@ko , "Capital Requirement"@en ;
+    skos:definition "바젤 협약에 따른 은행 자기자본 보유 의무."@ko .
+
+:BISCapitalRatio a owl:Class ;
+    rdfs:subClassOf :CapitalRequirement ;
+    rdfs:label "BIS 자기자본비율"@ko , "BIS Capital Adequacy Ratio"@en ;
+    skos:definition "위험가중자산 대비 자기자본의 비율. 바젤III 기준 최소 8%(완충자본 별도)."@ko .
+
+:CET1Ratio a owl:Class ;
+    rdfs:subClassOf :CapitalRequirement ;
+    rdfs:label "보통주자본비율(CET1)"@ko , "Common Equity Tier 1 Ratio"@en .
+
+:LCR a owl:Class ;
+    rdfs:subClassOf :CapitalRequirement ;
+    rdfs:label "유동성커버리지비율(LCR)"@ko , "Liquidity Coverage Ratio"@en ;
+    skos:definition "30일간 순현금유출액 대비 고유동성자산의 비율."@ko .
+
+:NSFR a owl:Class ;
+    rdfs:subClassOf :CapitalRequirement ;
+    rdfs:label "순안정자금조달비율(NSFR)"@ko , "Net Stable Funding Ratio"@en .
+
+:RiskWeightedAsset a owl:Class ;
+    rdfs:label "위험가중자산"@ko , "Risk-Weighted Asset"@en ;
+    skos:definition "자산별 위험가중치를 적용하여 산출한 자산 총액."@ko .
+
+#################################################################
+# 클래스: 자금세탁방지 (AML/KYC)
+#################################################################
+
+:ComplianceProcess a owl:Class ;
+    rdfs:label "규제준수 절차"@ko , "Compliance Process"@en .
+
+:KYC a owl:Class ;
+    rdfs:subClassOf :ComplianceProcess ;
+    rdfs:label "고객확인제도(KYC/CDD)"@ko , "Know Your Customer / Customer Due Diligence"@en ;
+    skos:definition "특정금융정보법에 따라 고객의 신원, 실제소유자, 거래목적을 확인하는 절차."@ko .
+
+:EDD a owl:Class ;
+    rdfs:subClassOf :KYC ;
+    rdfs:label "강화된 고객확인(EDD)"@ko , "Enhanced Due Diligence"@en ;
+    skos:definition "자금세탁 위험이 높은 고객에 대해 강화된 확인을 수행하는 절차."@ko .
+
+:AMLMonitoring a owl:Class ;
+    rdfs:subClassOf :ComplianceProcess ;
+    rdfs:label "자금세탁방지 모니터링"@ko , "AML Transaction Monitoring"@en ;
+    skos:definition "의심거래 탐지를 위한 거래 모니터링 절차."@ko .
+
+:SuspiciousTransactionReport a owl:Class ;
+    rdfs:label "의심거래보고(STR)"@ko , "Suspicious Transaction Report"@en ;
+    skos:definition "자금세탁이 의심되는 거래를 금융정보분석원(KoFIU)에 보고하는 것."@ko .
+
+:CurrencyTransactionReport a owl:Class ;
+    rdfs:label "고액현금거래보고(CTR)"@ko , "Currency Transaction Report"@en ;
+    skos:definition "1천만원 이상 현금거래를 금융정보분석원에 자동 보고하는 것."@ko .
+
+:SanctionsScreening a owl:Class ;
+    rdfs:subClassOf :ComplianceProcess ;
+    rdfs:label "제재대상 필터링"@ko , "Sanctions Screening"@en ;
+    skos:definition "UN·OFAC 등 제재 리스트 대상자와의 거래를 차단하기 위한 필터링."@ko .
+
+#################################################################
+# 클래스: 예금자보호·소비자보호
+#################################################################
+
+:DepositInsurance a owl:Class ;
+    rdfs:label "예금자보호"@ko , "Deposit Insurance"@en ;
+    skos:definition "예금보험공사가 금융기관 파산 시 예금자에게 보험금을 지급하는 제도. 1인당 원리금 합산 최대 5천만원."@ko .
+
+:FinancialConsumerProtection a owl:Class ;
+    rdfs:label "금융소비자보호"@ko , "Financial Consumer Protection"@en ;
+    skos:definition "금융소비자보호법에 따른 판매규제(적합성·적정성 원칙, 설명의무 등)와 소비자 권익 보호."@ko .
+
+#################################################################
+# 객체 속성
+#################################################################
+
+:isExposedToRisk a owl:ObjectProperty ;
+    rdfs:label "리스크에 노출된다"@ko , "is exposed to risk"@en ;
+    rdfs:domain parties:FinancialInstitution ;
+    rdfs:range :Risk .
+
+:isSubjectToRequirement a owl:ObjectProperty ;
+    rdfs:label "규제를 적용받는다"@ko , "is subject to requirement"@en ;
+    rdfs:domain parties:FinancialInstitution ;
+    rdfs:range :CapitalRequirement .
+
+:reportsOnTransaction a owl:ObjectProperty ;
+    rdfs:label "거래에 대해 보고한다"@ko , "reports on transaction"@en ;
+    rdfs:domain :SuspiciousTransactionReport ;
+    rdfs:range transactions:Transaction .
+
+:isPerformedOnCustomer a owl:ObjectProperty ;
+    rdfs:label "고객에 대해 수행된다"@ko , "is performed on customer"@en ;
+    rdfs:domain :KYC ;
+    rdfs:range parties:Customer .
+
+:identifiesBeneficialOwner a owl:ObjectProperty ;
+    rdfs:label "실제소유자를 확인한다"@ko , "identifies beneficial owner"@en ;
+    rdfs:domain :KYC ;
+    rdfs:range parties:BeneficialOwner .
+
+#################################################################
+# 데이터 속성
+#################################################################
+
+:hasRatioValue a owl:DatatypeProperty ;
+    rdfs:label "비율 값(%)"@ko , "has ratio value (%)"@en ;
+    rdfs:domain :CapitalRequirement ;
+    rdfs:range xsd:decimal .
+
+:hasReportDate a owl:DatatypeProperty ;
+    rdfs:label "보고일"@ko , "has report date"@en ;
+    rdfs:range xsd:date .
+
+:hasRiskLevel a owl:DatatypeProperty ;
+    rdfs:label "위험등급"@ko , "has risk level"@en ;
+    rdfs:range xsd:string ;
+    skos:definition "고객·거래의 자금세탁 위험등급 (예: 저위험, 중위험, 고위험)."@ko .

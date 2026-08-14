@@ -1,0 +1,159 @@
+@prefix : <https://w3id.org/bank-onto/accounts/> .
+@prefix core: <https://w3id.org/bank-onto/core/> .
+@prefix parties: <https://w3id.org/bank-onto/parties/> .
+@prefix products: <https://w3id.org/bank-onto/products/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+#################################################################
+# 은행권 온톨로지 - 계좌 모듈 (Accounts)
+# FIBO FBC/CAE 의 계좌 개념에 대응
+#################################################################
+
+<https://w3id.org/bank-onto/accounts/> a owl:Ontology ;
+    rdfs:label "은행권 온톨로지 - 계좌 모듈"@ko , "Banking Ontology - Accounts Module"@en ;
+    dct:description "예금계좌, 계좌 상태, 계좌와 상품·고객의 관계를 정의한다."@ko ;
+    owl:versionInfo "0.1.0" ;
+    owl:imports <https://w3id.org/bank-onto/core/> , <https://w3id.org/bank-onto/parties/> , <https://w3id.org/bank-onto/products/> ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FBC/ProductsAndServices/ClientsAndAccounts/> .
+
+#################################################################
+# 클래스: 계좌
+#################################################################
+
+:Account a owl:Class ;
+    rdfs:label "계좌"@ko , "Account"@en ;
+    skos:definition "은행과 고객 간 금융거래를 기록·관리하는 단위. 특정 상품 계약의 실행 인스턴스이다."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FBC/ProductsAndServices/ClientsAndAccounts/Account> ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty :hasAccountHolder ;
+        owl:minCardinality "1"^^xsd:nonNegativeInteger
+    ] .
+
+:DepositAccount a owl:Class ;
+    rdfs:subClassOf :Account ;
+    rdfs:label "예금계좌"@ko , "Deposit Account"@en ;
+    skos:definition "수신상품에 기반한 계좌."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FBC/ProductsAndServices/ClientsAndAccounts/DepositAccount> .
+
+:DemandDepositAccount a owl:Class ;
+    rdfs:subClassOf :DepositAccount ;
+    rdfs:label "요구불예금계좌"@ko , "Demand Deposit Account"@en ;
+    skos:definition "수시 입출금이 가능한 예금계좌."@ko .
+
+:TimeDepositAccount a owl:Class ;
+    rdfs:subClassOf :DepositAccount ;
+    rdfs:label "정기예금계좌"@ko , "Time Deposit Account"@en ;
+    skos:definition "정기예금 상품에 기반한 계좌. 만기일을 가진다."@ko .
+
+:InstallmentSavingsAccount a owl:Class ;
+    rdfs:subClassOf :DepositAccount ;
+    rdfs:label "정기적금계좌"@ko , "Installment Savings Account"@en ;
+    skos:definition "정기적금 상품에 기반한 계좌. 월 납입액과 만기일을 가진다."@ko .
+
+:ForeignCurrencyAccount a owl:Class ;
+    rdfs:subClassOf :DepositAccount ;
+    rdfs:label "외화예금계좌"@ko , "Foreign Currency Account"@en ;
+    skos:definition "외국통화로 관리되는 예금계좌."@ko .
+
+:LoanAccount a owl:Class ;
+    rdfs:subClassOf :Account ;
+    rdfs:label "대출계좌"@ko , "Loan Account"@en ;
+    skos:definition "대출 실행·상환 내역을 관리하는 계좌."@ko .
+
+:VirtualAccount a owl:Class ;
+    rdfs:subClassOf :Account ;
+    rdfs:label "가상계좌"@ko , "Virtual Account"@en ;
+    skos:definition "수납 목적으로 모계좌에 연결하여 발급하는 가상의 계좌번호."@ko .
+
+#################################################################
+# 클래스: 계좌 상태
+#################################################################
+
+:AccountStatus a owl:Class ;
+    rdfs:label "계좌 상태"@ko , "Account Status"@en ;
+    skos:definition "계좌의 생애주기 상태."@ko .
+
+:ActiveStatus a :AccountStatus ;
+    rdfs:label "정상"@ko , "Active"@en .
+
+:DormantStatus a :AccountStatus ;
+    rdfs:label "휴면"@ko , "Dormant"@en ;
+    skos:definition "장기간 거래가 없어 휴면 처리된 상태."@ko .
+
+:FrozenStatus a :AccountStatus ;
+    rdfs:label "지급정지"@ko , "Frozen"@en ;
+    skos:definition "법적 조치 또는 사고 신고로 지급이 정지된 상태."@ko .
+
+:ClosedStatus a :AccountStatus ;
+    rdfs:label "해지"@ko , "Closed"@en .
+
+#################################################################
+# 객체 속성
+#################################################################
+
+:hasAccountHolder a owl:ObjectProperty ;
+    rdfs:label "예금주를 가진다"@ko , "has account holder"@en ;
+    rdfs:domain :Account ;
+    rdfs:range parties:AccountHolder ;
+    owl:inverseOf :holdsAccount .
+
+:holdsAccount a owl:ObjectProperty ;
+    rdfs:label "계좌를 보유한다"@ko , "holds account"@en ;
+    rdfs:domain parties:AccountHolder ;
+    rdfs:range :Account .
+
+:isMaintainedBy a owl:ObjectProperty ;
+    rdfs:label "~가 관리한다"@ko , "is maintained by"@en ;
+    rdfs:domain :Account ;
+    rdfs:range parties:Bank .
+
+:isBasedOnProduct a owl:ObjectProperty ;
+    rdfs:label "상품에 기반한다"@ko , "is based on product"@en ;
+    rdfs:domain :Account ;
+    rdfs:range products:FinancialProduct .
+
+:hasAccountStatus a owl:ObjectProperty ;
+    rdfs:label "상태를 가진다"@ko , "has account status"@en ;
+    rdfs:domain :Account ;
+    rdfs:range :AccountStatus .
+
+:hasBalance a owl:ObjectProperty ;
+    rdfs:label "잔액을 가진다"@ko , "has balance"@en ;
+    rdfs:domain :Account ;
+    rdfs:range core:MonetaryAmount .
+
+:hasAccountNumber a owl:ObjectProperty ;
+    rdfs:label "계좌번호를 가진다"@ko , "has account number"@en ;
+    rdfs:subPropertyOf core:hasIdentifier ;
+    rdfs:domain :Account ;
+    rdfs:range core:AccountNumber .
+
+:isLinkedToAccount a owl:ObjectProperty ;
+    rdfs:label "계좌에 연결된다"@ko , "is linked to account"@en ;
+    rdfs:domain :VirtualAccount ;
+    rdfs:range :DepositAccount .
+
+#################################################################
+# 데이터 속성
+#################################################################
+
+:hasOpeningDate a owl:DatatypeProperty ;
+    rdfs:label "개설일"@ko , "has opening date"@en ;
+    rdfs:domain :Account ;
+    rdfs:range xsd:date .
+
+:hasClosingDate a owl:DatatypeProperty ;
+    rdfs:label "해지일"@ko , "has closing date"@en ;
+    rdfs:domain :Account ;
+    rdfs:range xsd:date .
+
+:hasMonthlyInstallmentAmount a owl:DatatypeProperty ;
+    rdfs:label "월 납입액"@ko , "has monthly installment amount"@en ;
+    rdfs:domain :InstallmentSavingsAccount ;
+    rdfs:range xsd:decimal .

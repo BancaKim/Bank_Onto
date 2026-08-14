@@ -1,0 +1,312 @@
+@prefix : <https://w3id.org/bank-onto/loans/> .
+@prefix core: <https://w3id.org/bank-onto/core/> .
+@prefix parties: <https://w3id.org/bank-onto/parties/> .
+@prefix products: <https://w3id.org/bank-onto/products/> .
+@prefix accounts: <https://w3id.org/bank-onto/accounts/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+#################################################################
+# 은행권 온톨로지 - 여신 모듈 (Loans)
+# FIBO LOAN 도메인에 대응
+#################################################################
+
+<https://w3id.org/bank-onto/loans/> a owl:Ontology ;
+    rdfs:label "은행권 온톨로지 - 여신 모듈"@ko , "Banking Ontology - Loans Module"@en ;
+    dct:description "대출계약, 담보, 보증, 상환방식, 신용등급, 여신 규제비율(LTV/DTI/DSR)을 정의한다. FIBO의 LOAN 도메인에 대응한다."@ko ;
+    owl:versionInfo "0.1.0" ;
+    owl:imports <https://w3id.org/bank-onto/core/> , <https://w3id.org/bank-onto/parties/> , <https://w3id.org/bank-onto/products/> , <https://w3id.org/bank-onto/accounts/> ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/LOAN/> .
+
+#################################################################
+# 클래스: 대출계약
+#################################################################
+
+:LoanContract a owl:Class ;
+    rdfs:subClassOf core:FinancialContract ;
+    rdfs:label "대출계약"@ko , "Loan Contract"@en ;
+    skos:definition "대주가 차주에게 금전을 대여하고 차주가 원리금 상환을 약정하는 계약."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/LoanContract> ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty :hasBorrower ;
+        owl:minCardinality "1"^^xsd:nonNegativeInteger
+    ] , [
+        a owl:Restriction ;
+        owl:onProperty :hasLender ;
+        owl:minCardinality "1"^^xsd:nonNegativeInteger
+    ] .
+
+:CreditLoanContract a owl:Class ;
+    rdfs:subClassOf :LoanContract ;
+    rdfs:label "신용대출계약"@ko , "Credit Loan Contract"@en ;
+    skos:definition "담보 없이 차주의 신용에 기반한 대출계약."@ko .
+
+:SecuredLoanContract a owl:Class ;
+    rdfs:subClassOf :LoanContract ;
+    rdfs:label "담보대출계약"@ko , "Secured Loan Contract"@en ;
+    skos:definition "담보권 설정을 수반하는 대출계약."@ko ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty :isSecuredBy ;
+        owl:minCardinality "1"^^xsd:nonNegativeInteger
+    ] .
+
+:MortgageLoanContract a owl:Class ;
+    rdfs:subClassOf :SecuredLoanContract ;
+    rdfs:label "주택담보대출계약"@ko , "Mortgage Loan Contract"@en ;
+    skos:definition "주택에 저당권(근저당권)을 설정하는 담보대출계약."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/LOAN/RealEstateLoans/MortgageLoans/MortgageLoanContract> .
+
+:GuaranteedLoanContract a owl:Class ;
+    rdfs:subClassOf :LoanContract ;
+    rdfs:label "보증부대출계약"@ko , "Guaranteed Loan Contract"@en ;
+    skos:definition "보증기관 또는 보증인의 보증을 수반하는 대출계약 (예: 전세자금대출)."@ko .
+
+#################################################################
+# 클래스: 담보·보증 (Collateral & Guarantee)
+#################################################################
+
+:Collateral a owl:Class ;
+    rdfs:label "담보"@ko , "Collateral"@en ;
+    skos:definition "채무 불이행 시 채권 회수를 위해 제공되는 자산."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/Collateral> .
+
+:RealEstateCollateral a owl:Class ;
+    rdfs:subClassOf :Collateral ;
+    rdfs:label "부동산담보"@ko , "Real Estate Collateral"@en ;
+    skos:definition "토지·건물 등 부동산 담보."@ko .
+
+:DepositCollateral a owl:Class ;
+    rdfs:subClassOf :Collateral ;
+    rdfs:label "예금담보"@ko , "Deposit Collateral"@en ;
+    skos:definition "예금(정기예금 등)에 질권을 설정하는 담보."@ko .
+
+:SecuritiesCollateral a owl:Class ;
+    rdfs:subClassOf :Collateral ;
+    rdfs:label "유가증권담보"@ko , "Securities Collateral"@en ;
+    skos:definition "주식·채권 등 유가증권 담보."@ko .
+
+:Guarantee a owl:Class ;
+    rdfs:label "보증"@ko , "Guarantee"@en ;
+    skos:definition "주채무자가 채무를 이행하지 않을 경우 보증인이 이행할 것을 약정하는 것."@ko .
+
+:GuaranteeLetter a owl:Class ;
+    rdfs:subClassOf :Guarantee ;
+    rdfs:label "보증서"@ko , "Guarantee Letter"@en ;
+    skos:definition "보증기관(주택도시보증공사, 한국주택금융공사, 서울보증보험 등)이 발급하는 보증서."@ko .
+
+#################################################################
+# 클래스: 상환 (Repayment)
+#################################################################
+
+:RepaymentMethod a owl:Class ;
+    rdfs:label "상환방식"@ko , "Repayment Method"@en ;
+    skos:definition "대출 원리금의 상환 방식."@ko .
+
+:EqualPrincipalAndInterest a :RepaymentMethod ;
+    rdfs:label "원리금균등분할상환"@ko , "Equal Principal and Interest Repayment"@en ;
+    skos:definition "매회 동일한 금액(원금+이자)을 상환하는 방식."@ko .
+
+:EqualPrincipal a :RepaymentMethod ;
+    rdfs:label "원금균등분할상환"@ko , "Equal Principal Repayment"@en ;
+    skos:definition "매회 동일한 원금과 잔액에 대한 이자를 상환하는 방식."@ko .
+
+:BulletRepayment a :RepaymentMethod ;
+    rdfs:label "만기일시상환"@ko , "Bullet Repayment"@en ;
+    skos:definition "기간 중 이자만 납부하고 만기에 원금을 일시 상환하는 방식."@ko .
+
+:RepaymentSchedule a owl:Class ;
+    rdfs:label "상환 스케줄"@ko , "Repayment Schedule"@en ;
+    skos:definition "대출 원리금의 회차별 상환 일정."@ko .
+
+:RepaymentInstallment a owl:Class ;
+    rdfs:label "상환 회차"@ko , "Repayment Installment"@en ;
+    skos:definition "상환 스케줄의 개별 회차. 상환일, 원금, 이자로 구성된다."@ko .
+
+#################################################################
+# 클래스: 신용평가 (Credit Assessment)
+#################################################################
+
+:CreditRating a owl:Class ;
+    rdfs:label "신용등급"@ko , "Credit Rating"@en ;
+    skos:definition "차주의 신용위험 수준에 대한 평가 등급."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/ClassificationSchemes/CreditRating> .
+
+:CreditScore a owl:Class ;
+    rdfs:label "신용점수"@ko , "Credit Score"@en ;
+    skos:definition "개인신용평가회사(CB사)가 산출하는 신용점수 (1~1000점 체계)."@ko .
+
+:LoanApplication a owl:Class ;
+    rdfs:label "대출신청"@ko , "Loan Application"@en ;
+    skos:definition "차주가 대출 실행을 요청하는 절차상의 행위."@ko .
+
+:LoanApproval a owl:Class ;
+    rdfs:label "대출승인(여신심사 결과)"@ko , "Loan Approval"@en ;
+    skos:definition "여신심사를 거쳐 대출 실행을 승인하는 의사결정."@ko .
+
+#################################################################
+# 클래스: 여신 규제비율 (Regulatory Ratios)
+#################################################################
+
+:RegulatoryLendingRatio a owl:Class ;
+    rdfs:label "여신 규제비율"@ko , "Regulatory Lending Ratio"@en ;
+    skos:definition "가계부채 관리를 위한 대출 규제 비율의 총칭."@ko .
+
+:LTV a owl:Class ;
+    rdfs:subClassOf :RegulatoryLendingRatio ;
+    rdfs:label "담보인정비율(LTV)"@ko , "Loan-to-Value Ratio"@en ;
+    skos:definition "담보물 가치 대비 대출 가능 금액의 비율."@ko .
+
+:DTI a owl:Class ;
+    rdfs:subClassOf :RegulatoryLendingRatio ;
+    rdfs:label "총부채상환비율(DTI)"@ko , "Debt-to-Income Ratio"@en ;
+    skos:definition "연소득 대비 주택담보대출 원리금과 기타부채 이자 상환액의 비율."@ko .
+
+:DSR a owl:Class ;
+    rdfs:subClassOf :RegulatoryLendingRatio ;
+    rdfs:label "총부채원리금상환비율(DSR)"@ko , "Debt Service Ratio"@en ;
+    skos:definition "연소득 대비 전체 대출의 원리금 상환액 비율."@ko .
+
+#################################################################
+# 클래스: 연체·부실 (Delinquency)
+#################################################################
+
+:Delinquency a owl:Class ;
+    rdfs:label "연체"@ko , "Delinquency"@en ;
+    skos:definition "약정 상환일에 원리금을 상환하지 못한 상태."@ko .
+
+:NonPerformingLoan a owl:Class ;
+    rdfs:label "부실채권(NPL)"@ko , "Non-Performing Loan"@en ;
+    skos:definition "3개월 이상 연체 등으로 고정이하로 분류된 여신."@ko .
+
+:AssetQualityClassification a owl:Class ;
+    rdfs:label "자산건전성 분류"@ko , "Asset Quality Classification"@en ;
+    skos:definition "은행업감독규정에 따른 여신 건전성 분류: 정상, 요주의, 고정, 회수의문, 추정손실."@ko .
+
+:Normal a :AssetQualityClassification ; rdfs:label "정상"@ko , "Normal"@en .
+:Precautionary a :AssetQualityClassification ; rdfs:label "요주의"@ko , "Precautionary"@en .
+:Substandard a :AssetQualityClassification ; rdfs:label "고정"@ko , "Substandard"@en .
+:DoubtfulRecovery a :AssetQualityClassification ; rdfs:label "회수의문"@ko , "Doubtful"@en .
+:EstimatedLoss a :AssetQualityClassification ; rdfs:label "추정손실"@ko , "Estimated Loss"@en .
+
+#################################################################
+# 객체 속성
+#################################################################
+
+:hasBorrower a owl:ObjectProperty ;
+    rdfs:subPropertyOf core:hasParty ;
+    rdfs:label "차주를 가진다"@ko , "has borrower"@en ;
+    rdfs:domain :LoanContract ;
+    rdfs:range parties:Borrower .
+
+:hasLender a owl:ObjectProperty ;
+    rdfs:subPropertyOf core:hasParty ;
+    rdfs:label "대주를 가진다"@ko , "has lender"@en ;
+    rdfs:domain :LoanContract ;
+    rdfs:range parties:Lender .
+
+:hasGuarantor a owl:ObjectProperty ;
+    rdfs:subPropertyOf core:hasParty ;
+    rdfs:label "보증인을 가진다"@ko , "has guarantor"@en ;
+    rdfs:domain :LoanContract ;
+    rdfs:range parties:Guarantor .
+
+:isSecuredBy a owl:ObjectProperty ;
+    rdfs:label "~로 담보된다"@ko , "is secured by"@en ;
+    rdfs:domain :LoanContract ;
+    rdfs:range :Collateral .
+
+:isGuaranteedBy a owl:ObjectProperty ;
+    rdfs:label "~로 보증된다"@ko , "is guaranteed by"@en ;
+    rdfs:domain :LoanContract ;
+    rdfs:range :Guarantee .
+
+:hasPrincipalAmount a owl:ObjectProperty ;
+    rdfs:label "대출원금을 가진다"@ko , "has principal amount"@en ;
+    rdfs:domain :LoanContract ;
+    rdfs:range core:MonetaryAmount .
+
+:hasRepaymentMethod a owl:ObjectProperty ;
+    rdfs:label "상환방식을 가진다"@ko , "has repayment method"@en ;
+    rdfs:domain :LoanContract ;
+    rdfs:range :RepaymentMethod .
+
+:hasRepaymentSchedule a owl:ObjectProperty ;
+    rdfs:label "상환 스케줄을 가진다"@ko , "has repayment schedule"@en ;
+    rdfs:domain :LoanContract ;
+    rdfs:range :RepaymentSchedule .
+
+:hasInstallment a owl:ObjectProperty ;
+    rdfs:label "상환 회차를 가진다"@ko , "has installment"@en ;
+    rdfs:domain :RepaymentSchedule ;
+    rdfs:range :RepaymentInstallment .
+
+:isBasedOnLoanProduct a owl:ObjectProperty ;
+    rdfs:label "여신상품에 기반한다"@ko , "is based on loan product"@en ;
+    rdfs:domain :LoanContract ;
+    rdfs:range products:LoanProduct .
+
+:hasLoanAccount a owl:ObjectProperty ;
+    rdfs:label "대출계좌를 가진다"@ko , "has loan account"@en ;
+    rdfs:domain :LoanContract ;
+    rdfs:range accounts:LoanAccount .
+
+:hasCreditRating a owl:ObjectProperty ;
+    rdfs:label "신용등급을 가진다"@ko , "has credit rating"@en ;
+    rdfs:range :CreditRating .
+
+:hasAssetQualityClassification a owl:ObjectProperty ;
+    rdfs:label "자산건전성 분류를 가진다"@ko , "has asset quality classification"@en ;
+    rdfs:domain :LoanContract ;
+    rdfs:range :AssetQualityClassification .
+
+:appliesFor a owl:ObjectProperty ;
+    rdfs:label "~를 신청한다"@ko , "applies for"@en ;
+    rdfs:domain :LoanApplication ;
+    rdfs:range products:LoanProduct .
+
+#################################################################
+# 데이터 속성
+#################################################################
+
+:hasLoanTermInMonths a owl:DatatypeProperty ;
+    rdfs:label "대출기간(개월)"@ko , "has loan term in months"@en ;
+    rdfs:domain :LoanContract ;
+    rdfs:range xsd:integer .
+
+:hasLTVValue a owl:DatatypeProperty ;
+    rdfs:label "LTV 값(%)"@ko , "has LTV value (%)"@en ;
+    rdfs:range xsd:decimal .
+
+:hasDTIValue a owl:DatatypeProperty ;
+    rdfs:label "DTI 값(%)"@ko , "has DTI value (%)"@en ;
+    rdfs:range xsd:decimal .
+
+:hasDSRValue a owl:DatatypeProperty ;
+    rdfs:label "DSR 값(%)"@ko , "has DSR value (%)"@en ;
+    rdfs:range xsd:decimal .
+
+:hasCreditScoreValue a owl:DatatypeProperty ;
+    rdfs:label "신용점수 값"@ko , "has credit score value"@en ;
+    rdfs:domain :CreditScore ;
+    rdfs:range xsd:integer .
+
+:hasAppraisalValue a owl:DatatypeProperty ;
+    rdfs:label "담보 감정가"@ko , "has appraisal value"@en ;
+    rdfs:domain :Collateral ;
+    rdfs:range xsd:decimal .
+
+:hasDelinquencyDays a owl:DatatypeProperty ;
+    rdfs:label "연체일수"@ko , "has delinquency days"@en ;
+    rdfs:domain :Delinquency ;
+    rdfs:range xsd:integer .
+
+:hasDisbursementDate a owl:DatatypeProperty ;
+    rdfs:label "대출실행일"@ko , "has disbursement date"@en ;
+    rdfs:domain :LoanContract ;
+    rdfs:range xsd:date .

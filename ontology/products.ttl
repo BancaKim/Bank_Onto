@@ -1,0 +1,215 @@
+@prefix : <https://w3id.org/bank-onto/products/> .
+@prefix core: <https://w3id.org/bank-onto/core/> .
+@prefix parties: <https://w3id.org/bank-onto/parties/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+#################################################################
+# 은행권 온톨로지 - 금융상품 모듈 (Products)
+# FIBO FBC (Financial Business & Commerce) 도메인에 대응
+#################################################################
+
+<https://w3id.org/bank-onto/products/> a owl:Ontology ;
+    rdfs:label "은행권 온톨로지 - 금융상품 모듈"@ko , "Banking Ontology - Products Module"@en ;
+    dct:description "은행이 제공하는 수신·여신·카드·외환 상품을 정의한다. FIBO의 FBC(Financial Business and Commerce) 도메인의 상품·서비스 개념에 대응한다."@ko ;
+    owl:versionInfo "0.1.0" ;
+    owl:imports <https://w3id.org/bank-onto/core/> , <https://w3id.org/bank-onto/parties/> ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FBC/> .
+
+#################################################################
+# 클래스: 상품 최상위
+#################################################################
+
+:FinancialProduct a owl:Class ;
+    rdfs:label "금융상품"@ko , "Financial Product"@en ;
+    skos:definition "금융기관이 고객에게 제공하기 위해 설계·판매하는 상품. 개별 계약의 템플릿 역할을 한다."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FBC/ProductsAndServices/FinancialProductsAndServices/FinancialProduct> .
+
+:FinancialService a owl:Class ;
+    rdfs:label "금융서비스"@ko , "Financial Service"@en ;
+    skos:definition "금융기관이 제공하는 서비스 (지급결제, 송금, 환전 등)."@ko ;
+    rdfs:seeAlso <https://spec.edmcouncil.org/fibo/ontology/FBC/ProductsAndServices/FinancialProductsAndServices/FinancialService> .
+
+#################################################################
+# 클래스: 수신상품 (Deposit Products)
+#################################################################
+
+:DepositProduct a owl:Class ;
+    rdfs:subClassOf :FinancialProduct ;
+    rdfs:label "수신상품"@ko , "Deposit Product"@en ;
+    skos:definition "고객으로부터 자금을 수입하는 예금·적금 상품의 총칭."@ko .
+
+:DemandDepositProduct a owl:Class ;
+    rdfs:subClassOf :DepositProduct ;
+    rdfs:label "요구불예금 상품"@ko , "Demand Deposit Product"@en ;
+    skos:definition "예금자가 언제든지 입출금할 수 있는 예금 상품 (보통예금, 당좌예금 등)."@ko .
+
+:OrdinaryDepositProduct a owl:Class ;
+    rdfs:subClassOf :DemandDepositProduct ;
+    rdfs:label "보통예금 상품"@ko , "Ordinary Deposit Product"@en ;
+    skos:definition "가입 대상·기간·금액에 제한이 없는 대표적 요구불예금."@ko .
+
+:CheckingDepositProduct a owl:Class ;
+    rdfs:subClassOf :DemandDepositProduct ;
+    rdfs:label "당좌예금 상품"@ko , "Checking Deposit Product"@en ;
+    skos:definition "당좌수표·어음 발행을 위한 기업용 요구불예금."@ko .
+
+:TimeDepositProduct a owl:Class ;
+    rdfs:subClassOf :DepositProduct ;
+    rdfs:label "정기예금 상품"@ko , "Time Deposit Product"@en ;
+    skos:definition "일정 금액을 일정 기간 예치하고 만기에 원리금을 수령하는 저축성예금."@ko .
+
+:InstallmentSavingsProduct a owl:Class ;
+    rdfs:subClassOf :DepositProduct ;
+    rdfs:label "정기적금 상품"@ko , "Installment Savings Product"@en ;
+    skos:definition "일정 기간 정기적으로 납입하고 만기에 원리금을 수령하는 적립식 저축성예금."@ko .
+
+:MMDAProduct a owl:Class ;
+    rdfs:subClassOf :DemandDepositProduct ;
+    rdfs:label "MMDA 상품"@ko , "Money Market Deposit Account Product"@en ;
+    skos:definition "시장금리부 수시입출금식 예금. 금액에 따라 차등금리를 적용한다."@ko .
+
+:ForeignCurrencyDepositProduct a owl:Class ;
+    rdfs:subClassOf :DepositProduct ;
+    rdfs:label "외화예금 상품"@ko , "Foreign Currency Deposit Product"@en ;
+    skos:definition "외국통화로 예치하는 예금 상품."@ko .
+
+#################################################################
+# 클래스: 여신상품 (Loan Products)
+#################################################################
+
+:LoanProduct a owl:Class ;
+    rdfs:subClassOf :FinancialProduct ;
+    rdfs:label "여신상품"@ko , "Loan Product"@en ;
+    skos:definition "고객에게 자금을 대여하는 대출 상품의 총칭."@ko .
+
+:CreditLoanProduct a owl:Class ;
+    rdfs:subClassOf :LoanProduct ;
+    rdfs:label "신용대출 상품"@ko , "Credit Loan Product"@en ;
+    skos:definition "담보 없이 차주의 신용도에 근거하여 실행하는 대출 상품."@ko .
+
+:SecuredLoanProduct a owl:Class ;
+    rdfs:subClassOf :LoanProduct ;
+    rdfs:label "담보대출 상품"@ko , "Secured Loan Product"@en ;
+    skos:definition "부동산·예금 등 담보를 제공받고 실행하는 대출 상품."@ko .
+
+:MortgageLoanProduct a owl:Class ;
+    rdfs:subClassOf :SecuredLoanProduct ;
+    rdfs:label "주택담보대출 상품"@ko , "Mortgage Loan Product"@en ;
+    skos:definition "주택을 담보로 하는 대출 상품. LTV·DTI·DSR 규제의 적용을 받는다."@ko .
+
+:JeonseLoanProduct a owl:Class ;
+    rdfs:subClassOf :LoanProduct ;
+    rdfs:label "전세자금대출 상품"@ko , "Jeonse (Lease Deposit) Loan Product"@en ;
+    skos:definition "전세보증금 마련을 위한 대출 상품. 통상 보증기관의 보증서를 담보로 한다."@ko .
+
+:CorporateLoanProduct a owl:Class ;
+    rdfs:subClassOf :LoanProduct ;
+    rdfs:label "기업대출 상품"@ko , "Corporate Loan Product"@en ;
+    skos:definition "기업의 운전자금·시설자금을 위한 대출 상품."@ko .
+
+:OverdraftProduct a owl:Class ;
+    rdfs:subClassOf :LoanProduct ;
+    rdfs:label "마이너스통장(한도대출) 상품"@ko , "Overdraft Product"@en ;
+    skos:definition "약정 한도 내에서 수시로 차입·상환할 수 있는 한도거래 대출 상품."@ko .
+
+#################################################################
+# 클래스: 카드상품 (Card Products)
+#################################################################
+
+:CardProduct a owl:Class ;
+    rdfs:subClassOf :FinancialProduct ;
+    rdfs:label "카드상품"@ko , "Card Product"@en ;
+    skos:definition "지급결제 수단으로서의 카드 상품."@ko .
+
+:CreditCardProduct a owl:Class ;
+    rdfs:subClassOf :CardProduct ;
+    rdfs:label "신용카드 상품"@ko , "Credit Card Product"@en ;
+    skos:definition "신용공여에 기반하여 후불 결제하는 카드 상품."@ko .
+
+:DebitCardProduct a owl:Class ;
+    rdfs:subClassOf :CardProduct ;
+    rdfs:label "체크카드 상품"@ko , "Debit Card Product"@en ;
+    skos:definition "결제 즉시 연결 계좌에서 대금이 인출되는 카드 상품."@ko .
+
+#################################################################
+# 클래스: 외환상품·서비스 (FX Products & Services)
+#################################################################
+
+:FXService a owl:Class ;
+    rdfs:subClassOf :FinancialService ;
+    rdfs:label "외환서비스"@ko , "Foreign Exchange Service"@en ;
+    skos:definition "환전, 해외송금 등 외국환 관련 서비스."@ko .
+
+:RemittanceService a owl:Class ;
+    rdfs:subClassOf :FinancialService ;
+    rdfs:label "송금서비스"@ko , "Remittance Service"@en ;
+    skos:definition "국내외 자금 이체 서비스."@ko .
+
+:CurrencyExchangeService a owl:Class ;
+    rdfs:subClassOf :FXService ;
+    rdfs:label "환전서비스"@ko , "Currency Exchange Service"@en ;
+    skos:definition "통화 간 교환 서비스."@ko .
+
+#################################################################
+# 객체 속성
+#################################################################
+
+:isOfferedBy a owl:ObjectProperty ;
+    rdfs:label "~가 제공한다"@ko , "is offered by"@en ;
+    rdfs:domain :FinancialProduct ;
+    rdfs:range parties:FinancialInstitution ;
+    owl:inverseOf :offers .
+
+:offers a owl:ObjectProperty ;
+    rdfs:label "상품을 제공한다"@ko , "offers"@en ;
+    rdfs:domain parties:FinancialInstitution ;
+    rdfs:range :FinancialProduct .
+
+:hasBaseRate a owl:ObjectProperty ;
+    rdfs:label "기본금리를 가진다"@ko , "has base rate"@en ;
+    rdfs:domain :FinancialProduct ;
+    rdfs:range core:InterestRate .
+
+:hasTargetCustomerType a owl:ObjectProperty ;
+    rdfs:label "가입대상 고객유형"@ko , "has target customer type"@en ;
+    rdfs:domain :FinancialProduct .
+
+#################################################################
+# 데이터 속성
+#################################################################
+
+:hasProductCode a owl:DatatypeProperty ;
+    rdfs:label "상품코드"@ko , "has product code"@en ;
+    rdfs:domain :FinancialProduct ;
+    rdfs:range xsd:string .
+
+:hasProductName a owl:DatatypeProperty ;
+    rdfs:label "상품명"@ko , "has product name"@en ;
+    rdfs:domain :FinancialProduct ;
+    rdfs:range xsd:string .
+
+:hasMinimumAmount a owl:DatatypeProperty ;
+    rdfs:label "최소 가입/거래 금액"@ko , "has minimum amount"@en ;
+    rdfs:domain :FinancialProduct ;
+    rdfs:range xsd:decimal .
+
+:hasMaximumAmount a owl:DatatypeProperty ;
+    rdfs:label "최대 한도 금액"@ko , "has maximum amount"@en ;
+    rdfs:domain :FinancialProduct ;
+    rdfs:range xsd:decimal .
+
+:hasTermInMonths a owl:DatatypeProperty ;
+    rdfs:label "계약기간(개월)"@ko , "has term in months"@en ;
+    rdfs:domain :FinancialProduct ;
+    rdfs:range xsd:integer .
+
+:isProtectedByDepositInsurance a owl:DatatypeProperty ;
+    rdfs:label "예금자보호 여부"@ko , "is protected by deposit insurance"@en ;
+    rdfs:domain :FinancialProduct ;
+    rdfs:range xsd:boolean ;
+    skos:definition "예금자보호법에 따른 보호 대상 여부 (1인당 최대 5천만원)."@ko .
