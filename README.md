@@ -118,21 +118,32 @@ python agent/bank_agent.py
 3. 동일인이 차주 역할로 **주택담보대출**(COFIX 연동 변동금리, LTV 60%, 원리금균등, 30년) 실행
 4. 모바일뱅킹 채널을 통한 **계좌이체** 및 **KYC 고객확인**(저위험) 수행
 
-## 벤치마크: 온톨로지 RAG vs 벡터 RAG
+## 벤치마크: 벡터 RAG vs Graph RAG(LPG) vs 온톨로지 RAG
 
-`eval/`은 같은 온톨로지 지식을 두 방식으로 검색했을 때의 성능을 비교합니다.
-결과는 [docs/benchmark-report.md](docs/benchmark-report.md) 참고.
+`eval/`은 같은 지식을 세 가지 검색 패러다임으로 제공했을 때의 성능을
+2계층(검색/답변)으로 비교합니다. 결과: [docs/benchmark-report.md](docs/benchmark-report.md).
 
-| 지표 | 벡터 RAG (TF-IDF top-5) | 온톨로지 RAG |
-|---|---|---|
-| 근거 재현율 (18문항) | 72% | **100%** |
-| 완전 답변 가능 질문 | 11/18 | **18/18** |
-| 답 없는 질문에 준 오답 재료 | 2,020자 | **0자** |
+**검색 계층** (근거 재현율 — 파이프라인 품질의 상한, LLM 없이 결정적):
+
+| 지표 (18문항) | 벡터 RAG | Graph RAG(LPG) | 온톨로지 RAG |
+|---|---|---|---|
+| 근거 재현율 | 69% | 92% | **100%** |
+| 답 없는 질문에 준 오답 재료 | 2,020자 | 0자 | **0자** |
+
+LPG(속성 그래프, Neo4j식 k-hop 이웃 탐색)는 다중 홉·열거에서 벡터를 크게 앞서지만,
+속성 스키마(domain/range)와 SPARQL 집계가 없어 스키마 질의·조건 필터에서 실패합니다
+— 이 격차가 온톨로지 의미론의 순수 기여분입니다.
+
+**답변 계층** (동일 LLM, 컨텍스트 공급 방식만 상이 — API 키 필요):
 
 ```bash
-python eval/run_retrieval_eval.py   # 검색 수준 비교 (API 키 불필요, 결정적)
-python eval/run_e2e.py              # LLM 답변 품질 비교 (ANTHROPIC_API_KEY 필요)
+python eval/run_retrieval_eval.py            # 검색 수준 3-way (API 키 불필요)
+python eval/run_answer_eval.py               # 답변 수준 3-way: 객관식 + LLM 심판 + 유사도
+python eval/run_answer_eval.py --scoring mcq # 객관식만 (결정적 채점, 심판 편향 없음)
 ```
+
+객관식 20문항(`eval/mcq_questions.py`)은 정답 기호 일치로 결정적 채점되고,
+자유 답변은 LLM-as-judge(0~2점)와 TF-IDF 유사도(보조)로 채점됩니다.
 
 벡터 RAG가 구조적으로 지는 지점: 다중 홉 관계 추적(청킹이 연결을 절단),
 분류 완전 열거(top-k는 완전성 미보장), 조건 필터/집계(유사도는 조건 평가가 아님),

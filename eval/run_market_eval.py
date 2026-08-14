@@ -20,6 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from eval.corpus import build_documents, chunk_corpus
+from eval.lpg_rag import LpgGraphRetriever
 from eval.vector_rag import TfidfVectorRetriever
 from knowledge.kb import BankKnowledgeBase
 
@@ -176,6 +177,7 @@ def main() -> int:
     docs = build_documents(kb)
     chunks = chunk_corpus(docs)
     vector = TfidfVectorRetriever(chunks)
+    lpg = LpgGraphRetriever(kb)
 
     questions = build_market_questions(kb)
     if not questions:
@@ -188,25 +190,29 @@ def main() -> int:
     rows = []
     for q in questions:
         v_ctx = vector.retrieve_context(q["question"], k=5)
+        l_ctx = lpg.retrieve_context(q["question"])
         g_ctx = render_rows(kb.run_sparql(q["sparql"]))
-        v_found = sum(1 for g in q["gold"] if g in v_ctx)
-        g_found = sum(1 for g in q["gold"] if g in g_ctx)
         total = len(q["gold"])
-        rows.append({**q, "v": v_found, "g": g_found, "total": total,
-                     "v_chars": len(v_ctx), "g_chars": len(g_ctx),
+        v_found = sum(1 for g in q["gold"] if g in v_ctx)
+        l_found = sum(1 for g in q["gold"] if g in l_ctx)
+        g_found = sum(1 for g in q["gold"] if g in g_ctx)
+        rows.append({**q, "v": v_found, "l": l_found, "g": g_found, "total": total,
+                     "v_chars": len(v_ctx), "l_chars": len(l_ctx), "g_chars": len(g_ctx),
                      "v_missing": [x for x in q["gold"] if x not in v_ctx]})
-        print(f"  {q['id']:11s} vector {v_found}/{total}   graph {g_found}/{total}")
+        print(f"  {q['id']:11s} vector {v_found}/{total}   lpg {l_found}/{total}   graph {g_found}/{total}")
 
     def rate(key):
         return sum(r[key] for r in rows) / sum(r["total"] for r in rows)
 
-    v_rate, g_rate = rate("v"), rate("g")
+    v_rate, l_rate, g_rate = rate("v"), rate("l"), rate("g")
     v_perfect = sum(1 for r in rows if r["v"] == r["total"])
+    l_perfect = sum(1 for r in rows if r["l"] == r["total"])
     g_perfect = sum(1 for r in rows if r["g"] == r["total"])
     avg_v = sum(r["v_chars"] for r in rows) / len(rows)
+    avg_l = sum(r["l_chars"] for r in rows) / len(rows)
     avg_g = sum(r["g_chars"] for r in rows) / len(rows)
 
-    print(f"\n근거 재현율: vector {v_rate:.0%}  /  graph {g_rate:.0%}")
+    print(f"\n근거 재현율: vector {v_rate:.0%}  /  lpg {l_rate:.0%}  /  graph {g_rate:.0%}")
 
     md = ["# 실무형(시장 데이터) 벤치마크: 온톨로지 RAG vs 벡터 RAG\n"]
     if is_sample:
@@ -218,18 +224,18 @@ def main() -> int:
     md.append("- 질문과 정답은 적재된 데이터에서 SPARQL로 자동 계산 — 데이터가 바뀌면 "
               "벤치마크도 함께 갱신된다\n")
     md.append("## 결과\n")
-    md.append("| 지표 | 벡터 RAG | 온톨로지 RAG (SPARQL) |")
-    md.append("|---|---|---|")
-    md.append(f"| 근거 재현율 | {v_rate:.0%} | **{g_rate:.0%}** |")
-    md.append(f"| 완전 답변 가능 질문 | {v_perfect}/{len(rows)} | **{g_perfect}/{len(rows)}** |")
-    md.append(f"| 평균 컨텍스트 크기 | {avg_v:,.0f}자 | **{avg_g:,.0f}자** |\n")
+    md.append("| 지표 | 벡터 RAG | Graph RAG(LPG) | 온톨로지 RAG (SPARQL) |")
+    md.append("|---|---|---|---|")
+    md.append(f"| 근거 재현율 | {v_rate:.0%} | {l_rate:.0%} | **{g_rate:.0%}** |")
+    md.append(f"| 완전 답변 가능 질문 | {v_perfect}/{len(rows)} | {l_perfect}/{len(rows)} | **{g_perfect}/{len(rows)}** |")
+    md.append(f"| 평균 컨텍스트 크기 | {avg_v:,.0f}자 | {avg_l:,.0f}자 | **{avg_g:,.0f}자** |\n")
     md.append("## 질문별 상세\n")
-    md.append("| ID | 유형 | 질문 | 벡터 | 그래프 | 벡터가 놓친 근거 |")
-    md.append("|---|---|---|---|---|---|")
+    md.append("| ID | 유형 | 질문 | 벡터 | LPG | 온톨로지 | 벡터가 놓친 근거 |")
+    md.append("|---|---|---|---|---|---|---|")
     for r in rows:
         miss = ", ".join(r["v_missing"]) or "-"
         md.append(f"| {r['id']} | {r['category']} | {r['question']} "
-                  f"| {r['v']}/{r['total']} | {r['g']}/{r['total']} | {miss} |")
+                  f"| {r['v']}/{r['total']} | {r['l']}/{r['total']} | {r['g']}/{r['total']} | {miss} |")
     md.append("""
 ## 왜 실무 질문에서 격차가 벌어지는가
 
@@ -245,6 +251,11 @@ def main() -> int:
 
 SPARQL은 이 연산을 정확히 수행하며, 컨텍스트도 결과 행만 담아 수십 배 작다.
 상품 수가 수백 개(실데이터)로 늘면 top-k의 커버리지는 더 떨어지므로 격차는 커진다.
+
+Graph RAG(LPG)의 이웃 탐색도 같은 이유로 집계에 약하다: 서브그래프를 가져올 수는
+있어도 "전체 중 최댓값"은 노드 수 제한(cap)에 걸리면 근거가 잘리고, 정렬·집계 연산
+자체가 없다. 실무의 text2cypher 방식은 집계가 가능하지만 서브클래스 추론과 표준
+스키마(FIBO 정렬)가 없다는 차이는 남는다.
 
 *재생성: `python eval/run_market_eval.py`*
 """)
