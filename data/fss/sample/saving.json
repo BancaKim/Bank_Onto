@@ -1,0 +1,13 @@
+{
+ "_note": "가상 은행 샘플 픽스처 (savingProductsSearch 스키마).",
+ "baseList": [
+  {"dcls_month": "202608", "fin_co_no": "0019001", "kor_co_nm": "한빛은행", "fin_prdt_cd": "HB-SV-01", "fin_prdt_nm": "한빛 차곡차곡 적금", "join_way": "영업점,스마트폰", "mtrt_int": "만기 후 1개월 이내: 기본금리의 50%", "spcl_cnd": "자동이체 등록 시 연 0.3%p 우대", "join_deny": "1", "join_member": "실명의 개인", "etc_note": "", "max_limit": null},
+  {"dcls_month": "202608", "fin_co_no": "0019002", "kor_co_nm": "미르은행", "fin_prdt_cd": "MR-SV-01", "fin_prdt_nm": "미르 자유적금", "join_way": "인터넷,스마트폰", "mtrt_int": "만기 후: 연 0.5%", "spcl_cnd": "마케팅 동의 시 연 0.1%p 우대", "join_deny": "1", "join_member": "제한없음", "etc_note": "", "max_limit": 30000000}
+ ],
+ "optionList": [
+  {"dcls_month": "202608", "fin_co_no": "0019001", "fin_prdt_cd": "HB-SV-01", "intr_rate_type": "S", "intr_rate_type_nm": "단리", "rsrv_type": "F", "rsrv_type_nm": "자유적립식", "save_trm": "12", "intr_rate": 3.50, "intr_rate2": 4.00},
+  {"dcls_month": "202608", "fin_co_no": "0019001", "fin_prdt_cd": "HB-SV-01", "intr_rate_type": "S", "intr_rate_type_nm": "단리", "rsrv_type": "F", "rsrv_type_nm": "자유적립식", "save_trm": "36", "intr_rate": 3.30, "intr_rate2": 3.80},
+  {"dcls_month": "202608", "fin_co_no": "0019002", "fin_prdt_cd": "MR-SV-01", "intr_rate_type": "S", "intr_rate_type_nm": "단리", "rsrv_type": "F", "rsrv_type_nm": "자유적립식", "save_trm": "12", "intr_rate": 3.60, "intr_rate2": 3.85},
+  {"dcls_month": "202608", "fin_co_no": "0019002", "fin_prdt_cd": "MR-SV-01", "intr_rate_type": "S", "intr_rate_type_nm": "단리", "rsrv_type": "S", "rsrv_type_nm": "정액적립식", "save_trm": "36", "intr_rate": 3.45, "intr_rate2": 3.70}
+ ]
+}

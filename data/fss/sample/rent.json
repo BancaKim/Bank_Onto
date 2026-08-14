@@ -1,0 +1,9 @@
+{
+ "_note": "가상 은행 샘플 픽스처 (rentHouseLoanProductsSearch 스키마).",
+ "baseList": [
+  {"dcls_month": "202608", "fin_co_no": "0019001", "kor_co_nm": "한빛은행", "fin_prdt_cd": "HB-RL-01", "fin_prdt_nm": "한빛 전세자금대출", "join_way": "영업점,스마트폰", "loan_inci_expn": "보증서 발급 수수료 별도", "erly_rpay_fee": "없음", "dly_rate": "대출금리+3%p (최고 연 12%)", "loan_lmt": "임차보증금의 80% 이내"}
+ ],
+ "optionList": [
+  {"dcls_month": "202608", "fin_co_no": "0019001", "fin_prdt_cd": "HB-RL-01", "rpay_type": "S", "rpay_type_nm": "만기일시상환방식", "lend_rate_type": "C", "lend_rate_type_nm": "변동금리", "lend_rate_min": 3.85, "lend_rate_max": 4.95, "lend_rate_avg": 4.30}
+ ]
+}

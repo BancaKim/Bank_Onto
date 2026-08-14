@@ -1,0 +1,19 @@
+{
+ "_note": "가상 은행의 샘플 픽스처. FSS 금융상품한눈에 API의 depositProductsSearch 응답 스키마와 동일. 실데이터는 ingest/fss_client.py로 다운로드.",
+ "baseList": [
+  {"dcls_month": "202608", "fin_co_no": "0019001", "kor_co_nm": "한빛은행", "fin_prdt_cd": "HB-TD-01", "fin_prdt_nm": "한빛 으뜸 정기예금", "join_way": "영업점,인터넷,스마트폰", "mtrt_int": "만기 후 1개월 이내: 기본금리의 50%", "spcl_cnd": "급여이체 실적 보유 시 연 0.3%p, 첫 거래 고객 연 0.2%p 우대", "join_deny": "1", "join_member": "실명의 개인", "etc_note": "", "max_limit": null},
+  {"dcls_month": "202608", "fin_co_no": "0019001", "kor_co_nm": "한빛은행", "fin_prdt_cd": "HB-TD-02", "fin_prdt_nm": "한빛 디지털 정기예금", "join_way": "스마트폰", "mtrt_int": "만기 후: 보통예금 금리 적용", "spcl_cnd": "모바일 앱 가입 시 연 0.2%p 우대", "join_deny": "1", "join_member": "실명의 개인", "etc_note": "", "max_limit": 100000000},
+  {"dcls_month": "202608", "fin_co_no": "0019002", "kor_co_nm": "미르은행", "fin_prdt_cd": "MR-TD-01", "fin_prdt_nm": "미르 정기예금", "join_way": "영업점,인터넷", "mtrt_int": "만기 후 1개월 이내: 기본금리의 50%", "spcl_cnd": "비대면 가입 시 연 0.15%p 우대", "join_deny": "1", "join_member": "제한없음", "etc_note": "", "max_limit": null},
+  {"dcls_month": "202608", "fin_co_no": "0019003", "kor_co_nm": "강산은행", "fin_prdt_cd": "GS-TD-01", "fin_prdt_nm": "강산 플러스 정기예금", "join_way": "영업점,인터넷,스마트폰,전화(텔레뱅킹)", "mtrt_int": "만기 후: 연 0.5%", "spcl_cnd": "연금수급 고객 연 0.4%p, 장기거래 고객 연 0.1%p 우대", "join_deny": "1", "join_member": "실명의 개인", "etc_note": "", "max_limit": 500000000},
+  {"dcls_month": "202608", "fin_co_no": "0019003", "kor_co_nm": "강산은행", "fin_prdt_cd": "GS-TD-02", "fin_prdt_nm": "강산 청년 정기예금", "join_way": "스마트폰", "mtrt_int": "만기 후: 연 0.5%", "spcl_cnd": "만 34세 이하 청년 연 0.5%p 우대", "join_deny": "3", "join_member": "만 19세~34세 개인", "etc_note": "", "max_limit": 50000000}
+ ],
+ "optionList": [
+  {"dcls_month": "202608", "fin_co_no": "0019001", "fin_prdt_cd": "HB-TD-01", "intr_rate_type": "S", "intr_rate_type_nm": "단리", "save_trm": "12", "intr_rate": 3.10, "intr_rate2": 3.60},
+  {"dcls_month": "202608", "fin_co_no": "0019001", "fin_prdt_cd": "HB-TD-01", "intr_rate_type": "S", "intr_rate_type_nm": "단리", "save_trm": "24", "intr_rate": 3.00, "intr_rate2": 3.50},
+  {"dcls_month": "202608", "fin_co_no": "0019001", "fin_prdt_cd": "HB-TD-02", "intr_rate_type": "S", "intr_rate_type_nm": "단리", "save_trm": "12", "intr_rate": 3.25, "intr_rate2": 3.45},
+  {"dcls_month": "202608", "fin_co_no": "0019002", "fin_prdt_cd": "MR-TD-01", "intr_rate_type": "S", "intr_rate_type_nm": "단리", "save_trm": "12", "intr_rate": 3.20, "intr_rate2": 3.35},
+  {"dcls_month": "202608", "fin_co_no": "0019002", "fin_prdt_cd": "MR-TD-01", "intr_rate_type": "M", "intr_rate_type_nm": "복리", "save_trm": "36", "intr_rate": 3.05, "intr_rate2": 3.20},
+  {"dcls_month": "202608", "fin_co_no": "0019003", "fin_prdt_cd": "GS-TD-01", "intr_rate_type": "S", "intr_rate_type_nm": "단리", "save_trm": "12", "intr_rate": 3.15, "intr_rate2": 3.65},
+  {"dcls_month": "202608", "fin_co_no": "0019003", "fin_prdt_cd": "GS-TD-02", "intr_rate_type": "S", "intr_rate_type_nm": "단리", "save_trm": "12", "intr_rate": 3.40, "intr_rate2": 3.90}
+ ]
+}

@@ -1,0 +1,277 @@
+@prefix market: <https://w3id.org/bank-onto/market/> .
+@prefix mktd: <https://w3id.org/bank-onto/market/data/> .
+@prefix parties: <https://w3id.org/bank-onto/parties/> .
+@prefix products: <https://w3id.org/bank-onto/products/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+mktd:prdt_0019001_HB_ML_01 a products:MortgageLoanProduct ;
+    market:disclosureMonth "202608" ;
+    market:hasRateOption mktd:prdt_0019001_HB_ML_01_opt0,
+        mktd:prdt_0019001_HB_ML_01_opt1 ;
+    market:joinWay "영업점,인터넷" ;
+    market:maxLimitNote "담보가액의 최대 70%" ;
+    market:sourceNote "샘플 픽스처(가상 은행) — 파이프라인 검증용" ;
+    products:hasProductCode "HB-ML-01" ;
+    products:hasProductName "한빛 내집마련 주택담보대출" ;
+    products:isOfferedBy mktd:bank_0019001 .
+
+mktd:prdt_0019001_HB_RL_01 a products:JeonseLoanProduct ;
+    market:disclosureMonth "202608" ;
+    market:hasRateOption mktd:prdt_0019001_HB_RL_01_opt0 ;
+    market:joinWay "영업점,스마트폰" ;
+    market:maxLimitNote "임차보증금의 80% 이내" ;
+    market:sourceNote "샘플 픽스처(가상 은행) — 파이프라인 검증용" ;
+    products:hasProductCode "HB-RL-01" ;
+    products:hasProductName "한빛 전세자금대출" ;
+    products:isOfferedBy mktd:bank_0019001 .
+
+mktd:prdt_0019001_HB_SV_01 a products:InstallmentSavingsProduct ;
+    market:disclosureMonth "202608" ;
+    market:hasRateOption mktd:prdt_0019001_HB_SV_01_opt0,
+        mktd:prdt_0019001_HB_SV_01_opt1 ;
+    market:joinMember "실명의 개인" ;
+    market:joinWay "영업점,스마트폰" ;
+    market:preferentialCondition "자동이체 등록 시 연 0.3%p 우대" ;
+    market:sourceNote "샘플 픽스처(가상 은행) — 파이프라인 검증용" ;
+    products:hasProductCode "HB-SV-01" ;
+    products:hasProductName "한빛 차곡차곡 적금" ;
+    products:isOfferedBy mktd:bank_0019001 .
+
+mktd:prdt_0019001_HB_TD_01 a products:TimeDepositProduct ;
+    market:disclosureMonth "202608" ;
+    market:hasRateOption mktd:prdt_0019001_HB_TD_01_opt0,
+        mktd:prdt_0019001_HB_TD_01_opt1 ;
+    market:joinMember "실명의 개인" ;
+    market:joinWay "영업점,인터넷,스마트폰" ;
+    market:preferentialCondition "급여이체 실적 보유 시 연 0.3%p, 첫 거래 고객 연 0.2%p 우대" ;
+    market:sourceNote "샘플 픽스처(가상 은행) — 파이프라인 검증용" ;
+    products:hasProductCode "HB-TD-01" ;
+    products:hasProductName "한빛 으뜸 정기예금" ;
+    products:isOfferedBy mktd:bank_0019001 .
+
+mktd:prdt_0019001_HB_TD_02 a products:TimeDepositProduct ;
+    market:disclosureMonth "202608" ;
+    market:hasRateOption mktd:prdt_0019001_HB_TD_02_opt2 ;
+    market:joinMember "실명의 개인" ;
+    market:joinWay "스마트폰" ;
+    market:maxLimitNote "100000000" ;
+    market:preferentialCondition "모바일 앱 가입 시 연 0.2%p 우대" ;
+    market:sourceNote "샘플 픽스처(가상 은행) — 파이프라인 검증용" ;
+    products:hasProductCode "HB-TD-02" ;
+    products:hasProductName "한빛 디지털 정기예금" ;
+    products:isOfferedBy mktd:bank_0019001 .
+
+mktd:prdt_0019002_MR_CL_01 a products:CreditLoanProduct ;
+    market:disclosureMonth "202608" ;
+    market:hasRateOption mktd:prdt_0019002_MR_CL_01_opt0 ;
+    market:joinWay "인터넷,스마트폰" ;
+    market:sourceNote "샘플 픽스처(가상 은행) — 파이프라인 검증용" ;
+    products:hasProductCode "MR-CL-01" ;
+    products:hasProductName "미르 직장인 신용대출" ;
+    products:isOfferedBy mktd:bank_0019002 .
+
+mktd:prdt_0019002_MR_ML_01 a products:MortgageLoanProduct ;
+    market:disclosureMonth "202608" ;
+    market:hasRateOption mktd:prdt_0019002_MR_ML_01_opt2 ;
+    market:joinWay "영업점" ;
+    market:maxLimitNote "담보가액의 최대 60%" ;
+    market:sourceNote "샘플 픽스처(가상 은행) — 파이프라인 검증용" ;
+    products:hasProductCode "MR-ML-01" ;
+    products:hasProductName "미르 주택담보대출" ;
+    products:isOfferedBy mktd:bank_0019002 .
+
+mktd:prdt_0019002_MR_SV_01 a products:InstallmentSavingsProduct ;
+    market:disclosureMonth "202608" ;
+    market:hasRateOption mktd:prdt_0019002_MR_SV_01_opt2,
+        mktd:prdt_0019002_MR_SV_01_opt3 ;
+    market:joinMember "제한없음" ;
+    market:joinWay "인터넷,스마트폰" ;
+    market:maxLimitNote "30000000" ;
+    market:preferentialCondition "마케팅 동의 시 연 0.1%p 우대" ;
+    market:sourceNote "샘플 픽스처(가상 은행) — 파이프라인 검증용" ;
+    products:hasProductCode "MR-SV-01" ;
+    products:hasProductName "미르 자유적금" ;
+    products:isOfferedBy mktd:bank_0019002 .
+
+mktd:prdt_0019002_MR_TD_01 a products:TimeDepositProduct ;
+    market:disclosureMonth "202608" ;
+    market:hasRateOption mktd:prdt_0019002_MR_TD_01_opt3,
+        mktd:prdt_0019002_MR_TD_01_opt4 ;
+    market:joinMember "제한없음" ;
+    market:joinWay "영업점,인터넷" ;
+    market:preferentialCondition "비대면 가입 시 연 0.15%p 우대" ;
+    market:sourceNote "샘플 픽스처(가상 은행) — 파이프라인 검증용" ;
+    products:hasProductCode "MR-TD-01" ;
+    products:hasProductName "미르 정기예금" ;
+    products:isOfferedBy mktd:bank_0019002 .
+
+mktd:prdt_0019003_GS_CL_01 a products:OverdraftProduct ;
+    market:disclosureMonth "202608" ;
+    market:hasRateOption mktd:prdt_0019003_GS_CL_01_opt1 ;
+    market:joinWay "스마트폰" ;
+    market:sourceNote "샘플 픽스처(가상 은행) — 파이프라인 검증용" ;
+    products:hasProductCode "GS-CL-01" ;
+    products:hasProductName "강산 마이너스통장" ;
+    products:isOfferedBy mktd:bank_0019003 .
+
+mktd:prdt_0019003_GS_ML_01 a products:MortgageLoanProduct ;
+    market:disclosureMonth "202608" ;
+    market:hasRateOption mktd:prdt_0019003_GS_ML_01_opt3 ;
+    market:joinWay "영업점,스마트폰" ;
+    market:maxLimitNote "담보가액의 최대 70%" ;
+    market:sourceNote "샘플 픽스처(가상 은행) — 파이프라인 검증용" ;
+    products:hasProductCode "GS-ML-01" ;
+    products:hasProductName "강산 고정금리 모기지론" ;
+    products:isOfferedBy mktd:bank_0019003 .
+
+mktd:prdt_0019003_GS_TD_01 a products:TimeDepositProduct ;
+    market:disclosureMonth "202608" ;
+    market:hasRateOption mktd:prdt_0019003_GS_TD_01_opt5 ;
+    market:joinMember "실명의 개인" ;
+    market:joinWay "영업점,인터넷,스마트폰,전화(텔레뱅킹)" ;
+    market:maxLimitNote "500000000" ;
+    market:preferentialCondition "연금수급 고객 연 0.4%p, 장기거래 고객 연 0.1%p 우대" ;
+    market:sourceNote "샘플 픽스처(가상 은행) — 파이프라인 검증용" ;
+    products:hasProductCode "GS-TD-01" ;
+    products:hasProductName "강산 플러스 정기예금" ;
+    products:isOfferedBy mktd:bank_0019003 .
+
+mktd:prdt_0019003_GS_TD_02 a products:TimeDepositProduct ;
+    market:disclosureMonth "202608" ;
+    market:hasRateOption mktd:prdt_0019003_GS_TD_02_opt6 ;
+    market:joinMember "만 19세~34세 개인" ;
+    market:joinWay "스마트폰" ;
+    market:maxLimitNote "50000000" ;
+    market:preferentialCondition "만 34세 이하 청년 연 0.5%p 우대" ;
+    market:sourceNote "샘플 픽스처(가상 은행) — 파이프라인 검증용" ;
+    products:hasProductCode "GS-TD-02" ;
+    products:hasProductName "강산 청년 정기예금" ;
+    products:isOfferedBy mktd:bank_0019003 .
+
+mktd:prdt_0019001_HB_ML_01_opt0 a market:LendRateOption ;
+    market:lendRateAvg 4.62 ;
+    market:lendRateMax 5.35 ;
+    market:lendRateMin 4.05 ;
+    market:lendRateTypeName "변동금리" ;
+    market:mortgageTypeName "아파트" ;
+    market:repaymentTypeName "분할상환방식" .
+
+mktd:prdt_0019001_HB_ML_01_opt1 a market:LendRateOption ;
+    market:lendRateAvg 4.85 ;
+    market:lendRateMax 5.55 ;
+    market:lendRateMin 4.25 ;
+    market:lendRateTypeName "변동금리" ;
+    market:mortgageTypeName "아파트외" ;
+    market:repaymentTypeName "분할상환방식" .
+
+mktd:prdt_0019001_HB_RL_01_opt0 a market:LendRateOption ;
+    market:lendRateAvg 4.3 ;
+    market:lendRateMax 4.95 ;
+    market:lendRateMin 3.85 ;
+    market:lendRateTypeName "변동금리" ;
+    market:repaymentTypeName "만기일시상환방식" .
+
+mktd:prdt_0019001_HB_SV_01_opt0 a market:RateOption ;
+    market:baseRateValue 3.5 ;
+    market:interestCalcType "단리" ;
+    market:maxPreferentialRateValue 4.0 ;
+    market:reserveType "자유적립식" ;
+    market:termMonths 12 .
+
+mktd:prdt_0019001_HB_SV_01_opt1 a market:RateOption ;
+    market:baseRateValue 3.3 ;
+    market:interestCalcType "단리" ;
+    market:maxPreferentialRateValue 3.8 ;
+    market:reserveType "자유적립식" ;
+    market:termMonths 36 .
+
+mktd:prdt_0019001_HB_TD_01_opt0 a market:RateOption ;
+    market:baseRateValue 3.1 ;
+    market:interestCalcType "단리" ;
+    market:maxPreferentialRateValue 3.6 ;
+    market:termMonths 12 .
+
+mktd:prdt_0019001_HB_TD_01_opt1 a market:RateOption ;
+    market:baseRateValue 3.0 ;
+    market:interestCalcType "단리" ;
+    market:maxPreferentialRateValue 3.5 ;
+    market:termMonths 24 .
+
+mktd:prdt_0019001_HB_TD_02_opt2 a market:RateOption ;
+    market:baseRateValue 3.25 ;
+    market:interestCalcType "단리" ;
+    market:maxPreferentialRateValue 3.45 ;
+    market:termMonths 12 .
+
+mktd:prdt_0019002_MR_CL_01_opt0 a market:LendRateOption ;
+    market:lendRateAvg 5.9 .
+
+mktd:prdt_0019002_MR_ML_01_opt2 a market:LendRateOption ;
+    market:lendRateAvg 4.78 ;
+    market:lendRateMax 5.6 ;
+    market:lendRateMin 4.15 ;
+    market:lendRateTypeName "변동금리" ;
+    market:mortgageTypeName "아파트" ;
+    market:repaymentTypeName "만기일시상환방식" .
+
+mktd:prdt_0019002_MR_SV_01_opt2 a market:RateOption ;
+    market:baseRateValue 3.6 ;
+    market:interestCalcType "단리" ;
+    market:maxPreferentialRateValue 3.85 ;
+    market:reserveType "자유적립식" ;
+    market:termMonths 12 .
+
+mktd:prdt_0019002_MR_SV_01_opt3 a market:RateOption ;
+    market:baseRateValue 3.45 ;
+    market:interestCalcType "단리" ;
+    market:maxPreferentialRateValue 3.7 ;
+    market:reserveType "정액적립식" ;
+    market:termMonths 36 .
+
+mktd:prdt_0019002_MR_TD_01_opt3 a market:RateOption ;
+    market:baseRateValue 3.2 ;
+    market:interestCalcType "단리" ;
+    market:maxPreferentialRateValue 3.35 ;
+    market:termMonths 12 .
+
+mktd:prdt_0019002_MR_TD_01_opt4 a market:RateOption ;
+    market:baseRateValue 3.05 ;
+    market:interestCalcType "복리" ;
+    market:maxPreferentialRateValue 3.2 ;
+    market:termMonths 36 .
+
+mktd:prdt_0019003_GS_CL_01_opt1 a market:LendRateOption ;
+    market:lendRateAvg 6.45 .
+
+mktd:prdt_0019003_GS_ML_01_opt3 a market:LendRateOption ;
+    market:lendRateAvg 4.4 ;
+    market:lendRateMax 5.1 ;
+    market:lendRateMin 3.95 ;
+    market:lendRateTypeName "고정금리" ;
+    market:mortgageTypeName "아파트" ;
+    market:repaymentTypeName "분할상환방식" .
+
+mktd:prdt_0019003_GS_TD_01_opt5 a market:RateOption ;
+    market:baseRateValue 3.15 ;
+    market:interestCalcType "단리" ;
+    market:maxPreferentialRateValue 3.65 ;
+    market:termMonths 12 .
+
+mktd:prdt_0019003_GS_TD_02_opt6 a market:RateOption ;
+    market:baseRateValue 3.4 ;
+    market:interestCalcType "단리" ;
+    market:maxPreferentialRateValue 3.9 ;
+    market:termMonths 12 .
+
+mktd:bank_0019002 a parties:Bank ;
+    market:finCompanyNo "0019002" ;
+    parties:hasName "미르은행" .
+
+mktd:bank_0019003 a parties:Bank ;
+    market:finCompanyNo "0019003" ;
+    parties:hasName "강산은행" .
+
+mktd:bank_0019001 a parties:Bank ;
+    market:finCompanyNo "0019001" ;
+    parties:hasName "한빛은행" .
+

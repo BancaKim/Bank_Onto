@@ -27,6 +27,8 @@ PREFIXES = {
     "transactions": f"{BANK_ONTO_NS}transactions/",
     "risk": f"{BANK_ONTO_NS}risk/",
     "ex": f"{BANK_ONTO_NS}examples/",
+    "market": f"{BANK_ONTO_NS}market/",
+    "mktd": f"{BANK_ONTO_NS}market/data/",
 }
 
 
@@ -70,15 +72,21 @@ class BankKnowledgeBase:
     """온톨로지 + 인스턴스 그래프에 대한 조회 계층."""
 
     def __init__(self, ontology_dir: Path | None = None, examples_dir: Path | None = None,
-                 include_examples: bool = True):
+                 include_examples: bool = True, data_dir: Path | None = None,
+                 include_data: bool = True):
         self.graph = Graph()
         ontology_dir = ontology_dir or REPO_ROOT / "ontology"
         examples_dir = examples_dir or REPO_ROOT / "examples"
+        data_dir = data_dir or REPO_ROOT / "data"
 
         for ttl in sorted(ontology_dir.glob("*.ttl")):
             self.graph.parse(ttl, format="turtle")
         if include_examples and examples_dir.exists():
             for ttl in sorted(examples_dir.glob("*.ttl")):
+                self.graph.parse(ttl, format="turtle")
+        # 시장 데이터 (ingest/fss_to_ttl.py 결과물) — 있으면 함께 로드
+        if include_data and data_dir.exists():
+            for ttl in sorted(data_dir.glob("*.ttl")):
                 self.graph.parse(ttl, format="turtle")
 
         for prefix, ns in PREFIXES.items():

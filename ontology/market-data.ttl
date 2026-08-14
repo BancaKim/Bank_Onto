@@ -1,0 +1,135 @@
+@prefix : <https://w3id.org/bank-onto/market/> .
+@prefix products: <https://w3id.org/bank-onto/products/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+#################################################################
+# 은행권 온톨로지 - 시장 데이터 모듈 (Market Data)
+# 금융감독원 금융상품통합비교공시("금융상품한눈에") Open API의
+# 실제 상품 공시 데이터를 적재하기 위한 확장 스키마.
+#################################################################
+
+<https://w3id.org/bank-onto/market/> a owl:Ontology ;
+    rdfs:label "은행권 온톨로지 - 시장 데이터 모듈"@ko , "Banking Ontology - Market Data Module"@en ;
+    dct:description "금융감독원 금융상품통합비교공시 Open API(finlife.fss.or.kr)의 상품·금리 공시 데이터를 온톨로지 인스턴스로 적재하기 위한 속성을 정의한다."@ko ;
+    owl:versionInfo "0.1.0" ;
+    owl:imports <https://w3id.org/bank-onto/products/> .
+
+#################################################################
+# 클래스: 금리 옵션
+#################################################################
+
+:RateOption a owl:Class ;
+    rdfs:label "수신 금리 옵션"@ko , "Deposit Rate Option"@en ;
+    skos:definition "수신상품의 저축기간별 금리 조건 (기본금리, 최고우대금리, 이자계산방식)."@ko .
+
+:LendRateOption a owl:Class ;
+    rdfs:label "여신 금리 옵션"@ko , "Lending Rate Option"@en ;
+    skos:definition "여신상품의 금리방식·상환방식·담보유형별 금리 구간 (최저/최고/평균)."@ko .
+
+#################################################################
+# 객체 속성
+#################################################################
+
+:hasRateOption a owl:ObjectProperty ;
+    rdfs:label "금리 옵션을 가진다"@ko , "has rate option"@en ;
+    rdfs:domain products:FinancialProduct .
+
+#################################################################
+# 데이터 속성: 공통
+#################################################################
+
+:disclosureMonth a owl:DatatypeProperty ;
+    rdfs:label "공시월"@ko , "disclosure month"@en ;
+    rdfs:range xsd:string .
+
+:finCompanyNo a owl:DatatypeProperty ;
+    rdfs:label "금융회사 코드"@ko , "financial company number"@en ;
+    rdfs:range xsd:string .
+
+:joinWay a owl:DatatypeProperty ;
+    rdfs:label "가입방법"@ko , "join way"@en ;
+    rdfs:range xsd:string .
+
+:joinMember a owl:DatatypeProperty ;
+    rdfs:label "가입대상"@ko , "join member"@en ;
+    rdfs:range xsd:string .
+
+:preferentialCondition a owl:DatatypeProperty ;
+    rdfs:label "우대조건"@ko , "preferential condition"@en ;
+    rdfs:range xsd:string .
+
+:maxLimitNote a owl:DatatypeProperty ;
+    rdfs:label "최고한도"@ko , "maximum limit note"@en ;
+    rdfs:range xsd:string .
+
+:sourceNote a owl:DatatypeProperty ;
+    rdfs:label "데이터 출처"@ko , "source note"@en ;
+    rdfs:range xsd:string .
+
+#################################################################
+# 데이터 속성: 수신 금리 옵션
+#################################################################
+
+:termMonths a owl:DatatypeProperty ;
+    rdfs:label "저축기간(개월)"@ko , "term in months"@en ;
+    rdfs:domain :RateOption ;
+    rdfs:range xsd:integer .
+
+:baseRateValue a owl:DatatypeProperty ;
+    rdfs:label "기본금리(연 %)"@ko , "base rate (%)"@en ;
+    rdfs:domain :RateOption ;
+    rdfs:range xsd:decimal .
+
+:maxPreferentialRateValue a owl:DatatypeProperty ;
+    rdfs:label "최고우대금리(연 %)"@ko , "max preferential rate (%)"@en ;
+    rdfs:domain :RateOption ;
+    rdfs:range xsd:decimal .
+
+:interestCalcType a owl:DatatypeProperty ;
+    rdfs:label "이자계산방식"@ko , "interest calculation type"@en ;
+    rdfs:range xsd:string ;
+    skos:definition "단리 또는 복리."@ko .
+
+:reserveType a owl:DatatypeProperty ;
+    rdfs:label "적립방식"@ko , "reserve type"@en ;
+    rdfs:range xsd:string ;
+    skos:definition "정액적립식 또는 자유적립식 (적금 상품)."@ko .
+
+#################################################################
+# 데이터 속성: 여신 금리 옵션
+#################################################################
+
+:lendRateTypeName a owl:DatatypeProperty ;
+    rdfs:label "대출금리유형"@ko , "lending rate type"@en ;
+    rdfs:domain :LendRateOption ;
+    rdfs:range xsd:string ;
+    skos:definition "고정금리 또는 변동금리."@ko .
+
+:repaymentTypeName a owl:DatatypeProperty ;
+    rdfs:label "대출상환유형"@ko , "repayment type"@en ;
+    rdfs:domain :LendRateOption ;
+    rdfs:range xsd:string .
+
+:mortgageTypeName a owl:DatatypeProperty ;
+    rdfs:label "담보유형"@ko , "mortgage type"@en ;
+    rdfs:domain :LendRateOption ;
+    rdfs:range xsd:string .
+
+:lendRateMin a owl:DatatypeProperty ;
+    rdfs:label "최저 대출금리(연 %)"@ko , "min lending rate (%)"@en ;
+    rdfs:domain :LendRateOption ;
+    rdfs:range xsd:decimal .
+
+:lendRateMax a owl:DatatypeProperty ;
+    rdfs:label "최고 대출금리(연 %)"@ko , "max lending rate (%)"@en ;
+    rdfs:domain :LendRateOption ;
+    rdfs:range xsd:decimal .
+
+:lendRateAvg a owl:DatatypeProperty ;
+    rdfs:label "평균 대출금리(연 %)"@ko , "average lending rate (%)"@en ;
+    rdfs:domain :LendRateOption ;
+    rdfs:range xsd:decimal .

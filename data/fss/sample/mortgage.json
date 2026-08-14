@@ -1,0 +1,14 @@
+{
+ "_note": "가상 은행 샘플 픽스처 (mortgageLoanProductsSearch 스키마).",
+ "baseList": [
+  {"dcls_month": "202608", "fin_co_no": "0019001", "kor_co_nm": "한빛은행", "fin_prdt_cd": "HB-ML-01", "fin_prdt_nm": "한빛 내집마련 주택담보대출", "join_way": "영업점,인터넷", "loan_inci_expn": "인지세: 5억 초과 시 15만원(50% 부담)", "erly_rpay_fee": "3년 이내 상환금액의 1.2%", "dly_rate": "연체기간에 관계없이 대출금리+3%p (최고 연 12%)", "loan_lmt": "담보가액의 최대 70%"},
+  {"dcls_month": "202608", "fin_co_no": "0019002", "kor_co_nm": "미르은행", "fin_prdt_cd": "MR-ML-01", "fin_prdt_nm": "미르 주택담보대출", "join_way": "영업점", "loan_inci_expn": "인지세 고객부담 50%", "erly_rpay_fee": "3년 이내 상환금액의 1.4%", "dly_rate": "대출금리+3%p (최고 연 13%)", "loan_lmt": "담보가액의 최대 60%"},
+  {"dcls_month": "202608", "fin_co_no": "0019003", "kor_co_nm": "강산은행", "fin_prdt_cd": "GS-ML-01", "fin_prdt_nm": "강산 고정금리 모기지론", "join_way": "영업점,스마트폰", "loan_inci_expn": "인지세 50% 부담", "erly_rpay_fee": "3년 이내 상환금액의 1.0%", "dly_rate": "대출금리+3%p (최고 연 12%)", "loan_lmt": "담보가액의 최대 70%"}
+ ],
+ "optionList": [
+  {"dcls_month": "202608", "fin_co_no": "0019001", "fin_prdt_cd": "HB-ML-01", "mrtg_type": "A", "mrtg_type_nm": "아파트", "rpay_type": "D", "rpay_type_nm": "분할상환방식", "lend_rate_type": "C", "lend_rate_type_nm": "변동금리", "lend_rate_min": 4.05, "lend_rate_max": 5.35, "lend_rate_avg": 4.62},
+  {"dcls_month": "202608", "fin_co_no": "0019001", "fin_prdt_cd": "HB-ML-01", "mrtg_type": "E", "mrtg_type_nm": "아파트외", "rpay_type": "D", "rpay_type_nm": "분할상환방식", "lend_rate_type": "C", "lend_rate_type_nm": "변동금리", "lend_rate_min": 4.25, "lend_rate_max": 5.55, "lend_rate_avg": 4.85},
+  {"dcls_month": "202608", "fin_co_no": "0019002", "fin_prdt_cd": "MR-ML-01", "mrtg_type": "A", "mrtg_type_nm": "아파트", "rpay_type": "S", "rpay_type_nm": "만기일시상환방식", "lend_rate_type": "C", "lend_rate_type_nm": "변동금리", "lend_rate_min": 4.15, "lend_rate_max": 5.60, "lend_rate_avg": 4.78},
+  {"dcls_month": "202608", "fin_co_no": "0019003", "fin_prdt_cd": "GS-ML-01", "mrtg_type": "A", "mrtg_type_nm": "아파트", "rpay_type": "D", "rpay_type_nm": "분할상환방식", "lend_rate_type": "F", "lend_rate_type_nm": "고정금리", "lend_rate_min": 3.95, "lend_rate_max": 5.10, "lend_rate_avg": 4.40}
+ ]
+}

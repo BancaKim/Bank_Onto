@@ -1,0 +1,11 @@
+{
+ "_note": "가상 은행 샘플 픽스처 (creditLoanProductsSearch 스키마).",
+ "baseList": [
+  {"dcls_month": "202608", "fin_co_no": "0019002", "kor_co_nm": "미르은행", "fin_prdt_cd": "MR-CL-01", "fin_prdt_nm": "미르 직장인 신용대출", "join_way": "인터넷,스마트폰", "crdt_prdt_type": "1", "crdt_prdt_type_nm": "일반신용대출", "cb_name": "KCB"},
+  {"dcls_month": "202608", "fin_co_no": "0019003", "kor_co_nm": "강산은행", "fin_prdt_cd": "GS-CL-01", "fin_prdt_nm": "강산 마이너스통장", "join_way": "스마트폰", "crdt_prdt_type": "2", "crdt_prdt_type_nm": "마이너스한도대출", "cb_name": "NICE"}
+ ],
+ "optionList": [
+  {"dcls_month": "202608", "fin_co_no": "0019002", "fin_prdt_cd": "MR-CL-01", "crdt_prdt_type": "1", "crdt_lend_rate_type": "A", "crdt_lend_rate_type_nm": "대출금리", "crdt_grad_1": 4.95, "crdt_grad_4": 5.85, "crdt_grad_5": 6.40, "crdt_grad_6": 7.60, "crdt_grad_10": null, "crdt_grad_11": null, "crdt_grad_12": null, "crdt_grad_13": null, "crdt_grad_avg": 5.90},
+  {"dcls_month": "202608", "fin_co_no": "0019003", "fin_prdt_cd": "GS-CL-01", "crdt_prdt_type": "2", "crdt_lend_rate_type": "A", "crdt_lend_rate_type_nm": "대출금리", "crdt_grad_1": 5.45, "crdt_grad_4": 6.30, "crdt_grad_5": 6.95, "crdt_grad_6": 8.10, "crdt_grad_10": null, "crdt_grad_11": null, "crdt_grad_12": null, "crdt_grad_13": null, "crdt_grad_avg": 6.45}
+ ]
+}

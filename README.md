@@ -138,6 +138,28 @@ python eval/run_e2e.py              # LLM 답변 품질 비교 (ANTHROPIC_API_KE
 분류 완전 열거(top-k는 완전성 미보장), 조건 필터/집계(유사도는 조건 평가가 아님),
 환각 방지(답이 없어도 top-k를 반환). 자세한 해석과 공정성 한계는 리포트 참고.
 
+## 실데이터 적재: 금융감독원 상품 공시 (합법 소스)
+
+`ingest/`는 금융감독원 **금융상품통합비교공시 "금융상품한눈에" Open API**
+(finlife.fss.or.kr — 공시 데이터 활용을 위해 공식 제공되는 무료 API)에서
+전 은행의 실제 정기예금·적금·주택담보대출·전세자금대출·신용대출 상품을 받아
+온톨로지 인스턴스로 적재합니다. 은행 사이트 크롤링은 약관 위반 소지가 있어
+사용하지 않습니다.
+
+```bash
+export FSS_API_KEY=발급받은키          # finlife.fss.or.kr 에서 무료 발급
+python ingest/fss_client.py            # 공시 데이터 다운로드 → data/fss/
+python ingest/fss_to_ttl.py            # 온톨로지 인스턴스 변환 → data/market-instances.ttl
+python eval/run_market_eval.py         # 실무형 벤치마크 (질문·정답 자동 생성)
+```
+
+API 접근이 불가한 환경에서는 `python ingest/fss_to_ttl.py --sample` 로 가상 은행
+픽스처를 사용해 파이프라인을 검증할 수 있습니다. 실무형 벤치마크는 적재된 데이터에서
+질문과 정답을 SPARQL로 자동 계산하므로("12개월 정기예금 최고 우대금리는?",
+"고정금리 주담대만 골라줘" 등) 데이터가 갱신되면 벤치마크도 함께 갱신됩니다.
+샘플 기준 결과: [docs/market-benchmark-report.md](docs/market-benchmark-report.md)
+— 근거 재현율 벡터 59% vs 온톨로지 100%.
+
 ## 확장 로드맵
 
 - [ ] SHACL 제약(shape) 추가 — 데이터 품질 검증 강화
