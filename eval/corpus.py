@@ -1,0 +1,73 @@
+"""벡터 RAG 베이스라인용 코퍼스 생성.
+
+온톨로지의 모든 개체를 텍스트 문서로 직렬화(verbalize)한 뒤,
+전형적인 RAG 파이프라인처럼 고정 크기 청크로 분할한다.
+두 시스템(벡터/그래프)이 정확히 같은 지식에서 출발하도록 보장하는 역할.
+"""
+from __future__ import annotations
+
+from rdflib import BNode, Literal, URIRef
+from rdflib.namespace import OWL, RDFS, SKOS
+
+from knowledge.kb import BANK_ONTO_NS, BankKnowledgeBase
+
+
+from knowledge.kb import PREFIXES
+from rdflib import URIRef as _URIRef
+
+_NAME_PREDICATES = (
+    _URIRef(PREFIXES["parties"] + "hasName"),
+    _URIRef(PREFIXES["products"] + "hasProductName"),
+)
+
+
+def label_of(kb: BankKnowledgeBase, node) -> str:
+    """한국어 레이블 우선, 없으면 고유명(hasName 등), 최후에 qname."""
+    if isinstance(node, Literal):
+        return str(node)
+    labels = list(kb.graph.objects(node, RDFS.label))
+    ko = [str(lbl) for lbl in labels if getattr(lbl, "language", None) == "ko"]
+    if ko:
+        return ko[0]
+    if labels:
+        return str(labels[0])
+    for pred in _NAME_PREDICATES:
+        for name in kb.graph.objects(node, pred):
+            return str(name)
+    return kb._qname(node)
+
+
+def build_documents(kb: BankKnowledgeBase) -> list[str]:
+    """온톨로지의 모든 개체를 '개체당 하나의 텍스트 블록'으로 직렬화한다."""
+    docs = []
+    subjects = sorted(
+        {s for s in kb.graph.subjects() if isinstance(s, URIRef)
+         and str(s).startswith(BANK_ONTO_NS)},
+        key=str,
+    )
+    for subj in subjects:
+        lines = [f"## {label_of(kb, subj)} ({kb._qname(subj)})"]
+        definition = kb._definition(subj)
+        if definition:
+            lines.append(f"정의: {definition}")
+        for pred, obj in kb.graph.predicate_objects(subj):
+            if pred in (RDFS.label, SKOS.definition) or isinstance(obj, BNode):
+                continue
+            if obj in (OWL.Class, OWL.ObjectProperty, OWL.DatatypeProperty, OWL.Ontology):
+                continue
+            value = str(obj) if isinstance(obj, Literal) else label_of(kb, obj)
+            lines.append(f"- {label_of(kb, pred)}: {value}")
+        docs.append("\n".join(lines))
+    return docs
+
+
+def chunk_corpus(docs: list[str], size: int = 400, overlap: int = 80) -> list[str]:
+    """전형적 RAG 방식의 고정 크기 슬라이딩 윈도우 청킹."""
+    text = "\n\n".join(docs)
+    chunks = []
+    step = size - overlap
+    i = 0
+    while i < len(text):
+        chunks.append(text[i:i + size])
+        i += step
+    return chunks
