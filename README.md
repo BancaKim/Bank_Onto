@@ -37,12 +37,19 @@ FIBO는 EDM Council이 관리하는 금융산업 표준 온톨로지로, 도메�
 ```
 Bank_Onto/
 ├── ontology/          # 온톨로지 모듈 (.ttl)
+├── knowledge/         # 에이전트 Knowledge Layer
+│   ├── kb.py          #   BankKnowledgeBase: 검색·정의·계층·인스턴스·SPARQL 조회 API
+│   └── tools.py       #   Claude 에이전트 도구 6종 (@beta_tool)
+├── agent/
+│   └── bank_agent.py  # Claude API tool runner 기반 은행 상담 에이전트
 ├── examples/
 │   ├── sample-instances.ttl   # 가상 시나리오 인스턴스 (한빛은행 · 김민준)
 │   └── queries.sparql         # SPARQL 예시 쿼리 5종
 ├── scripts/
 │   ├── validate.py    # 구문·무결성·레이블 검증
 │   └── query.py       # 예시 쿼리 실행기
+├── tests/
+│   └── test_knowledge_layer.py  # Knowledge layer 테스트 (API 키 불필요)
 └── docs/
     └── architecture.md        # 설계 문서
 ```
@@ -50,14 +57,54 @@ Bank_Onto/
 ## 시작하기
 
 ```bash
-pip install rdflib
+pip install -r requirements.txt
 
 # 온톨로지 검증 (구문, 미정의 참조, 한국어 레이블 누락 검사)
 python scripts/validate.py
 
 # 예시 SPARQL 쿼리 실행
 python scripts/query.py
+
+# Knowledge layer 테스트 (API 키 불필요)
+python tests/test_knowledge_layer.py
 ```
+
+## 은행 에이전트 Knowledge Layer
+
+`knowledge/` 패키지는 온톨로지를 LLM 에이전트의 지식 계층으로 노출합니다.
+
+**`BankKnowledgeBase`** (`knowledge/kb.py`) — 온톨로지+인스턴스 그래프에 대한 조회 API:
+
+| 메서드 | 용도 |
+|---|---|
+| `search_concepts("대출")` | 한국어/영어 레이블·정의 부분 일치 검색 |
+| `get_concept("주택담보대출계약")` | 정의, 상위/하위 클래스, 상속 포함 관련 속성, FIBO 참조 |
+| `get_hierarchy("LoanProduct")` | 하위 분류 트리 ("어떤 종류의 대출이 있나?") |
+| `get_instances("Account")` | 클래스(하위 클래스 포함)의 인스턴스 목록 |
+| `describe_instance("ex:KimMinjun")` | 인스턴스의 모든 속성-값과 역참조 |
+| `run_sparql(query)` | 임의 SPARQL SELECT (프리픽스 자동 바인딩) |
+
+개념 이름은 qname(`loans:LTV`), 로컬명(`LTV`), 한국어 레이블(`담보인정비율(LTV)`) 어느 형태로도 해석됩니다.
+
+**Claude 에이전트 도구** (`knowledge/tools.py`) — 위 API를 Anthropic SDK tool runner용
+`@beta_tool` 함수 6종으로 노출: `search_banking_concepts`, `get_concept_details`,
+`get_class_hierarchy`, `list_instances`, `describe_instance`, `run_sparql_query`.
+
+**에이전트 실행** (`agent/bank_agent.py`):
+
+```bash
+export ANTHROPIC_API_KEY=...   # 또는 `ant auth login` 프로필
+
+# 단일 질문
+python agent/bank_agent.py "주택담보대출 받으려면 어떤 규제비율이 적용되나요?"
+
+# 대화형 모드
+python agent/bank_agent.py
+```
+
+에이전트는 시스템 프롬프트에 의해 은행 개념 답변을 온톨로지 조회 결과에 근거하도록
+제약되며, 근거 개념의 URI를 답변에 표기합니다. 자체 에이전트에 통합하려면
+`knowledge.tools.BANK_KB_TOOLS`를 tool runner의 `tools`에 전달하면 됩니다.
 
 [Protégé](https://protege.stanford.edu/)에서 `ontology/bank-onto.ttl`을 열면 전체 모듈을 탐색할 수 있습니다
 (로컬 파일 import를 위해 catalog 설정이 필요할 수 있습니다).
