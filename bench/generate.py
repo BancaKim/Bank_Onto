@@ -50,12 +50,43 @@ def fmt_rate(value) -> str:
     return f"{float(value):g}"
 
 
-def eul_reul(word: str) -> str:
-    """받침 유무에 따른 목적격 조사 선택 (한글이 아니면 '을(를)')."""
+def _batchim(word: str) -> bool | None:
     last = word[-1]
     if "가" <= last <= "힣":
-        return "을" if (ord(last) - ord("가")) % 28 else "를"
-    return "을(를)"
+        return bool((ord(last) - ord("가")) % 28)
+    return None
+
+
+def eul_reul(word: str) -> str:
+    """받침 유무에 따른 목적격 조사 선택 (한글이 아니면 '을(를)')."""
+    b = _batchim(word)
+    return "을(를)" if b is None else ("을" if b else "를")
+
+
+def i_ga(word: str) -> str:
+    b = _batchim(word)
+    return "이(가)" if b is None else ("이" if b else "가")
+
+
+def eun_neun(word: str) -> str:
+    b = _batchim(word)
+    return "은(는)" if b is None else ("은" if b else "는")
+
+
+def gwa_wa(word: str) -> str:
+    b = _batchim(word)
+    return "과(와)" if b is None else ("과" if b else "와")
+
+
+def pick(variants: list[str], *key_parts) -> str:
+    """문면 변형을 결정적으로 배정한다 (zlib.crc32 — PYTHONHASHSEED 무관).
+
+    정답·근거 산출 경로와 무관하게 질문 표면형만 바꾼다. 변형 문안은 수작업으로
+    작성·검수했으며 의미(판정 기준·단위·만기 조건)는 모든 변형에서 동일하다.
+    """
+    import zlib
+    idx = zlib.crc32(":".join(str(p) for p in key_parts).encode()) % len(variants)
+    return variants[idx]
 
 
 # ----------------------------------------------------------------------
@@ -118,10 +149,16 @@ def gen_base_rate(products):  # P1: 예금 12개월 기본금리 조회
         opt = term_option(p, 12)
         if opt and opt.get("intr_rate"):
             rate = fmt_rate(opt["intr_rate"])
+            question = pick([
+                f"{label(p)}의 12개월 만기 기본금리는 연 몇 %인가?",
+                f"{label(p)}에 12개월 만기로 가입하면 기본금리는 연 몇 %가 적용되는가?",
+                f"12개월 만기 기준으로 {label(p)}의 기본금리는 연 몇 %인가?",
+                f"{label(p)}의 1년(12개월) 만기 기본금리로 공시된 값은 연 몇 %인가?",
+            ], "base_rate", p["code"])
             out.append({
                 "template": "base_rate_lookup",
                 "category": "예금", "subcategory": "정기예금",
-                "question": f"{label(p)}의 12개월 만기 기본금리는 연 몇 %인가?",
+                "question": question,
                 "answer_type": "numeric", "answer": rate, "unit": "%",
                 "evidence": evidence_of(p, "intr_rate(12개월)", rate),
             })
@@ -135,10 +172,16 @@ def gen_max_rate(products):  # P3: 적금 최고우대금리 조회
         if opt and opt.get("intr_rate2"):
             months = opt.get("save_trm")
             rate = fmt_rate(opt["intr_rate2"])
+            question = pick([
+                f"{label(p)}의 {months}개월 만기 최고 우대금리는 연 몇 %인가?",
+                f"우대조건을 모두 충족하면 {label(p)}의 {months}개월 만기 금리는 최고 연 몇 %인가?",
+                f"{label(p)}에서 {months}개월 만기로 받을 수 있는 최고 우대금리는 연 몇 %인가?",
+                f"{months}개월 만기 기준 {label(p)}의 최고 우대금리로 공시된 값은?",
+            ], "max_rate", p["code"])
             out.append({
                 "template": "max_rate_lookup",
                 "category": "예금", "subcategory": "적금",
-                "question": f"{label(p)}의 {months}개월 만기 최고 우대금리는 연 몇 %인가?",
+                "question": question,
                 "answer_type": "numeric", "answer": rate, "unit": "%",
                 "evidence": evidence_of(p, f"intr_rate2({months}개월)", rate),
             })
@@ -156,11 +199,16 @@ def gen_rate_threshold(products):  # P2: 우대금리 임계 판정 (YES/NO 쌍)
         for probe, verdict in ((value - 0.2, "YES"), (value + 0.2, "NO")):
             if probe <= 0:
                 continue
+            question = pick([
+                f"{label(p)}의 {months}개월 만기 최고 우대금리는 연 {probe:.2f}% 이상인가?",
+                f"{months}개월 만기 기준, {label(p)}의 최고 우대금리가 연 {probe:.2f}% 이상인가?",
+                f"{label(p)}({months}개월 만기)의 최고 우대금리는 연 {probe:.2f}%보다 높거나 같은가?",
+                f"연 {probe:.2f}% 이상의 최고 우대금리를 {label(p)}의 {months}개월 만기에서 기대할 수 있는가?",
+            ], "rate_threshold", p["code"], verdict)
             out.append({
                 "template": "rate_threshold",
                 "category": cat, "subcategory": sub,
-                "question": (f"{label(p)}의 {months}개월 만기 최고 우대금리는 "
-                             f"연 {probe:.2f}% 이상인가?"),
+                "question": question,
                 "answer_type": "boolean", "answer": verdict,
                 "evidence": evidence_of(p, f"intr_rate2({months}개월)",
                                         fmt_rate(value)),
@@ -179,10 +227,16 @@ def gen_join_way(products):  # P4: 가입경로 판정 (YES/NO 쌍)
                                  (absent[0] if absent else None, "NO")):
             if channel is None:
                 continue
+            question = pick([
+                f"{label(p)}은(는) {channel} 경로로 가입할 수 있는가?",
+                f"{channel} 채널을 통해 {label(p)}에 가입할 수 있는가?",
+                f"{label(p)}의 가입 경로에 {channel}{i_ga(channel)} 포함되는가?",
+                f"{label(p)}은(는) {channel}{eul_reul(channel)} 통한 가입이 가능한 상품인가?",
+            ], "join_way", p["code"], channel)
             out.append({
                 "template": "join_way",
                 "category": cat, "subcategory": sub,
-                "question": f"{label(p)}은(는) {channel} 경로로 가입할 수 있는가?",
+                "question": question,
                 "answer_type": "boolean", "answer": verdict,
                 "evidence": evidence_of(p, "join_way", p["join_way"]),
             })
@@ -200,11 +254,15 @@ def gen_age_condition(products):  # P5: 가입연령 판정 (YES/NO 쌍)
         for probe, verdict in ((age + 3, "YES"), (age - 3, "NO")):
             if probe <= 0:
                 continue
+            question = pick([
+                f"만 {probe}세인 개인이 {label(p)}의 가입 연령 요건(연령 외 요건은 충족 가정)을 충족하는가?",
+                f"{label(p)}은(는) 만 {probe}세 개인이 가입할 수 있는 연령 요건인가? (연령 외 요건은 충족 가정)",
+                f"연령 요건만 볼 때, 만 {probe}세가 {label(p)}에 가입 가능한가? (그 외 요건은 충족 가정)",
+            ], "age", p["code"], verdict)
             out.append({
                 "template": "age_condition",
                 "category": cat, "subcategory": sub,
-                "question": (f"만 {probe}세인 개인이 {label(p)}의 가입 연령 요건"
-                             f"(연령 외 요건은 충족 가정)을 충족하는가?"),
+                "question": question,
                 "answer_type": "boolean", "answer": verdict,
                 "evidence": evidence_of(p, "join_member", p["join_member"]),
             })
@@ -219,10 +277,15 @@ def gen_max_limit(products):  # P6: 최고한도 조회
             continue
         cat, sub = KIND_META[p["kind"]]
         gold = f"{int(limit):,}원" if limit.isdigit() else limit
+        question = pick([
+            f"{label(p)}의 공시된 최고 한도는 얼마인가?",
+            f"{label(p)}의 최고 한도로 공시된 금액은 얼마인가?",
+            f"공시 기준으로 {label(p)}의 한도 상한은 얼마인가?",
+        ], "max_limit", p["code"])
         out.append({
             "template": "max_limit_lookup",
             "category": cat, "subcategory": sub,
-            "question": f"{label(p)}의 공시된 최고 한도는 얼마인가?",
+            "question": question,
             "answer_type": "span", "answer": gold,
             "evidence": evidence_of(p, "max_limit", limit),
         })
@@ -237,10 +300,15 @@ def gen_interest_type(products):  # P7: 이자계산방식 (단리/복리)
         if len(types) != 1:
             continue  # 단리·복리 둘 다 있으면 단답이 성립하지 않음
         cat, sub = KIND_META[p["kind"]]
+        question = pick([
+            f"{label(p)}의 공시된 이자 계산 방식은 단리인가 복리인가?",
+            f"{label(p)}은(는) 단리와 복리 중 어느 방식으로 이자를 계산하는가?",
+            f"이자 계산 방식(단리/복리) 기준으로 {label(p)}은(는) 어느 쪽인가?",
+        ], "calc_type", p["code"])
         out.append({
             "template": "interest_calc_type",
             "category": cat, "subcategory": sub,
-            "question": f"{label(p)}의 공시된 이자 계산 방식은 단리인가 복리인가?",
+            "question": question,
             "answer_type": "span", "answer": types.pop(),
             "evidence": evidence_of(p, "intr_rate_type_nm",
                                     p["options"][0].get("intr_rate_type_nm", "")),
@@ -262,11 +330,15 @@ def gen_loan_rate(products):  # P8: 담보유형·금리방식별 최저금리 �
                 continue
             seen.add(key)
             qual = f"{mtype} 담보 " if mtype else ""
+            question = pick([
+                f"{label(p)}의 {qual}{ltype} 방식 최저금리는 연 몇 %인가?",
+                f"{qual}{ltype} 조건에서 {label(p)} 상품이 공시한 최저금리는 연 몇 %인가?",
+                f"{label(p)}에서 {qual}{ltype} 방식으로 대출할 때 최저금리는 연 몇 %인가?",
+            ], "loan_min", p["code"], mtype, ltype)
             out.append({
                 "template": "loan_min_rate",
                 "category": cat, "subcategory": sub,
-                "question": (f"{label(p)}의 {qual}{ltype} 방식 최저금리는 "
-                             f"연 몇 %인가?"),
+                "question": question,
                 "answer_type": "numeric", "answer": fmt_rate(rate), "unit": "%",
                 "evidence": evidence_of(
                     p, f"lend_rate_min({mtype or '-'}/{ltype})", fmt_rate(rate)),
@@ -287,10 +359,15 @@ def gen_loan_rate_type(products):  # P9: 금리방식 취급 여부 (YES/NO 쌍)
                                    (absent[0] if absent else None, "NO")):
             if rate_type is None:
                 continue
+            question = pick([
+                f"{label(p)}에서 {rate_type} 방식을 선택할 수 있는가?",
+                f"{label(p)}의 금리 방식 옵션에 {rate_type}{i_ga(rate_type)} 있는가?",
+                f"{rate_type} 방식으로 {label(p)} 대출을 받는 것이 가능한가?",
+            ], "loan_type", p["code"], rate_type)
             out.append({
                 "template": "loan_rate_type",
                 "category": cat, "subcategory": sub,
-                "question": f"{label(p)}에서 {rate_type} 방식을 선택할 수 있는가?",
+                "question": question,
                 "answer_type": "boolean", "answer": verdict,
                 "evidence": evidence_of(
                     p, "lend_rate_type_nm", ", ".join(sorted(offered)) or "없음"),
@@ -304,11 +381,15 @@ def gen_credit_rate(products):  # P10: 신용대출 평균금리 조회
         for opt in p["options"]:
             if opt.get("crdt_lend_rate_type") == "A" and opt.get("crdt_grad_avg"):
                 rate = fmt_rate(opt["crdt_grad_avg"])
+                question = pick([
+                    f"{label(p)}의 공시된 평균 대출금리는 연 몇 %인가?",
+                    f"{label(p)}의 평균 금리는 공시 기준 연 몇 %인가?",
+                    f"공시상 {label(p)}의 평균 대출금리는 연 몇 %인가?",
+                ], "credit_avg", p["code"])
                 out.append({
                     "template": "credit_avg_rate",
                     "category": "대출", "subcategory": "신용대출",
-                    "question": (f"{label(p)}의 공시된 평균 대출금리는 "
-                                 f"연 몇 %인가?"),
+                    "question": question,
                     "answer_type": "numeric", "answer": rate, "unit": "%",
                     "evidence": evidence_of(p, "crdt_grad_avg", rate),
                 })
@@ -321,21 +402,148 @@ def gen_abstain(products):  # P11: 공시에 없는 항목 (보류가 정답)
     for p in products:
         cat, sub = KIND_META[p["kind"]]
         if not p["max_limit"].strip():
+            question = pick([
+                f"{label(p)}의 공시된 최고 한도 금액은 얼마인가?",
+                f"{label(p)}의 최고 한도는 공시에서 얼마로 확인되는가?",
+                f"{label(p)}의 한도 상한 금액을 공시에서 찾으면 얼마인가?",
+            ], "abstain_limit", p["code"])
             out.append({
                 "template": "abstain_missing_field",
                 "category": cat, "subcategory": sub,
-                "question": f"{label(p)}의 공시된 최고 한도 금액은 얼마인가?",
+                "question": question,
                 "answer_type": "abstain", "answer": "공시에 해당 정보 없음",
                 "evidence": evidence_of(p, "max_limit", "(공시값 없음)"),
             })
         elif not p["spcl_cnd"].strip():
+            question = pick([
+                f"{label(p)}의 공시된 우대금리 조건은 무엇인가?",
+                f"{label(p)}에 적용되는 우대금리 조건을 공시에서 찾으면 무엇인가?",
+                f"{label(p)}의 우대조건으로 공시된 내용은 무엇인가?",
+            ], "abstain_spcl", p["code"])
             out.append({
                 "template": "abstain_missing_field",
                 "category": cat, "subcategory": sub,
-                "question": f"{label(p)}의 공시된 우대금리 조건은 무엇인가?",
+                "question": question,
                 "answer_type": "abstain", "answer": "공시에 해당 정보 없음",
                 "evidence": evidence_of(p, "spcl_cnd", "(공시값 없음)"),
             })
+    return out
+
+
+KIND_KO = {"deposit": "정기예금", "saving": "적금",
+           "mortgage": "주택담보대출", "rent": "전세자금대출", "credit": "신용대출"}
+
+
+def _rate12(p: dict):
+    opt = term_option(p, 12)
+    return float(opt["intr_rate2"]) if opt and opt.get("intr_rate2") else None
+
+
+def gen_compare_two(products):  # P12: 동일 은행 두 상품 금리 비교 (2지선다)
+    out = []
+    by_bank_kind: dict[tuple, list] = {}
+    for p in (x for x in products if x["kind"] in ("deposit", "saving")):
+        if _rate12(p) is not None:
+            by_bank_kind.setdefault((p["bank"], p["kind"]), []).append(p)
+    for (bank, kind), items in sorted(by_bank_kind.items()):
+        for a, b in zip(items, items[1:]):
+            ra, rb = _rate12(a), _rate12(b)
+            if ra == rb:
+                continue
+            winner = a if ra > rb else b
+            question = pick([
+                f"{bank}의 '{a['name']}'{gwa_wa(a['name'])} '{b['name']}' 중 12개월 만기 최고 우대금리가 더 높은 상품은?",
+                f"12개월 만기 최고 우대금리 기준으로, {bank}의 '{a['name']}'{gwa_wa(a['name'])} '{b['name']}' 중 어느 상품이 유리한가?",
+                f"{bank}의 두 상품 '{a['name']}'{gwa_wa(a['name'])} '{b['name']}'{eul_reul(b['name'])} 비교하면 12개월 만기 최고 우대금리가 높은 쪽은?",
+            ], "compare", a["code"], b["code"])
+            out.append({
+                "template": "compare_two_products",
+                "category": "예금", "subcategory": KIND_KO[kind],
+                "question": question,
+                "answer_type": "span", "answer": winner["name"],
+                "evidence": {"source": FSS_SOURCE,
+                             "locator": f"{bank}:{a['code']},{b['code']}:intr_rate2(12개월)",
+                             "text": f"{a['name']}={fmt_rate(ra)}; {b['name']}={fmt_rate(rb)}"},
+            })
+    return out
+
+
+def gen_agg_count(products):  # P13: 은행별 상품 수 집계 (COUNT)
+    out = []
+    by_bank_kind: dict[tuple, list] = {}
+    for p in (x for x in products if x["kind"] in ("deposit", "saving",
+                                                   "mortgage", "rent")):
+        by_bank_kind.setdefault((p["bank"], p["kind"]), []).append(p)
+    for (bank, kind), items in sorted(by_bank_kind.items()):
+        if len(items) < 2:
+            continue  # 1개짜리 집계는 사실상 조회형
+        names = sorted(p["name"] for p in items)
+        question = pick([
+            f"{bank}{i_ga(bank)} 공시한 {KIND_KO[kind]} 상품은 모두 몇 개인가?",
+            f"현재 공시 기준으로 {bank}의 {KIND_KO[kind]} 상품 수는 몇 개인가?",
+            f"{bank}의 {KIND_KO[kind]} 상품을 전부 세면 몇 개인가?",
+        ], "count", bank, kind)
+        out.append({
+            "template": "agg_count",
+            "category": KIND_META[kind][0], "subcategory": KIND_KO[kind],
+            "question": question,
+            "answer_type": "numeric", "answer": str(len(items)), "unit": "개",
+            "evidence": {"source": FSS_SOURCE,
+                         "locator": f"{bank}:{kind}:baseList",
+                         "text": "; ".join(names)},
+        })
+    return out
+
+
+def gen_agg_superlative(products):  # P14: 전체 은행 최고/최저 (정렬)
+    out = []
+    for kind in ("deposit", "saving"):
+        candidates = [(p, _rate12(p)) for p in products
+                      if p["kind"] == kind and _rate12(p) is not None]
+        if not candidates:
+            continue
+        top_rate = max(r for _, r in candidates)
+        winners = sorted(p["name"] for p, r in candidates if r == top_rate)
+        if len(winners) != 1:
+            continue  # 공동 1위면 단답이 성립하지 않음
+        question = pick([
+            f"전체 은행의 {KIND_KO[kind]} 중 12개월 만기 최고 우대금리가 가장 높은 상품은 무엇인가?",
+            f"공시된 모든 은행 {KIND_KO[kind]}에서 12개월 만기 최고 우대금리 1위 상품은?",
+        ], "superlative", kind)
+        out.append({
+            "template": "agg_superlative",
+            "category": "예금", "subcategory": KIND_KO[kind],
+            "question": question,
+            "answer_type": "span", "answer": winners[0],
+            "evidence": {"source": FSS_SOURCE,
+                         "locator": f"전체:{kind}:max(intr_rate2, 12개월)",
+                         "text": f"{winners[0]}={fmt_rate(top_rate)}"},
+        })
+    return out
+
+
+def gen_enumerate(products):  # P15: 은행별 상품 완전 열거
+    out = []
+    by_bank_kind: dict[tuple, list] = {}
+    for p in (x for x in products if x["kind"] in ("deposit", "saving")):
+        by_bank_kind.setdefault((p["bank"], p["kind"]), []).append(p)
+    for (bank, kind), items in sorted(by_bank_kind.items()):
+        if not 2 <= len(items) <= 5:
+            continue  # 너무 많으면 단답 채점이 무의미
+        names = sorted(p["name"] for p in items)
+        question = pick([
+            f"{bank}의 {KIND_KO[kind]} 상품을 모두 나열하면?",
+            f"{bank}{i_ga(bank)} 공시한 {KIND_KO[kind]} 상품 전체 목록은?",
+        ], "enumerate", bank, kind)
+        out.append({
+            "template": "enumerate_products",
+            "category": "예금", "subcategory": KIND_KO[kind],
+            "question": question,
+            "answer_type": "span", "answer": ", ".join(names),
+            "evidence": {"source": FSS_SOURCE,
+                         "locator": f"{bank}:{kind}:baseList",
+                         "text": "; ".join(names)},
+        })
     return out
 
 
@@ -371,11 +579,16 @@ def gen_article_locate(laws):  # R1: 조문 위치형
         unique = [(t, arts[0]) for t, arts in sorted(titles.items())
                   if len(arts) == 1]
         for title, art in unique[:R1_QUOTA.get(law["name"], 10)]:
+            question = pick([
+                f"「{law['name']}」에서 '{title}'{eul_reul(title)} 규정한 조문은 몇 조인가?",
+                f"'{title}' 조항은 「{law['name']}」의 몇 조에 있는가?",
+                f"「{law['name']}」의 어느 조문이 '{title}'{eul_reul(title)} 다루는가?",
+                f"「{law['name']}」에서 '{title}' 관련 규정은 제 몇 조인가?",
+            ], "article", law["slug"], art["label"])
             out.append({
                 "template": "article_locate",
                 "category": law["category"], "subcategory": law["name"],
-                "question": (f"「{law['name']}」에서 '{title}'{eul_reul(title)} "
-                             f"규정한 조문은 몇 조인가?"),
+                "question": question,
                 "answer_type": "span", "answer": art["label"],
                 "evidence": law_evidence(law, art),
             })
@@ -400,8 +613,14 @@ def gen_definitions(laws):  # R2: 정의형 (용어 역조회)
                 # "다음 각 목의 …" 류는 참조문이지 정의가 아님 (용어 특정 불가)
                 if "다음 각" in definition or len(definition) < 25:
                     continue
-                question = (f"「{law['name']}」 {art['label']}(정의)에서 "
-                            f"“{definition}”(으)로 정의되는 용어는 무엇인가?")
+                # 중첩 "말한다"로 정의가 괄호 중간에서 잘린 경우 제외
+                if definition.count("(") != definition.count(")"):
+                    continue
+                question = pick([
+                    f"「{law['name']}」 {art['label']}(정의)에서 “{definition}”(으)로 정의되는 용어는 무엇인가?",
+                    f"「{law['name']}」 {art['label']}에서 “{definition}”(이)라고 정의된 용어는 무엇인가?",
+                    f"다음은 「{law['name']}」 {art['label']}의 정의 조문이다: “{definition}” — 이 정의가 가리키는 용어는?",
+                ], "definition", law["slug"], term)
                 # 정답 용어가 질문 문면(정의문·법령명 포함)에 노출되면 제외
                 if term in question:
                     continue
@@ -426,13 +645,19 @@ def gen_law_meta(laws):  # R3: 법령 메타형 (시행일·소관부처·법종
         out.append({
             "template": "law_meta", "category": law["category"],
             "subcategory": law["name"],
-            "question": f"「{law['name']}」 현행 법령의 시행일자는 언제인가?",
+            "question": pick([
+                f"「{law['name']}」 현행 법령의 시행일자는 언제인가?",
+                f"현행 「{law['name']}」은(는) 언제부터 시행되는가?",
+            ], "meta_eff", law["slug"]),
             "answer_type": "span", "answer": eff_fmt, "evidence": meta_ev,
         })
         out.append({
             "template": "law_meta", "category": law["category"],
             "subcategory": law["name"],
-            "question": f"「{law['name']}」의 소관부처는 어디인가?",
+            "question": pick([
+                f"「{law['name']}」의 소관부처는 어디인가?",
+                f"「{law['name']}」{eul_reul(law['name'])} 소관하는 정부 부처는?",
+            ], "meta_min", law["slug"]),
             "answer_type": "span", "answer": law["ministry"], "evidence": meta_ev,
         })
     return out
@@ -452,11 +677,15 @@ def gen_penalties(laws):  # R4: 벌칙 수치형
                              key=lambda y: -int(y))
             fines = PENALTY_FINE.findall(art["text"])
             if prisons:
+                question = pick([
+                    f"「{law['name']}」 {art['label']}({art['title']})에서 정한 징역형의 최고 상한은 몇 년인가?",
+                    f"「{law['name']}」 {art['label']}({art['title']})에 따르면 징역은 최대 몇 년까지인가?",
+                    f"「{law['name']}」 {art['label']}({art['title']})의 징역형 상한은 몇 년인가?",
+                ], "prison", law["slug"], art["label"])
                 out.append({
                     "template": "penalty_amount",
                     "category": law["category"], "subcategory": law["name"],
-                    "question": (f"「{law['name']}」 {art['label']}({art['title']})"
-                                 f"에서 정한 징역형의 최고 상한은 몇 년인가?"),
+                    "question": question,
                     "answer_type": "numeric", "answer": prisons[0], "unit": "년",
                     "evidence": law_evidence(law, art),
                 })
@@ -464,11 +693,15 @@ def gen_penalties(laws):  # R4: 벌칙 수치형
                 amounts = [a for a, _ in fines]
                 kind = fines[0][1]
                 top = max(amounts, key=lambda a: _won(a))
+                question = pick([
+                    f"「{law['name']}」 {art['label']}({art['title']})에서 정한 {kind}의 최고 상한은 얼마인가?",
+                    f"「{law['name']}」 {art['label']}({art['title']})에 따르면 {kind}{eun_neun(kind)} 최대 얼마까지인가?",
+                    f"「{law['name']}」 {art['label']}({art['title']})의 {kind} 상한 금액은?",
+                ], "fine", law["slug"], art["label"])
                 out.append({
                     "template": "penalty_amount",
                     "category": law["category"], "subcategory": law["name"],
-                    "question": (f"「{law['name']}」 {art['label']}({art['title']})"
-                                 f"에서 정한 {kind}의 최고 상한은 얼마인가?"),
+                    "question": question,
                     "answer_type": "span", "answer": top,
                     "evidence": law_evidence(law, art),
                 })
@@ -520,10 +753,12 @@ def import_temporal(path: Path):  # R5: KR-FinReg-QA 법령 시간형 이식
 # ----------------------------------------------------------------------
 # 합계 700 (가용량 실측 기반; boolean 템플릿은 YES/NO 쌍 보존 위해 짝수)
 PRODUCT_QUOTA = [
-    (gen_base_rate, 38), (gen_max_rate, 58), (gen_rate_threshold, 120),
-    (gen_join_way, 100), (gen_age_condition, 32), (gen_max_limit, 50),
-    (gen_interest_type, 50), (gen_loan_rate, 80), (gen_loan_rate_type, 80),
+    (gen_base_rate, 38), (gen_max_rate, 48), (gen_rate_threshold, 100),
+    (gen_join_way, 60), (gen_age_condition, 32), (gen_max_limit, 50),
+    (gen_interest_type, 40), (gen_loan_rate, 80), (gen_loan_rate_type, 60),
     (gen_credit_rate, 32), (gen_abstain, 60),
+    (gen_compare_two, 40), (gen_agg_count, 36), (gen_agg_superlative, 1),
+    (gen_enumerate, 23),
 ]
 PRODUCT_OVERFLOW = ["rate_threshold", "join_way", "loan_rate_type"]
 

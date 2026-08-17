@@ -44,6 +44,16 @@ def gold_strings(row: dict) -> list[str]:
     evidence_text = row["evidence"].get("text", "")
 
     if row["qtype"] == "공시형":
+        # 집계·비교형: 결정적 근거 = 관련된 모든 상품의 값 (evidence.text에
+        # '; '로 나열됨) — 전체가 컨텍스트에 있어야 셈·비교·열거가 가능하다
+        if template in ("agg_count", "enumerate_products"):
+            return [part.strip() for part in evidence_text.split(";")]
+        if template in ("compare_two_products", "agg_superlative"):
+            gold = []
+            for part in evidence_text.split(";"):
+                name, _, rate = part.strip().rpartition("=")
+                gold += [name, rate]  # 상품명과 금리값 각각이 근거
+            return gold
         product = row["evidence"]["locator"].split(":")[0]  # 은행명
         name_m = re.search(r"'([^']+)'", row["question"])
         product_name = name_m.group(1) if name_m else product
@@ -171,15 +181,16 @@ def main() -> int:
     md.append("")
     md.append("""## 해석과 한계
 
-1. **벡터 RAG의 실패는 수치 조회형에 집중된다** (penalty 57%, credit_avg 52%,
-   law_meta 57%, rate_threshold 69%): 질문과 어휘가 겹치는 청크는 찾아도 정답
-   수치가 있는 바로 그 청크를 top-5 안에 못 넣는다. 코퍼스가 커질수록(법령
-   1,025개 조문 추가) 이 희석은 심해진다 — 같은 벤치마크에서 법령 적재 전후로
-   벡터 성적이 하락한 것이 그 증거다.
-2. **이 벤치마크는 단일 문서 조회형 위주라 LPG와 온톨로지의 격차가 작다**
-   (98% vs 99%). 두 시스템의 격차는 다중 홉·완전 열거·집계가 있는 큐레이션·시장
-   벤치마크에서 벌어진다 (LPG 86%/78% vs 온톨로지 100%/100%). 남은 공동 실패
-   지점(loan_rate_type 87%)은 '주택담보대출'처럼 여러 은행이 같은 상품명을 쓰는
+1. **벡터 RAG의 실패는 수치 조회와 다중 문서 종합에 집중된다**: 수치 조회
+   (penalty 57%, law_meta 50%, rate_threshold 67%)에서는 어휘가 겹치는 청크를
+   찾아도 정답 수치가 있는 그 청크를 top-5에 못 넣고, v2.1에서 추가된 집계 축
+   에서는 붕괴한다 (COUNT 30%, 완전 열거 31%) — 셈과 열거에 필요한 근거가
+   여러 문서에 흩어져 있어 top-k 청킹으로는 구조적으로 모을 수 없기 때문이다.
+   그래프 계열은 같은 문항에서 100%를 유지한다.
+2. **단일 상품 조회형에서는 LPG와 온톨로지가 동률에 가깝다** (98% vs 99%).
+   두 시스템의 격차는 스키마 의미론이 필요한 큐레이션·시장 벤치마크에서
+   벌어진다 (LPG 86%/78% vs 온톨로지 100%/100%). 남은 공동 실패 지점
+   (loan_rate_type 88%)은 '주택담보대출'처럼 여러 은행이 같은 상품명을 쓰는
    경우의 개체 중의성 — 시드 매칭이 은행-상품 연결을 활용하지 못하는 한계다.
 3. **컨텍스트 크기 격차에 주의**: 그래프 계열은 근거 재현율이 높은 대신 컨텍스트가
    크다(조문 전문 포함). 답변 계층에서는 컨텍스트 예산을 통일한 비교(원본
