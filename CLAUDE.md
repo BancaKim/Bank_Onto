@@ -42,7 +42,8 @@ eval/              3-way RAG 벤치마크 (벡터 vs LPG vs 온톨로지)
   run_answer_eval.py      답변 계층 3-way: MCQ + LLM심판 + 유사도 (API 키 필요)
 data/fss/sample/   가상 은행 픽스처 (FSS API 스키마 동일, 파이프라인 검증용)
 data/market-instances.ttl  변환된 시장 데이터 (현재 샘플 기준; KB가 자동 로드)
-scripts/           validate.py (구문·참조·ko레이블 검증), query.py (예시 SPARQL)
+scripts/           validate.py (구문·참조·ko레이블 검증), query.py (예시 SPARQL),
+                   export_benchmark_xlsx.py (벤치마크 4종 → docs/bank-onto-benchmark-v1.xlsx)
 tests/             test_knowledge_layer.py (KB 단위 10건) +
                    test_retrievers.py (결정성·다중홉·픽스처 격리 3건) +
                    test_krfinreg.py (이식 필드·데이터셋 무결성 3건) — 모두 API 키 불필요
