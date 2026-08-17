@@ -27,6 +27,8 @@ agent/bank_agent.py  claude-opus-5 + tool runner 은행 상담 에이전트 (단
 ingest/            금감원 "금융상품한눈에" Open API 적재 파이프라인
   fss_client.py      다운로드 (은행권 020000 고정, FSS_API_KEY 환경변수 필요)
   fss_to_ttl.py      JSON → data/market-instances.ttl 변환 (--sample: 픽스처 검증)
+  import_krfinreg.py 석사논문 벤치마크(KR-FinReg-QA, ~/research_paper)의 은행 문항을
+                     202608 공시로 근거 재검증 후 이식 → data/krfinreg-bank-questions.jsonl
 eval/              3-way RAG 벤치마크 (벡터 vs LPG vs 온톨로지)
   corpus.py          온톨로지 → 텍스트 직렬화 + 400자 청킹 (벡터 베이스라인용)
   vector_rag.py      TF-IDF 문자 n-gram top-5 리트리버 (오프라인 어휘 벡터)
@@ -34,6 +36,7 @@ eval/              3-way RAG 벤치마크 (벡터 vs LPG vs 온톨로지)
   graph_rag.py       온톨로지 리트리버 (개념매칭→계층·속성·BFS, LLM 없이 결정적)
   benchmark_questions.py  큐레이션 18문항 + 환각유도 2문항 (gold evidence 방식)
   mcq_questions.py   객관식 20문항 (결정적 채점용)
+  run_krfinreg_eval.py    KR-FinReg-QA 은행 이식 76문항 3-way → docs/krfinreg-benchmark-report.md
   run_retrieval_eval.py   검색 계층 3-way → docs/benchmark-report.md
   run_market_eval.py      시장 데이터 실무 벤치마크 (질문·정답 SPARQL 자동생성)
   run_answer_eval.py      답변 계층 3-way: MCQ + LLM심판 + 유사도 (API 키 필요)
@@ -41,7 +44,8 @@ data/fss/sample/   가상 은행 픽스처 (FSS API 스키마 동일, 파이프�
 data/market-instances.ttl  변환된 시장 데이터 (현재 샘플 기준; KB가 자동 로드)
 scripts/           validate.py (구문·참조·ko레이블 검증), query.py (예시 SPARQL)
 tests/             test_knowledge_layer.py (KB 단위 10건) +
-                   test_retrievers.py (결정성·다중홉·픽스처 격리 3건) — 모두 API 키 불필요
+                   test_retrievers.py (결정성·다중홉·픽스처 격리 3건) +
+                   test_krfinreg.py (이식 필드·데이터셋 무결성 3건) — 모두 API 키 불필요
 docs/              architecture.md, benchmark-report.md, market-benchmark-report.md
 ```
 
@@ -93,8 +97,13 @@ python ingest/fss_to_ttl.py --sample   # 키 없이 픽스처로 검증
   순수 기여분이 되도록. 벡터 베이스라인은 재현성 위해 어휘적 TF-IDF (의미 임베딩으로
   교체 가능하나 다중홉·열거·집계 실패는 청킹+유사도 패러다임 자체의 한계임을 리포트에 명시).
 - **현재 수치** (금감원 실데이터, 2026-08 공시·상품 211개): 검색 재현율 — 큐레이션
-  18문항 벡터 72% / LPG 89% / 온톨로지 100%; 시장 8문항 11% / 78% / 100%.
-  환각유도 질문 컨텍스트: 벡터 2,020자 vs 그래프·온톨로지 0자.
+  18문항 벡터 61% / LPG 89% / 온톨로지 100%; 시장 8문항 10% / 78% / 100%;
+  KR-FinReg 이식 71문항(판정형) 88% / 100% / 100%. 환각유도 질문 컨텍스트: 벡터
+  2,020자 vs 그래프·온톨로지 0자. (벡터 수치는 etcNote 등 필드 추가로 코퍼스가
+  커지며 하락했음 — 코퍼스 확장에 따른 top-k 희석은 벡터 패러다임의 구조적 한계)
+- **KR-FinReg 이식 세트는 단일 상품 조회형**이라 검색 계층 변별력이 작다(LPG=온톨로지
+  100% 동률). 이 세트의 목적은 답변 계층: YES/NO 판정 + ABSTAIN 5문항 보류 정확도.
+  원본(202607)과 공시가 달라진 문항은 이식에서 자동 탈락시킴(정답 부패 방지).
 - 시장 벤치마크는 질문·정답을 적재된 데이터에서 SPARQL로 자동 계산 — 데이터를
   갈아끼우면 벤치마크도 자동 갱신됨. '공시된 상품' 집계는 `market:disclosureMonth`
   조건으로 examples/ 가상 픽스처를 제외함.
@@ -110,13 +119,18 @@ python ingest/fss_to_ttl.py --sample   # 키 없이 픽스처로 검증
    python ingest/fss_client.py && python ingest/fss_to_ttl.py` 재실행.
 2. **답변 계층 실행**: `python eval/run_answer_eval.py` (ANTHROPIC_API_KEY 필요)
    → docs/answer-eval-report.md 생성. 아직 한 번도 실행되지 않음.
-3. **로드맵**: SHACL 제약, FIBO equivalentClass 정렬, 신탁·퇴직연금 모듈,
+   KR-FinReg 이식 문항(YES/NO/ABSTAIN 판정형)도 답변 계층에 통합할 것 —
+   data/krfinreg-bank-questions.jsonl의 verdict로 결정적 채점 가능.
+3. **KR-FinReg 2단계 (법령 60문항)**: ~/research_paper의 Q2_시간 문항(신구조문
+   유효기간 판정)은 버전드 규칙 데이터(kb_candidates_amend.jsonl, 규칙 191개,
+   valid_from/valid_to)를 TTL로 변환하는 시간 축 모듈이 선행되어야 함. 미착수.
+4. **로드맵**: SHACL 제약, FIBO equivalentClass 정렬, 신탁·퇴직연금 모듈,
    LangGraph 포팅(발표용 프레이밍 필요 시), 의미 임베딩 벡터 베이스라인 추가.
 
 ## Git
 
 - 브랜치: `claude/banking-ontology-build-5zwe0q` (현재 유일한 브랜치이자 기본 브랜치)
 - 커밋 전: `python scripts/validate.py && python tests/test_knowledge_layer.py
-  && python tests/test_retrievers.py`
+  && python tests/test_retrievers.py && python tests/test_krfinreg.py`
 - 벤치마크 코드를 바꿨으면 리포트 재생성 후 함께 커밋
   (`run_retrieval_eval.py`, `run_market_eval.py`)

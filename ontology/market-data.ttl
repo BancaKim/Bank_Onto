@@ -62,6 +62,14 @@
     rdfs:label "우대조건"@ko , "preferential condition"@en ;
     rdfs:range xsd:string .
 
+:joinDenyNote a owl:DatatypeProperty ;
+    rdfs:label "가입제한"@ko , "join restriction"@en ;
+    rdfs:range xsd:string .
+
+:etcNote a owl:DatatypeProperty ;
+    rdfs:label "기타 유의사항"@ko , "additional notes"@en ;
+    rdfs:range xsd:string .
+
 :maxLimitNote a owl:DatatypeProperty ;
     rdfs:label "최고한도"@ko , "maximum limit note"@en ;
     rdfs:range xsd:string .

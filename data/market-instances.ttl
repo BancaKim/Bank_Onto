@@ -80,12 +80,17 @@ mktd:prdt_0010001_CR0001C a products:OverdraftProduct ;
 
 mktd:prdt_0010001_WR0001B a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """- 가입기간: 1~36개월
+- 최소가입금액: 1만원 이상
+- 만기일을 일,월 단위로 자유롭게 선택 가능
+- 만기해지 시 신규일 당시 영업점과 인터넷 홈페이지에 고시된 계약기간별 금리 적용""" ;
     market:hasRateOption mktd:prdt_0010001_WR0001B_opt0,
         mktd:prdt_0010001_WR0001B_opt1,
         mktd:prdt_0010001_WR0001B_opt2,
         mktd:prdt_0010001_WR0001B_opt3,
         mktd:prdt_0010001_WR0001B_opt4,
         mktd:prdt_0010001_WR0001B_opt5 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인" ;
     market:joinWay "인터넷,스마트폰,전화(텔레뱅킹)" ;
     market:preferentialCondition "해당사항 없음" ;
@@ -96,12 +101,15 @@ mktd:prdt_0010001_WR0001B a products:TimeDepositProduct ;
 
 mktd:prdt_0010001_WR0001F a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입기간 : 1년/2년/3년
+2. 가입금액 : 월 50만원 이내""" ;
     market:hasRateOption mktd:prdt_0010001_WR0001F_opt0,
         mktd:prdt_0010001_WR0001F_opt1,
         mktd:prdt_0010001_WR0001F_opt2,
         mktd:prdt_0010001_WR0001F_opt3,
         mktd:prdt_0010001_WR0001F_opt4,
         mktd:prdt_0010001_WR0001F_opt5 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인" ;
     market:joinWay "영업점,인터넷,스마트폰,전화(텔레뱅킹)" ;
     market:preferentialCondition """1.우리은행 입출식 계좌에서 각 항목별 실적 월 수가 계약기간의 1/2이상인 경우
@@ -117,8 +125,11 @@ mktd:prdt_0010001_WR0001F a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010001_WR0001L a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입기간 : 1년
+2. 가입금액 : 월 50만원 이내""" ;
     market:hasRateOption mktd:prdt_0010001_WR0001L_opt6,
         mktd:prdt_0010001_WR0001L_opt7 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인" ;
     market:joinWay "스마트폰,전화(텔레뱅킹)" ;
     market:preferentialCondition """1. 아래 각 항(가, 나)의 조건을 충족하는 경우 합산 최대 연 0.2%p 우대
@@ -131,6 +142,7 @@ mktd:prdt_0010001_WR0001L a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010002_00266451 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "해당없음" ;
     market:hasRateOption mktd:prdt_0010002_00266451_opt10,
         mktd:prdt_0010002_00266451_opt11,
         mktd:prdt_0010002_00266451_opt12,
@@ -139,6 +151,7 @@ mktd:prdt_0010002_00266451 a products:InstallmentSavingsProduct ;
         mktd:prdt_0010002_00266451_opt15,
         mktd:prdt_0010002_00266451_opt8,
         mktd:prdt_0010002_00266451_opt9 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "개인(개인사업자 포함)" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:maxLimitNote "10000000" ;
@@ -150,10 +163,12 @@ mktd:prdt_0010002_00266451 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010002_00320342 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "디지털채널 전용상품 (인터넷, 모바일뱅킹)" ;
     market:hasRateOption mktd:prdt_0010002_00320342_opt6,
         mktd:prdt_0010002_00320342_opt7,
         mktd:prdt_0010002_00320342_opt8,
         mktd:prdt_0010002_00320342_opt9 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "개인(개인사업자 포함)" ;
     market:joinWay "인터넷,스마트폰" ;
     market:maxLimitNote "1000000000" ;
@@ -223,7 +238,9 @@ mktd:prdt_0010006_WR0002F a products:CreditLoanProduct ;
 
 mktd:prdt_0010016_10511008001166004 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "계좌당 가입 최저한도 : 100만원" ;
     market:hasRateOption mktd:prdt_0010016_10511008001166004_opt10 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인 및 개인사업자" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:preferentialCondition """* 최고우대금리: 연0.45%p
@@ -240,12 +257,14 @@ mktd:prdt_0010016_10511008001166004 a products:TimeDepositProduct ;
 
 mktd:prdt_0010016_10511008001278000 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "계좌당 가입 최저한도 : 100만원" ;
     market:hasRateOption mktd:prdt_0010016_10511008001278000_opt11,
         mktd:prdt_0010016_10511008001278000_opt12,
         mktd:prdt_0010016_10511008001278000_opt13,
         mktd:prdt_0010016_10511008001278000_opt14,
         mktd:prdt_0010016_10511008001278000_opt15,
         mktd:prdt_0010016_10511008001278000_opt16 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인" ;
     market:joinWay "인터넷,스마트폰" ;
     market:preferentialCondition """* 최고우대금리 : 연0.25%p
@@ -260,7 +279,9 @@ mktd:prdt_0010016_10511008001278000 a products:TimeDepositProduct ;
 
 mktd:prdt_0010016_10521001001166004 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "계좌당 가입 최저한도 : 10만원" ;
     market:hasRateOption mktd:prdt_0010016_10521001001166004_opt16 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인 및 개인사업자" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:preferentialCondition """*최고우대금리:연0.85%p
@@ -409,8 +430,11 @@ mktd:prdt_0010016_WR0002F a products:CreditLoanProduct,
 
 mktd:prdt_0010017_01020400490002 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입한도: 월 1만원 이상 50만원 이하 원단위
+2. 정기적립식""" ;
     market:hasRateOption mktd:prdt_0010017_01020400490002_opt17,
         mktd:prdt_0010017_01020400490002_opt18 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인고객(1인 1계좌)" ;
     market:joinWay "영업점,스마트폰" ;
     market:maxLimitNote "500000" ;
@@ -422,10 +446,13 @@ mktd:prdt_0010017_01020400490002 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010017_01020400510001 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입한도: 월 1만원 이상 1천만원 이하 원단위 (월 1천만원 이하 불입 가능)
+2. 자유적립식""" ;
     market:hasRateOption mktd:prdt_0010017_01020400510001_opt19,
         mktd:prdt_0010017_01020400510001_opt20,
         mktd:prdt_0010017_01020400510001_opt21,
         mktd:prdt_0010017_01020400510001_opt22 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "제한없음" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:maxLimitNote "10000000" ;
@@ -439,10 +466,14 @@ mktd:prdt_0010017_01020400510001 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010017_01020400530001 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입금액 :  1천원 이상
+2. 가입기간 :  6개월 이상 60개월 이하(일단위)
+3. 자유적립식""" ;
     market:hasRateOption mktd:prdt_0010017_01020400530001_opt23,
         mktd:prdt_0010017_01020400530001_opt24,
         mktd:prdt_0010017_01020400530001_opt25,
         mktd:prdt_0010017_01020400530001_opt26 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "제한없음" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:preferentialCondition """*우대이율 최대 0.2%
@@ -455,10 +486,13 @@ mktd:prdt_0010017_01020400530001 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010017_01020400660001 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입한도: 월 1천원 이상 100만원 이하 원단위
+2. 자유적립식""" ;
     market:hasRateOption mktd:prdt_0010017_01020400660001_opt27,
         mktd:prdt_0010017_01020400660001_opt28,
         mktd:prdt_0010017_01020400660001_opt29,
         mktd:prdt_0010017_01020400660001_opt30 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "만 14세이상 실명의 개인고객(1인 1계좌)" ;
     market:joinWay "스마트폰" ;
     market:maxLimitNote "1000000" ;
@@ -471,7 +505,10 @@ Big적금""" ;
 
 mktd:prdt_0010017_01020400700001 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1.가입금(적립)금액 : 월 1천원 이상 50만원 이하
+2. 가입기간 : 12개월""" ;
     market:hasRateOption mktd:prdt_0010017_01020400700001_opt31 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "만14세 이상 실명의 개인(1인 1계좌)" ;
     market:joinWay "영업점,스마트폰" ;
     market:maxLimitNote "500000" ;
@@ -485,12 +522,18 @@ mktd:prdt_0010017_01020400700001 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010017_01030500510002 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입금액 :
+   1천만원 이상
+2. 가입기간 : 
+1개월 이상 60개월 이하(일단위)
+3. 월이자지급식/만기일시지급식""" ;
     market:hasRateOption mktd:prdt_0010017_01030500510002_opt17,
         mktd:prdt_0010017_01030500510002_opt18,
         mktd:prdt_0010017_01030500510002_opt19,
         mktd:prdt_0010017_01030500510002_opt20,
         mktd:prdt_0010017_01030500510002_opt21,
         mktd:prdt_0010017_01030500510002_opt22 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "제한없음" ;
     market:joinWay "영업점,인터넷" ;
     market:preferentialCondition """*우대이율
@@ -504,12 +547,16 @@ mktd:prdt_0010017_01030500510002 a products:TimeDepositProduct ;
 
 mktd:prdt_0010017_01030500560002 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입금액 : 1백만원 이상 제한없음 (원단위)
+2. 가입기간 : 1개월, 3개월, 6개월, 1년, 2년, 3년
+3. 이자지급방식 : 만기일시지급식""" ;
     market:hasRateOption mktd:prdt_0010017_01030500560002_opt23,
         mktd:prdt_0010017_01030500560002_opt24,
         mktd:prdt_0010017_01030500560002_opt25,
         mktd:prdt_0010017_01030500560002_opt26,
         mktd:prdt_0010017_01030500560002_opt27,
         mktd:prdt_0010017_01030500560002_opt28 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인" ;
     market:joinWay "인터넷,스마트폰" ;
     market:preferentialCondition """* 우대이율 (최대 1.35%p)
@@ -523,8 +570,12 @@ mktd:prdt_0010017_01030500560002 a products:TimeDepositProduct ;
 
 mktd:prdt_0010017_01030500600002 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입금액 : 1백만원 이상 제한없음 (원단위)
+2. 가입기간 : 6개월, 1년
+3. 이자지급방식 : 만기일시지급식""" ;
     market:hasRateOption mktd:prdt_0010017_01030500600002_opt29,
         mktd:prdt_0010017_01030500600002_opt30 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인" ;
     market:joinWay "스마트폰" ;
     market:preferentialCondition """*우대이율(최대 0.90%p)
@@ -695,9 +746,12 @@ mktd:prdt_0010019_LN11010001732 a products:MortgageLoanProduct ;
 
 mktd:prdt_0010019_TD11300027000 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입기간 : 1년이상 3년제
+2. 가입금액 : 5백만원이상 최고 50백만원""" ;
     market:hasRateOption mktd:prdt_0010019_TD11300027000_opt31,
         mktd:prdt_0010019_TD11300027000_opt32,
         mktd:prdt_0010019_TD11300027000_opt33 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "만18세이상 여성으로 실명의 개인 및 개인사업자" ;
     market:joinWay "영업점,인터넷,스마트폰,기타" ;
     market:maxLimitNote "50000000" ;
@@ -711,12 +765,15 @@ mktd:prdt_0010019_TD11300027000 a products:TimeDepositProduct ;
 
 mktd:prdt_0010019_TD11300031000 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입기간 : 1개월이상 3년제
+2. 최소가입금액 : 100만원이상""" ;
     market:hasRateOption mktd:prdt_0010019_TD11300031000_opt34,
         mktd:prdt_0010019_TD11300031000_opt35,
         mktd:prdt_0010019_TD11300031000_opt36,
         mktd:prdt_0010019_TD11300031000_opt37,
         mktd:prdt_0010019_TD11300031000_opt38,
         mktd:prdt_0010019_TD11300031000_opt39 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "개인 및 개인사업자" ;
     market:joinWay "인터넷,스마트폰" ;
     market:preferentialCondition """▶ 1년미만, 1천만원이상 0.10%p
@@ -728,7 +785,10 @@ mktd:prdt_0010019_TD11300031000 a products:TimeDepositProduct ;
 
 mktd:prdt_0010019_TD11300035000 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입기간 : 1년제
+2. 가입금액 : 1백만원이상 최고 1억원(1인1계좌)""" ;
     market:hasRateOption mktd:prdt_0010019_TD11300035000_opt40 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "개인 및 개인사업자" ;
     market:joinWay "스마트폰" ;
     market:maxLimitNote "100000000" ;
@@ -742,9 +802,12 @@ mktd:prdt_0010019_TD11300035000 a products:TimeDepositProduct ;
 
 mktd:prdt_0010019_TD11300036000 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입기간 : 3개월,6개월,1년제
+2. 가입금액 : 10백만원이상 고객당 10억원한도""" ;
     market:hasRateOption mktd:prdt_0010019_TD11300036000_opt41,
         mktd:prdt_0010019_TD11300036000_opt42,
         mktd:prdt_0010019_TD11300036000_opt43 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "개인 및 법인(단,국가 지자체 및 금융기관 제외)" ;
     market:joinWay "영업점,스마트폰" ;
     market:maxLimitNote "1000000000" ;
@@ -756,6 +819,8 @@ mktd:prdt_0010019_TD11300036000 a products:TimeDepositProduct ;
 
 mktd:prdt_0010019_TD11330029000 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입기간 : 6개월이상 3년제
+2. 가입금액 : 월5만원 이상 5백만원 이하 (1인1계좌)""" ;
     market:hasRateOption mktd:prdt_0010019_TD11330029000_opt32,
         mktd:prdt_0010019_TD11330029000_opt33,
         mktd:prdt_0010019_TD11330029000_opt34,
@@ -764,6 +829,7 @@ mktd:prdt_0010019_TD11330029000 a products:InstallmentSavingsProduct ;
         mktd:prdt_0010019_TD11330029000_opt37,
         mktd:prdt_0010019_TD11330029000_opt38,
         mktd:prdt_0010019_TD11330029000_opt39 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "제한없음(단,국가및지방자치단체제외)" ;
     market:joinWay "영업점,스마트폰" ;
     market:maxLimitNote "5000000" ;
@@ -779,8 +845,12 @@ mktd:prdt_0010019_TD11330029000 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010019_TD11330030000 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입기간 :12개월제,18개월제
+2. 가입금액 : 월 5만원 이상 1백만원 이하 (1인1계좌)
+※ 18개월 정액식 기본금리 3.3%, 최고금리 5.2%""" ;
     market:hasRateOption mktd:prdt_0010019_TD11330030000_opt40,
         mktd:prdt_0010019_TD11330030000_opt41 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "만14세이상 개인 및 개인사업자" ;
     market:joinWay "영업점,스마트폰" ;
     market:maxLimitNote "1000000" ;
@@ -795,8 +865,11 @@ mktd:prdt_0010019_TD11330030000 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010019_TD11330031000 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입기간 : 1년제
+2. 가입금액 : 월10만원 이상 5백만원 이하 (1인1계좌)""" ;
     market:hasRateOption mktd:prdt_0010019_TD11330031000_opt42,
         mktd:prdt_0010019_TD11330031000_opt43 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:maxLimitNote "5000000" ;
@@ -819,12 +892,14 @@ mktd:prdt_0010019_WR0002F a products:CreditLoanProduct ;
 
 mktd:prdt_0010020_101272000006 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "가입금액 : 1백만원 이상" ;
     market:hasRateOption mktd:prdt_0010020_101272000006_opt44,
         mktd:prdt_0010020_101272000006_opt45,
         mktd:prdt_0010020_101272000006_opt46,
         mktd:prdt_0010020_101272000006_opt47,
         mktd:prdt_0010020_101272000006_opt48,
         mktd:prdt_0010020_101272000006_opt49 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "제한없음" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:preferentialCondition """최고 연 0.1%p(항목별 0.1%p)
@@ -847,12 +922,14 @@ mktd:prdt_0010020_101272000006 a products:TimeDepositProduct ;
 
 mktd:prdt_0010020_101272000057 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "가입금액 : 30만원 이상" ;
     market:hasRateOption mktd:prdt_0010020_101272000057_opt50,
         mktd:prdt_0010020_101272000057_opt51,
         mktd:prdt_0010020_101272000057_opt52,
         mktd:prdt_0010020_101272000057_opt53,
         mktd:prdt_0010020_101272000057_opt54,
         mktd:prdt_0010020_101272000057_opt55 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember """실명의 
 개인 및 
 개인사업자""" ;
@@ -869,9 +946,11 @@ mktd:prdt_0010020_101272000057 a products:TimeDepositProduct ;
 
 mktd:prdt_0010020_101272000058 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "가입금액 : 1백만원 이상" ;
     market:hasRateOption mktd:prdt_0010020_101272000058_opt56,
         mktd:prdt_0010020_101272000058_opt57,
         mktd:prdt_0010020_101272000058_opt58 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember """실명의
 개인 및 
 개인사업자""" ;
@@ -947,8 +1026,10 @@ mktd:prdt_0010020_14201127 a products:JeonseLoanProduct ;
 
 mktd:prdt_0010020_220002101 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "월 납입한도 50만원 이하" ;
     market:hasRateOption mktd:prdt_0010020_220002101_opt44,
         mktd:prdt_0010020_220002101_opt45 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "개인 및 개인사업자" ;
     market:joinWay "인터넷,스마트폰" ;
     market:maxLimitNote "500000" ;
@@ -964,8 +1045,10 @@ mktd:prdt_0010020_220002101 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010020_220002501 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "월 납입한도 30만원 이하" ;
     market:hasRateOption mktd:prdt_0010020_220002501_opt46,
         mktd:prdt_0010020_220002501_opt47 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "개인 및 개인사업자" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:maxLimitNote "300000" ;
@@ -980,10 +1063,13 @@ mktd:prdt_0010020_220002501 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010020_220002701 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """가입 최소금액 1천원 이상,
+매 입금별 1천원 이상""" ;
     market:hasRateOption mktd:prdt_0010020_220002701_opt48,
         mktd:prdt_0010020_220002701_opt49,
         mktd:prdt_0010020_220002701_opt50,
         mktd:prdt_0010020_220002701_opt51 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "개인 및 개인사업자" ;
     market:joinWay "인터넷,스마트폰" ;
     market:preferentialCondition """최고 0.4%p 추가 우대금리 제공
@@ -1025,9 +1111,12 @@ mktd:prdt_0010020_WR0002F a products:OverdraftProduct ;
 
 mktd:prdt_0010022_10_01_20_024_0046_0000 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """가입금액 1계좌당 1백만원이상
+인터넷/스마트폰뱅킹 가입상품""" ;
     market:hasRateOption mktd:prdt_0010022_10_01_20_024_0046_0000_opt59,
         mktd:prdt_0010022_10_01_20_024_0046_0000_opt60,
         mktd:prdt_0010022_10_01_20_024_0046_0000_opt61 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인(임의단체 제외" ;
     market:joinWay "인터넷,스마트폰" ;
     market:preferentialCondition """우대조건
@@ -1040,7 +1129,11 @@ mktd:prdt_0010022_10_01_20_024_0046_0000 a products:TimeDepositProduct ;
 
 mktd:prdt_0010022_10_01_20_024_0059_0000 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """예금의 신규 : 인터넷뱅킹, 모바일뱅킹, 모바일웹, BDT
+예금의 해지 : 인터넷뱅킹, 모바일뱅킹, 영업점
+가입금액 최저 1백만원이상""" ;
     market:hasRateOption mktd:prdt_0010022_10_01_20_024_0059_0000_opt62 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인 또는 개인사업자 (1인 다계좌 가입 가능함)" ;
     market:joinWay "인터넷,스마트폰" ;
     market:preferentialCondition """자동재예치 우대이율
@@ -1060,10 +1153,15 @@ mktd:prdt_0010022_10_01_20_024_0059_0000 a products:TimeDepositProduct ;
 
 mktd:prdt_0010022_10_01_20_024_0063_0000 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """가입금액 : 계좌당 10만원 이상
+예금의 신규 : 모바일뱅킹, 모바일Web
+예금의 해지 : 모바일뱅킹, 인터넷뱅킹, 영업점
+계약기간 : 1개월이상 12개월이내(월단위)""" ;
     market:hasRateOption mktd:prdt_0010022_10_01_20_024_0063_0000_opt63,
         mktd:prdt_0010022_10_01_20_024_0063_0000_opt64,
         mktd:prdt_0010022_10_01_20_024_0063_0000_opt65,
         mktd:prdt_0010022_10_01_20_024_0063_0000_opt66 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인 및 개인사업자" ;
     market:joinWay "인터넷,스마트폰" ;
     market:preferentialCondition "1. 마케팅동의고객 0.10%" ;
@@ -1074,9 +1172,13 @@ mktd:prdt_0010022_10_01_20_024_0063_0000 a products:TimeDepositProduct ;
 
 mktd:prdt_0010022_10_01_30_031_0018_0000 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 초회불입금 1만원이상, 1인당 월별 최고 1천만원이내
+2. 만기직전 1개월간 적립합계는 이전기간 적립금액을 초과할 수 없음
+3. 인터넷뱅킹/스마트폰뱅킹 가입상품""" ;
     market:hasRateOption mktd:prdt_0010022_10_01_30_031_0018_0000_opt52,
         mktd:prdt_0010022_10_01_30_031_0018_0000_opt53,
         mktd:prdt_0010022_10_01_30_031_0018_0000_opt54 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인 및 개인사업자(임의단체 제외)" ;
     market:joinWay "인터넷,스마트폰" ;
     market:maxLimitNote "10000000" ;
@@ -1089,9 +1191,12 @@ mktd:prdt_0010022_10_01_30_031_0018_0000 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010022_10_01_30_031_0036 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 초회불입금 1만원이상, 1인당 월별 최고 5백만원이내
+2. 인터넷뱅킹/스마트폰뱅킹 가입상품""" ;
     market:hasRateOption mktd:prdt_0010022_10_01_30_031_0036_opt55,
         mktd:prdt_0010022_10_01_30_031_0036_opt56,
         mktd:prdt_0010022_10_01_30_031_0036_opt57 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인 및 개인사업자(임의단체 제외)" ;
     market:joinWay "인터넷,스마트폰" ;
     market:maxLimitNote "5000000" ;
@@ -1180,9 +1285,12 @@ mktd:prdt_0010022_WR0002F a products:CreditLoanProduct ;
 
 mktd:prdt_0010024_21000111 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 계약기간은 1년 이상 3년 이하 월단위로 한다.
+2. 적립금액은 5만원 이상, 최고금액은 제한없음""" ;
     market:hasRateOption mktd:prdt_0010024_21000111_opt58,
         mktd:prdt_0010024_21000111_opt59,
         mktd:prdt_0010024_21000111_opt60 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인 및 개인사업자" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:maxLimitNote "999999999" ;
@@ -1198,10 +1306,13 @@ mktd:prdt_0010024_21000111 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010024_21001115 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 이 예금의 계약기간은 3개월 이상 2년 이내 월단위로 한다.
+2. 가입금액은 1인당 최소 100만원 이상 5억원 이하이다.""" ;
     market:hasRateOption mktd:prdt_0010024_21001115_opt67,
         mktd:prdt_0010024_21001115_opt68,
         mktd:prdt_0010024_21001115_opt69,
         mktd:prdt_0010024_21001115_opt70 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "거래대상자는 제한을 두지 아니한다. 다만, 국가 및 지방자치단체는 이 예금을 거래할 수 없다." ;
     market:joinWay "인터넷,스마트폰" ;
     market:maxLimitNote "500000000" ;
@@ -1219,9 +1330,13 @@ mktd:prdt_0010024_21001115 a products:TimeDepositProduct ;
 
 mktd:prdt_0010024_21001116 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 계약기간은 6개월 이상 2년 이내 월단위로 한다.
+2. 초입금 1만원 이상 월별 500만원 이내에서 자유롭게 저축
+3. 최대 저축횟수는 999회 이내""" ;
     market:hasRateOption mktd:prdt_0010024_21001116_opt61,
         mktd:prdt_0010024_21001116_opt62,
         mktd:prdt_0010024_21001116_opt63 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "거래대상자는 제한을 두지 아니한다. 다만, 국가 및 지방자치단체는 이 예금을 거래할 수 없다." ;
     market:joinWay "인터넷,스마트폰" ;
     market:maxLimitNote "5000000" ;
@@ -1236,11 +1351,15 @@ mktd:prdt_0010024_21001116 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010024_21001199 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1.계약기간은 1개월 이상 36개월 이하 월단위로 한다.
+2..1인 1계좌로 가입가능
+2.매월 최소 1만원 이상, 최고 월 100만원 이하 (천원 단위)""" ;
     market:hasRateOption mktd:prdt_0010024_21001199_opt64,
         mktd:prdt_0010024_21001199_opt65,
         mktd:prdt_0010024_21001199_opt66,
         mktd:prdt_0010024_21001199_opt67,
         mktd:prdt_0010024_21001199_opt68 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인 및 개인사업자" ;
     market:joinWay "영업점,인터넷,스마트폰,기타" ;
     market:maxLimitNote "1000000" ;
@@ -1255,9 +1374,12 @@ mktd:prdt_0010024_21001199 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010024_21001236 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1.계악기간은 1년제, 2년제, 3년제로 한다.
+2. 적립금액은 매월 1만원이상, 최고금액은 제한없음""" ;
     market:hasRateOption mktd:prdt_0010024_21001236_opt69,
         mktd:prdt_0010024_21001236_opt70,
         mktd:prdt_0010024_21001236_opt71 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인 및 개인사업자" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:maxLimitNote "999999999" ;
@@ -1273,9 +1395,13 @@ mktd:prdt_0010024_21001236 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010024_21001259 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 계약기간은 3개월 이상 6개월 이내 월단위로 한다.
+2. 초입금 일 1천원 이상 10만원 이하 자유롭게 저축
+3. 최대 저축횟수는 999회 이내""" ;
     market:hasRateOption mktd:prdt_0010024_21001259_opt72,
         mktd:prdt_0010024_21001259_opt73,
         mktd:prdt_0010024_21001259_opt74 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인 및 개인사업자" ;
     market:joinWay "인터넷,스마트폰,기타" ;
     market:maxLimitNote "100000" ;
@@ -1288,9 +1414,12 @@ mktd:prdt_0010024_21001259 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010024_21001280 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 이 예금의 계약기간은 3개월, 6개월, 9개월, 12개월로 한다.
+2. 가입좌수 제한없으며, 가입금액은 1인당 최소 100만원 이상 10억원 이하이다.""" ;
     market:hasRateOption mktd:prdt_0010024_21001280_opt71,
         mktd:prdt_0010024_21001280_opt72,
         mktd:prdt_0010024_21001280_opt73 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "개인" ;
     market:joinWay "스마트폰" ;
     market:maxLimitNote "1000000000" ;
@@ -1304,10 +1433,13 @@ mktd:prdt_0010024_21001280 a products:TimeDepositProduct ;
 
 mktd:prdt_0010024_21001285 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 이 예금의 계약기간은 3개월, 6개월, 12개월, 24개월로 한다.
+2. 가입좌수 제한없으며, 가입금액은 1인당 최소 100만원 이상 10억원 이하이다.""" ;
     market:hasRateOption mktd:prdt_0010024_21001285_opt74,
         mktd:prdt_0010024_21001285_opt75,
         mktd:prdt_0010024_21001285_opt76,
         mktd:prdt_0010024_21001285_opt77 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "개인" ;
     market:joinWay "스마트폰" ;
     market:maxLimitNote "1000000000" ;
@@ -1321,7 +1453,10 @@ mktd:prdt_0010024_21001285 a products:TimeDepositProduct ;
 
 mktd:prdt_0010024_21001292 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1.계악기간은 1년제로 한다.
+2. 적립금액은 매월 10만원이상, 50만원 이하(1만원 이상)""" ;
     market:hasRateOption mktd:prdt_0010024_21001292_opt75 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:maxLimitNote "500000" ;
@@ -1444,10 +1579,12 @@ mktd:prdt_0010024_WR0002F a products:CreditLoanProduct ;
 
 mktd:prdt_0010026_01211210113 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "1인당 3계좌 가입 가능하며, 계좌당 20만원 이내 납입 가능" ;
     market:hasRateOption mktd:prdt_0010026_01211210113_opt76,
         mktd:prdt_0010026_01211210113_opt77,
         mktd:prdt_0010026_01211210113_opt78,
         mktd:prdt_0010026_01211210113_opt79 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember """실명의 개인
 (개인사업자 제외)""" ;
     market:joinWay "스마트폰" ;
@@ -1463,7 +1600,9 @@ mktd:prdt_0010026_01211210113 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010026_01211210121 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "1인당 1계좌 가입 가능하며, 계좌당 최소 1만원 이상 1백만원까지 납입 가능" ;
     market:hasRateOption mktd:prdt_0010026_01211210121_opt80 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember """실명의 개인
 (개인사업자 제외)""" ;
     market:joinWay "스마트폰" ;
@@ -1479,7 +1618,9 @@ mktd:prdt_0010026_01211210121 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010026_01211210122 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "1인당 1계좌 가입 가능하며, 계좌당 100만원까지 납입 가능" ;
     market:hasRateOption mktd:prdt_0010026_01211210122_opt81 ;
+    market:joinDenyNote "일부제한" ;
     market:joinMember """중소기업에서 근무하는
 실명의 개인
 (개인사업자 제외)""" ;
@@ -1497,10 +1638,12 @@ mktd:prdt_0010026_01211210122 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010026_01211210129 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "1인당 5계좌 가입 가능하며, 계좌당 최소 1천원 이상 3백만원까지 납입 가능" ;
     market:hasRateOption mktd:prdt_0010026_01211210129_opt82,
         mktd:prdt_0010026_01211210129_opt83,
         mktd:prdt_0010026_01211210129_opt84,
         mktd:prdt_0010026_01211210129_opt85 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember """실명의 개인
 (개인사업자 제외)""" ;
     market:joinWay "영업점,스마트폰" ;
@@ -1518,9 +1661,11 @@ mktd:prdt_0010026_01211210129 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010026_01211310121 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "계좌 수 제한 없으며, 최소 1백만원 이상 통합한도 1억원 이내 가입 가능" ;
     market:hasRateOption mktd:prdt_0010026_01211310121_opt78,
         mktd:prdt_0010026_01211310121_opt79,
         mktd:prdt_0010026_01211310121_opt80 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember """실명의 개인
 (개인사업자 제외)""" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
@@ -1540,10 +1685,12 @@ mktd:prdt_0010026_01211310121 a products:TimeDepositProduct ;
 
 mktd:prdt_0010026_01211310130 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "계좌 수 제한 없으며, 최소 1백만원 이상 납입한도 제한 없음" ;
     market:hasRateOption mktd:prdt_0010026_01211310130_opt81,
         mktd:prdt_0010026_01211310130_opt82,
         mktd:prdt_0010026_01211310130_opt83,
         mktd:prdt_0010026_01211310130_opt84 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember """실명의 개인
 (개인사업자 제외)""" ;
     market:joinWay "인터넷,스마트폰" ;
@@ -1555,10 +1702,12 @@ mktd:prdt_0010026_01211310130 a products:TimeDepositProduct ;
 
 mktd:prdt_0010026_01211310142 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "계좌 수 제한 없으며, 최소 1백만원 이상 통합한도 3억원 이내 가입 가능" ;
     market:hasRateOption mktd:prdt_0010026_01211310142_opt85,
         mktd:prdt_0010026_01211310142_opt86,
         mktd:prdt_0010026_01211310142_opt87,
         mktd:prdt_0010026_01211310142_opt88 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember """실명의 개인
 (개인사업자 제외)""" ;
     market:joinWay "영업점,스마트폰" ;
@@ -1660,10 +1809,12 @@ mktd:prdt_0010026_WR0002F a products:CreditLoanProduct ;
 
 mktd:prdt_0010030_03101 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "해당없음" ;
     market:hasRateOption mktd:prdt_0010030_03101_opt86,
         mktd:prdt_0010030_03101_opt87,
         mktd:prdt_0010030_03101_opt88,
         mktd:prdt_0010030_03101_opt89 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "개인사업자, 조합(비영리법인 포함), 법인" ;
     market:joinWay "영업점,인터넷" ;
     market:preferentialCondition "해당없음" ;
@@ -1674,12 +1825,14 @@ mktd:prdt_0010030_03101 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010030_03700 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "해당없음" ;
     market:hasRateOption mktd:prdt_0010030_03700_opt90,
         mktd:prdt_0010030_03700_opt91,
         mktd:prdt_0010030_03700_opt92,
         mktd:prdt_0010030_03700_opt93,
         mktd:prdt_0010030_03700_opt94,
         mktd:prdt_0010030_03700_opt95 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "개인, 개인사업자, 임의단체" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:maxLimitNote "5000000" ;
@@ -1691,12 +1844,14 @@ mktd:prdt_0010030_03700 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010030_06492 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "해당없음" ;
     market:hasRateOption mktd:prdt_0010030_06492_opt89,
         mktd:prdt_0010030_06492_opt90,
         mktd:prdt_0010030_06492_opt91,
         mktd:prdt_0010030_06492_opt92,
         mktd:prdt_0010030_06492_opt93,
         mktd:prdt_0010030_06492_opt94 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "제한없음" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:preferentialCondition "해당없음" ;
@@ -1736,9 +1891,11 @@ mktd:prdt_0010030_2 a products:OverdraftProduct ;
 
 mktd:prdt_0010927_010200100051 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "1인 1계좌" ;
     market:hasRateOption mktd:prdt_0010927_010200100051_opt96,
         mktd:prdt_0010927_010200100051_opt97,
         mktd:prdt_0010927_010200100051_opt98 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인" ;
     market:joinWay "영업점,인터넷,스마트폰,전화(텔레뱅킹)" ;
     market:preferentialCondition """① 단체가입/나라사랑/쿠폰 우대이율: 
@@ -1753,10 +1910,12 @@ mktd:prdt_0010927_010200100051 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010927_010200100070 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "인터넷뱅킹/KB스타뱅킹 전용상품" ;
     market:hasRateOption mktd:prdt_0010927_010200100070_opt100,
         mktd:prdt_0010927_010200100070_opt101,
         mktd:prdt_0010927_010200100070_opt102,
         mktd:prdt_0010927_010200100070_opt99 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인 또는 개인사업자" ;
     market:joinWay "인터넷,스마트폰" ;
     market:preferentialCondition """신규 시 다음의 9가지 우대이율 항목 중 6가지를 자유롭게 선택하고, 아래 우대이율 적용조건 충족 시 항목 당 각 연0.1%p의 우대이율 적용
@@ -1769,9 +1928,12 @@ mktd:prdt_0010927_010200100070 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010927_010200100084 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """공동명의 불가
+(1인 최대 3계좌)""" ;
     market:hasRateOption mktd:prdt_0010927_010200100084_opt103,
         mktd:prdt_0010927_010200100084_opt104,
         mktd:prdt_0010927_010200100084_opt105 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:preferentialCondition """맑은하늘을 위한 미션별 제공조건을 달성하는 경우 각 미션별 우대이율 제공
@@ -1787,9 +1949,13 @@ mktd:prdt_0010927_010200100084 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010927_010200100104 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """개인사업자, 임의단체 및
+공동명의 가입 불가
+(1인 최대 3계좌)""" ;
     market:hasRateOption mktd:prdt_0010927_010200100104_opt106,
         mktd:prdt_0010927_010200100104_opt107,
         mktd:prdt_0010927_010200100104_opt108 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인" ;
     market:joinWay "스마트폰" ;
     market:preferentialCondition """항목별 적용 조건 충족시, 최고 연 4.0%p
@@ -1805,12 +1971,14 @@ mktd:prdt_0010927_010200100104 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0010927_010300100335 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "- 가입금액 : 1백만원 이상" ;
     market:hasRateOption mktd:prdt_0010927_010300100335_opt100,
         mktd:prdt_0010927_010300100335_opt95,
         mktd:prdt_0010927_010300100335_opt96,
         mktd:prdt_0010927_010300100335_opt97,
         mktd:prdt_0010927_010300100335_opt98,
         mktd:prdt_0010927_010300100335_opt99 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인 또는 개인사업자" ;
     market:joinWay "인터넷,스마트폰" ;
     market:preferentialCondition "해당무" ;
@@ -1891,10 +2059,13 @@ mktd:prdt_0010927_KB200400000001 a products:JeonseLoanProduct ;
 
 mktd:prdt_0011625_207_0134_16 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입한도 :
+ 50만원 이상 1억원 이내""" ;
     market:hasRateOption mktd:prdt_0011625_207_0134_16_opt101,
         mktd:prdt_0011625_207_0134_16_opt102,
         mktd:prdt_0011625_207_0134_16_opt103,
         mktd:prdt_0011625_207_0134_16_opt104 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "개인고객" ;
     market:joinWay "영업점,스마트폰" ;
     market:maxLimitNote "100000000" ;
@@ -1908,12 +2079,15 @@ mktd:prdt_0011625_207_0134_16 a products:TimeDepositProduct ;
 
 mktd:prdt_0011625_207_0135_12 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입한도 :
+ 1만원 이상""" ;
     market:hasRateOption mktd:prdt_0011625_207_0135_12_opt105,
         mktd:prdt_0011625_207_0135_12_opt106,
         mktd:prdt_0011625_207_0135_12_opt107,
         mktd:prdt_0011625_207_0135_12_opt108,
         mktd:prdt_0011625_207_0135_12_opt109,
         mktd:prdt_0011625_207_0135_12_opt110 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "만14세이상 개인고객" ;
     market:joinWay "인터넷,스마트폰" ;
     market:preferentialCondition "해당사항없음" ;
@@ -1924,9 +2098,13 @@ mktd:prdt_0011625_207_0135_12 a products:TimeDepositProduct ;
 
 mktd:prdt_0011625_230_0119_85 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입한도: 
+월300만원 이하
+2. 1인 다계좌""" ;
     market:hasRateOption mktd:prdt_0011625_230_0119_85_opt109,
         mktd:prdt_0011625_230_0119_85_opt110,
         mktd:prdt_0011625_230_0119_85_opt111 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "제한없음" ;
     market:joinWay "영업점,스마트폰" ;
     market:maxLimitNote "3000000" ;
@@ -2016,10 +2194,12 @@ mktd:prdt_0011625_WR0002B a products:JeonseLoanProduct ;
 
 mktd:prdt_0013175_10_003_1225_0001 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "기타유의사항없음." ;
     market:hasRateOption mktd:prdt_0013175_10_003_1225_0001_opt111,
         mktd:prdt_0013175_10_003_1225_0001_opt112,
         mktd:prdt_0013175_10_003_1225_0001_opt113,
         mktd:prdt_0013175_10_003_1225_0001_opt114 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "개인" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:preferentialCondition """1. 급여이체실적(50만원 이상)이 있는 경우 : 0.1%p
@@ -2031,9 +2211,14 @@ mktd:prdt_0013175_10_003_1225_0001 a products:TimeDepositProduct ;
 
 mktd:prdt_0013175_10_003_1381_0001 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 300만원이상 가입
+2. 온실가스 줄이기 실천서약서 동의시 가입가능
+3. 신규가입 계좌당 2천원씩 녹색환경기금 적립
+※ 자세한 사항은 상품설명서 참조""" ;
     market:hasRateOption mktd:prdt_0013175_10_003_1381_0001_opt115,
         mktd:prdt_0013175_10_003_1381_0001_opt116,
         mktd:prdt_0013175_10_003_1381_0001_opt117 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "개인" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:preferentialCondition """※ 우대금리 최대한도 : 0.4%p(연%, 세전)
@@ -2048,12 +2233,14 @@ mktd:prdt_0013175_10_003_1381_0001 a products:TimeDepositProduct ;
 
 mktd:prdt_0013175_10_003_1384_0001 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote "1. 10만원 이상 10억원 이내 가입" ;
     market:hasRateOption mktd:prdt_0013175_10_003_1384_0001_opt118,
         mktd:prdt_0013175_10_003_1384_0001_opt119,
         mktd:prdt_0013175_10_003_1384_0001_opt120,
         mktd:prdt_0013175_10_003_1384_0001_opt121,
         mktd:prdt_0013175_10_003_1384_0001_opt122,
         mktd:prdt_0013175_10_003_1384_0001_opt123 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "개인" ;
     market:joinWay "인터넷,스마트폰" ;
     market:maxLimitNote "1000000000" ;
@@ -2065,7 +2252,13 @@ mktd:prdt_0013175_10_003_1384_0001 a products:TimeDepositProduct ;
 
 mktd:prdt_0013175_10_003_1387_0001 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 100만원 이상 가입
+2. 고향사랑기부금 우대금리는 농협은행/농축협 영업점 또는 고향사랑e음 홈페이지를 통한 고향사랑기부금 납부실적이 확인되는 경우 제공
+3. 연간 판매액의 0.1% 공익기금 적립
+
+※ 우대조건 관련 자세한 사항은 상품설명서 참조""" ;
     market:hasRateOption mktd:prdt_0013175_10_003_1387_0001_opt124 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "개인" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:preferentialCondition """1. 고향사랑기부금 납부고객 우대 : 0.3%p
@@ -2082,9 +2275,13 @@ mktd:prdt_0013175_10_003_1387_0001 a products:TimeDepositProduct ;
 
 mktd:prdt_0013175_10_047_1360_0002 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """가입기간 1개월 이상 6개월 이하(일 단위)
+
+초입금 및 매일 1천원이상  5만원이내(천원 단위)""" ;
     market:hasRateOption mktd:prdt_0013175_10_047_1360_0002_opt112,
         mktd:prdt_0013175_10_047_1360_0002_opt113,
         mktd:prdt_0013175_10_047_1360_0002_opt114 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "개인" ;
     market:joinWay "스마트폰" ;
     market:maxLimitNote "1550000" ;
@@ -2100,9 +2297,17 @@ mktd:prdt_0013175_10_047_1360_0002 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0013175_10_047_1365_0001 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """초입금 및 매회 1만원 이상, 월 50만원 이내 자유적립
+
+급여이체 실적과 개인사업자 계좌 실적 우대금리는 중복 적용 불가
+
+ * 급여입금실적 인정기준
+  - 가입기간 12개월 이하 : 3개월 이상 급여이체
+  - 가입기간 24개월 이하 : 12개월 이상 급여이체""" ;
     market:hasRateOption mktd:prdt_0013175_10_047_1365_0001_opt115,
         mktd:prdt_0013175_10_047_1365_0001_opt116,
         mktd:prdt_0013175_10_047_1365_0001_opt117 ;
+    market:joinDenyNote "일부제한" ;
     market:joinMember "만19세~만34세 개인 및 개인사업자" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:maxLimitNote "500000" ;
@@ -2119,9 +2324,14 @@ mktd:prdt_0013175_10_047_1365_0001 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0013175_10_047_1381_0001 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """초입금5만원 이상 및 매회 1만원 이상, 매월50만원이내
+(단, 만기일 전 3개월 이내에는 이전 적립금 합계액을 초과하여 입금불가)
+
+※자세한 사항은 상품설명서 참조""" ;
     market:hasRateOption mktd:prdt_0013175_10_047_1381_0001_opt118,
         mktd:prdt_0013175_10_047_1381_0001_opt119,
         mktd:prdt_0013175_10_047_1381_0001_opt120 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "개인" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:maxLimitNote "500000" ;
@@ -2138,9 +2348,17 @@ mktd:prdt_0013175_10_047_1381_0001 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0013175_10_047_1387_0001 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1.초입금1만원 이상 및 매회 1천원 이상, 매월50만원이내
+
+2. 고향사랑기부금 우대금리는 농협은행/농축협 영업점 또는 고향사랑e음 홈페이지를 통한 고향사랑기부금 납부실적이 확인되는 경우 제공
+
+3. 연간 판매액의 0.1% 공익기금 적립
+
+※자세한 사항은 상품설명서 참조""" ;
     market:hasRateOption mktd:prdt_0013175_10_047_1387_0001_opt121,
         mktd:prdt_0013175_10_047_1387_0001_opt122,
         mktd:prdt_0013175_10_047_1387_0001_opt123 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "개인" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:maxLimitNote "500000" ;
@@ -2158,9 +2376,12 @@ mktd:prdt_0013175_10_047_1387_0001 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0013175_10_059_1264_0001 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """초입금 및 매회 입금 1만원 이상 원 단위,  1인당 분기별 3백만원 이내 적립 가능
+(단,계약기간 3/4 경과 후 적립할 수 있는 금액은 이전 적립누계액의 1/2이내)""" ;
     market:hasRateOption mktd:prdt_0013175_10_059_1264_0001_opt124,
         mktd:prdt_0013175_10_059_1264_0001_opt125,
         mktd:prdt_0013175_10_059_1264_0001_opt126 ;
+    market:joinDenyNote "일부제한" ;
     market:joinMember "만18세이상 개인" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:maxLimitNote "3000000" ;
@@ -2339,12 +2560,15 @@ mktd:prdt_0013909_3 a products:OverdraftProduct ;
 
 mktd:prdt_0013909_4 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입금액: 1백만원이상
+2. 1인 최대가입한도 : 제한 없음""" ;
     market:hasRateOption mktd:prdt_0013909_4_opt125,
         mktd:prdt_0013909_4_opt126,
         mktd:prdt_0013909_4_opt127,
         mktd:prdt_0013909_4_opt128,
         mktd:prdt_0013909_4_opt129,
         mktd:prdt_0013909_4_opt130 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인 또는 개인사업자" ;
     market:joinWay "스마트폰" ;
     market:preferentialCondition "해당사항없음" ;
@@ -2355,9 +2579,17 @@ mktd:prdt_0013909_4 a products:TimeDepositProduct ;
 
 mktd:prdt_0013909_52 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 1인 1계좌만 가능
+(급여하나월복리적금,연금하나 월복리적금과 중복가입 불가)
+2. 가입금액 
+ - 최저1만원~300만원이하
+3. 적립한도
+ 분기당 1만원이상 300만원
+ (자유적립식)""" ;
     market:hasRateOption mktd:prdt_0013909_52_opt127,
         mktd:prdt_0013909_52_opt128,
         mktd:prdt_0013909_52_opt129 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember """실명의 개인
 또는 개인사업자""" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
@@ -2372,6 +2604,12 @@ mktd:prdt_0013909_52 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0013909_53 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 1인 다계좌 가능
+2. 가입금액
+   - 1천원 이상~1,000만원 이하(원단위)
+3. 적립한도
+    - 자유적립식 : 매월 1원 이상~1,000만원 이하(원단위)
+    - 정액적립식 : 매월 1천원 이상~1,000만원 이하(원단위)""" ;
     market:hasRateOption mktd:prdt_0013909_53_opt130,
         mktd:prdt_0013909_53_opt131,
         mktd:prdt_0013909_53_opt132,
@@ -2380,6 +2618,7 @@ mktd:prdt_0013909_53 a products:InstallmentSavingsProduct ;
         mktd:prdt_0013909_53_opt135,
         mktd:prdt_0013909_53_opt136,
         mktd:prdt_0013909_53_opt137 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember """실명의 개인
 또는 개인사업자(1인 다계좌 가능)""" ;
     market:joinWay "영업점,인터넷,스마트폰,전화(텔레뱅킹)" ;
@@ -2392,12 +2631,16 @@ mktd:prdt_0013909_53 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0014674_01012000200000000003 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """가입금액: 1만원 이상 30만원 이하
+가입기간: 6개월, 1년, 2년, 3년 
+(1인 최대 15계좌)""" ;
     market:hasRateOption mktd:prdt_0014674_01012000200000000003_opt138,
         mktd:prdt_0014674_01012000200000000003_opt139,
         mktd:prdt_0014674_01012000200000000003_opt140,
         mktd:prdt_0014674_01012000200000000003_opt141,
         mktd:prdt_0014674_01012000200000000003_opt142,
         mktd:prdt_0014674_01012000200000000003_opt143 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "만 17세 이상 실명의 개인 및 개인사업자" ;
     market:joinWay "스마트폰" ;
     market:maxLimitNote "300000" ;
@@ -2409,7 +2652,13 @@ mktd:prdt_0014674_01012000200000000003 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0014674_01012000200000000004 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """가입금액: 0원
+가입기간: 31일
+(1인 최대 1계좌)
+적립방법 : 연결계좌를 통한 직접 입금만 가능하며, 입금은 신규일부터 만기일 전일까지 1일 1회 가능
+납입금액 : 1일(1회) 최소 100원, 최대 5만원""" ;
     market:hasRateOption mktd:prdt_0014674_01012000200000000004_opt144 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "만 17세 이상 실명의 개인 및 개인사업자" ;
     market:joinWay "스마트폰" ;
     market:preferentialCondition "입금할 때마다 우대금리를 랜덤으로 제공하며, 입금 시 제공되는 우대금리를 누적으로 합산하여 만기 해지 시 적용 (최고 연 6.0%)" ;
@@ -2420,8 +2669,12 @@ mktd:prdt_0014674_01012000200000000004 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0014674_01012000200000000005 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """가입금액: 1만원 이상 1천만원 이하
+가입기간: 6개월 , 1년
+(1인 최대1계좌)""" ;
     market:hasRateOption mktd:prdt_0014674_01012000200000000005_opt145,
         mktd:prdt_0014674_01012000200000000005_opt146 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "만 17세 이상 실명의 개인 및 개인사업자" ;
     market:joinWay "스마트폰" ;
     market:maxLimitNote "10000000" ;
@@ -2433,9 +2686,14 @@ mktd:prdt_0014674_01012000200000000005 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0014674_01012000200000000006 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """가입금액: 0원 / 최대 납입금액 : 월 30만원 
+가입기간 : 1년,2년,3년,4년,5년
+ ㅇ 4년 금리: 최저 연 3.3% ~ 최고 연 7.3%
+ ㅇ 5년 금리: 최저 연 3.5% ~ 최고 연 7.5%""" ;
     market:hasRateOption mktd:prdt_0014674_01012000200000000006_opt147,
         mktd:prdt_0014674_01012000200000000006_opt148,
         mktd:prdt_0014674_01012000200000000006_opt149 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "만 17세 미만의 실명의 개인" ;
     market:joinWay "스마트폰" ;
     market:maxLimitNote "300000" ;
@@ -2448,10 +2706,14 @@ mktd:prdt_0014674_01012000200000000006 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0014674_01012000210000000000 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """가입금액: 1천원 이상 300만원 이하
+가입기간: 6개월 ~ 36개월
+(1인 최대 3계좌)""" ;
     market:hasRateOption mktd:prdt_0014674_01012000210000000000_opt150,
         mktd:prdt_0014674_01012000210000000000_opt151,
         mktd:prdt_0014674_01012000210000000000_opt152,
         mktd:prdt_0014674_01012000210000000000_opt153 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "만 17세 이상 실명의 개인 및 개인사업자" ;
     market:joinWay "스마트폰" ;
     market:maxLimitNote "3000000" ;
@@ -2463,12 +2725,15 @@ mktd:prdt_0014674_01012000210000000000 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0014674_01013000110000000001 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """가입금액 : 1백만원 이상
+가입기간 : 1개월~36개월""" ;
     market:hasRateOption mktd:prdt_0014674_01013000110000000001_opt131,
         mktd:prdt_0014674_01013000110000000001_opt132,
         mktd:prdt_0014674_01013000110000000001_opt133,
         mktd:prdt_0014674_01013000110000000001_opt134,
         mktd:prdt_0014674_01013000110000000001_opt135,
         mktd:prdt_0014674_01013000110000000001_opt136 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "만 17세 이상 실명의 개인 및 개인사업자" ;
     market:joinWay "스마트폰" ;
     market:preferentialCondition "우대조건 없음" ;
@@ -2545,8 +2810,12 @@ mktd:prdt_0014674_01021000700000000003 a products:JeonseLoanProduct ;
 
 mktd:prdt_0014807_10120114300011 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """- 1인 다계좌 가능 
+  단,  합산금액 5억원 이내 
+- 최저 100만원 이상""" ;
     market:hasRateOption mktd:prdt_0014807_10120114300011_opt137,
         mktd:prdt_0014807_10120114300011_opt138 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:maxLimitNote "500000000" ;
@@ -2564,9 +2833,13 @@ mktd:prdt_0014807_10120114300011 a products:TimeDepositProduct ;
 
 mktd:prdt_0014807_10120114700011 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """-1인 다계좌 가능
+ 단, 합산금액 최대 10억원 이내
+-최저 10만원 이상""" ;
     market:hasRateOption mktd:prdt_0014807_10120114700011_opt139,
         mktd:prdt_0014807_10120114700011_opt140,
         mktd:prdt_0014807_10120114700011_opt141 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인" ;
     market:joinWay "인터넷,스마트폰" ;
     market:maxLimitNote "1000000000" ;
@@ -2578,7 +2851,10 @@ mktd:prdt_0014807_10120114700011 a products:TimeDepositProduct ;
 
 mktd:prdt_0014807_10120116100011 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """-1인 1계좌
+-최저 100만원 이상""" ;
     market:hasRateOption mktd:prdt_0014807_10120116100011_opt142 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인" ;
     market:joinWay "인터넷,스마트폰" ;
     market:maxLimitNote "30000000" ;
@@ -2594,9 +2870,12 @@ mktd:prdt_0014807_10120116100011 a products:TimeDepositProduct ;
 
 mktd:prdt_0014807_10140114300011 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """- 1인 1계좌 
+- 월 가입한도 : 100만원""" ;
     market:hasRateOption mktd:prdt_0014807_10140114300011_opt154,
         mktd:prdt_0014807_10140114300011_opt155,
         mktd:prdt_0014807_10140114300011_opt156 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:maxLimitNote "1000000" ;
@@ -2614,8 +2893,11 @@ mktd:prdt_0014807_10140114300011 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0014807_10140114700041 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """- 1인 1계좌 
+- 월 가입한도 : 100만원""" ;
     market:hasRateOption mktd:prdt_0014807_10140114700041_opt157,
         mktd:prdt_0014807_10140114700041_opt158 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인" ;
     market:joinWay "스마트폰" ;
     market:maxLimitNote "1000000" ;
@@ -2630,9 +2912,12 @@ mktd:prdt_0014807_10140114700041 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0014807_10141109800021 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """- 1인 1계좌
+- 월 가입한도 : 100만원""" ;
     market:hasRateOption mktd:prdt_0014807_10141109800021_opt159,
         mktd:prdt_0014807_10141109800021_opt160,
         mktd:prdt_0014807_10141109800021_opt161 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인 및 개인사업자" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:maxLimitNote "1000000" ;
@@ -2650,9 +2935,12 @@ mktd:prdt_0014807_10141109800021 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0014807_10141114300011 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """- 1인 1계좌 
+- 월 가입한도 : 20만원""" ;
     market:hasRateOption mktd:prdt_0014807_10141114300011_opt162,
         mktd:prdt_0014807_10141114300011_opt163,
         mktd:prdt_0014807_10141114300011_opt164 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의 개인" ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:maxLimitNote "200000" ;
@@ -2670,8 +2958,11 @@ mktd:prdt_0014807_10141114300011 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0014807_10141114700041 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """- 1인 1계좌 
+- 월 가입한도 : 100만원""" ;
     market:hasRateOption mktd:prdt_0014807_10141114700041_opt165,
         mktd:prdt_0014807_10141114700041_opt166 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "실명의개인" ;
     market:joinWay "스마트폰" ;
     market:maxLimitNote "1000000" ;
@@ -2799,12 +3090,16 @@ mktd:prdt_0015130_03005 a products:MortgageLoanProduct ;
 
 mktd:prdt_0015130_10_01_20_388_0002 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입방법 : 스마트폰
+2. 가입금액 : 100만원 이상(원단위)
+3. 가입기간 : 1개월 이상 ~ 36개월 이하(월, 일단위 지정 가능)""" ;
     market:hasRateOption mktd:prdt_0015130_10_01_20_388_0002_opt143,
         mktd:prdt_0015130_10_01_20_388_0002_opt144,
         mktd:prdt_0015130_10_01_20_388_0002_opt145,
         mktd:prdt_0015130_10_01_20_388_0002_opt146,
         mktd:prdt_0015130_10_01_20_388_0002_opt147,
         mktd:prdt_0015130_10_01_20_388_0002_opt148 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "만 14세 이상의 실명의 개인" ;
     market:joinWay "스마트폰" ;
     market:preferentialCondition "※복잡한 우대조건 없이 가입가능한 정기예금" ;
@@ -2815,10 +3110,15 @@ mktd:prdt_0015130_10_01_20_388_0002 a products:TimeDepositProduct ;
 
 mktd:prdt_0015130_10_01_30_355_0002 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입방법 : 스마트폰
+2. 가입금액 : 1천원 이상(원단위)
+3. 가입기간 : 6개월 이상 ~ 36개월 이하(월, 일단위 지정 가능)
+4. 월 적립한도 : 1천원 이상 월 300만원 이하 원단위(단, 자동연장된 원리금은 월 적립한도에 포함되지 않음)""" ;
     market:hasRateOption mktd:prdt_0015130_10_01_30_355_0002_opt167,
         mktd:prdt_0015130_10_01_30_355_0002_opt168,
         mktd:prdt_0015130_10_01_30_355_0002_opt169,
         mktd:prdt_0015130_10_01_30_355_0002_opt170 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "만 14세 이상의 실명의 개인" ;
     market:joinWay "스마트폰" ;
     market:preferentialCondition """자동이체시 우대금리 제공 : 연 0.20%p
@@ -2831,7 +3131,13 @@ mktd:prdt_0015130_10_01_30_355_0002 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0015130_10_01_30_355_0005 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입방법 : 스마트폰
+2. 가입금액 : 1천원, 2천원, 3천원, 5천원, 1만원
+3. 가입기간 : 6개월
+4. 26주적금서비스(자동이체)를 통해서 납입이 가능하며, 그 외의 입금은 모두 제한됨
+(단, 26주적금 서비스를 통한 납입 실패 시 빈자리 채우기로 납입 가능)""" ;
     market:hasRateOption mktd:prdt_0015130_10_01_30_355_0005_opt171 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "만 14세 이상의 실명의 개인" ;
     market:joinWay "스마트폰" ;
     market:preferentialCondition """자동이체 연속 성공 우대금리 제공 : 최고 연 3.00%p
@@ -2846,7 +3152,12 @@ mktd:prdt_0015130_10_01_30_355_0005 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0015130_10_01_30_355_0006 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입방법 : 스마트폰
+2. 납입금액 : 1회 100원 이상 3만원 이하(원단위)
+3. 가입기간 : 31일
+4. 직접 납입을 통해서 1일 1회만 입금 가능하며, 그 외의 입금은 모두 제한됨""" ;
     market:hasRateOption mktd:prdt_0015130_10_01_30_355_0006_opt172 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "만 14세 이상의 실명의 개인" ;
     market:joinWay "스마트폰" ;
     market:preferentialCondition """매일/보너스 우대금리 제공 : 최고 연 5.50%p
@@ -2861,7 +3172,12 @@ mktd:prdt_0015130_10_01_30_355_0006 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0015130_10_01_30_355_0007 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """1. 가입방법: 스마트폰 
+2. 가입기간 : 12개월 
+3. 월 적립한도: 1천원 이상 월 20만원 이하 원단위(단, 자동연장된 원리금은 월 적립한도에 포함되지 않음)
+4. 우리아이서비스를 통해 법정대리인으로 확인된 부 또는 모가 본인을 대리하여 가입 가능""" ;
     market:hasRateOption mktd:prdt_0015130_10_01_30_355_0007_opt173 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "우리아이통장을 보유한 만 0세 이상 만 17세 미만의 실명의 개인" ;
     market:joinWay "스마트폰" ;
     market:preferentialCondition """자동이체시 우대금리 제공 : 연 4.00%p
@@ -2896,9 +3212,12 @@ mktd:prdt_0015130_30270004 a products:JeonseLoanProduct ;
 
 mktd:prdt_0017801_1001202000002 a products:TimeDepositProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """· 계약기간 : 3개월, 6개월, 12개월 
+· 가입금액 : 최소 1백만원 최대 10억원""" ;
     market:hasRateOption mktd:prdt_0017801_1001202000002_opt149,
         mktd:prdt_0017801_1001202000002_opt150,
         mktd:prdt_0017801_1001202000002_opt151 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "토스뱅크 통장 또는 토스뱅크 서브 통장을 보유한 만 17세 이상 실명의 개인" ;
     market:joinWay "스마트폰" ;
     market:maxLimitNote "1000000000" ;
@@ -2910,7 +3229,11 @@ mktd:prdt_0017801_1001202000002 a products:TimeDepositProduct ;
 
 mktd:prdt_0017801_1001303001003 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """· 1인 1계좌 (단, 이벤트 등으로 토스뱅크가 복수의 계좌개설을 허용하는 경우 추가 개설 가능)
+· 가입금액 : 0원
+· 우대금리는 만기 해지하는 경우에만 제공됨""" ;
     market:hasRateOption mktd:prdt_0017801_1001303001003_opt174 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "· 토스뱅크 통장 또는 토스뱅크 서브 통장을 보유한 실명의 개인" ;
     market:joinWay "스마트폰" ;
     market:maxLimitNote "300000" ;
@@ -2922,11 +3245,15 @@ mktd:prdt_0017801_1001303001003 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0017801_1001303001004 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """· 1인 1계좌 (단, 이벤트 등으로 토스뱅크가 복수의 계좌개설을 허용하는 경우 추가 개설 가능)
+· 가입금액 : 0원 이상 300만원 이하
+· 우대금리는 만기 해지하는 경우에만 제공됨""" ;
     market:hasRateOption mktd:prdt_0017801_1001303001004_opt175,
         mktd:prdt_0017801_1001303001004_opt176,
         mktd:prdt_0017801_1001303001004_opt177,
         mktd:prdt_0017801_1001303001004_opt178,
         mktd:prdt_0017801_1001303001004_opt179 ;
+    market:joinDenyNote "제한없음" ;
     market:joinMember "· 토스뱅크 통장 또는 토스뱅크 서브 통장을 보유한 실명의 개인" ;
     market:joinWay "스마트폰" ;
     market:maxLimitNote "3000000" ;
@@ -2938,7 +3265,11 @@ mktd:prdt_0017801_1001303001004 a products:InstallmentSavingsProduct ;
 
 mktd:prdt_0017801_1001303001005 a products:InstallmentSavingsProduct ;
     market:disclosureMonth "202607" ;
+    market:etcNote """· 1인 1계좌 
+· 가입금액 : 0원
+· 우대금리는 만기 해지하는 경우에만 제공됨""" ;
     market:hasRateOption mktd:prdt_0017801_1001303001005_opt180 ;
+    market:joinDenyNote "일부제한" ;
     market:joinMember "· 토스뱅크 아이 통장을 보유한 15세 이하 실명의 개인" ;
     market:joinWay "스마트폰" ;
     market:maxLimitNote "200000" ;

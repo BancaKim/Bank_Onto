@@ -33,6 +33,9 @@ MKTD = Namespace("https://w3id.org/bank-onto/market/data/")
 PRODUCTS = Namespace("https://w3id.org/bank-onto/products/")
 PARTIES = Namespace("https://w3id.org/bank-onto/parties/")
 
+# FSS 공시 코드 → 텍스트 (금융상품한눈에 API 명세의 join_deny 코드)
+JOIN_DENY_TEXT = {"1": "제한없음", "2": "서민전용", "3": "일부제한"}
+
 PRODUCT_CLASS = {
     "deposit": PRODUCTS.TimeDepositProduct,
     "saving": PRODUCTS.InstallmentSavingsProduct,
@@ -105,6 +108,9 @@ def convert(input_dir: Path, source_note: str) -> Graph:
             add_if(graph, product, MARKET.joinWay, item.get("join_way"))
             add_if(graph, product, MARKET.joinMember, item.get("join_member"))
             add_if(graph, product, MARKET.preferentialCondition, item.get("spcl_cnd"))
+            add_if(graph, product, MARKET.joinDenyNote,
+                   JOIN_DENY_TEXT.get(str(item.get("join_deny", "")).strip()))
+            add_if(graph, product, MARKET.etcNote, item.get("etc_note"))
             add_if(graph, product, MARKET.maxLimitNote,
                    item.get("max_limit") or item.get("loan_lmt"))
             add_if(graph, product, MARKET.sourceNote, source_note)
