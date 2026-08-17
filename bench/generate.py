@@ -25,7 +25,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
-from ingest.fss_naming import credit_product_name  # noqa: E402
+from ingest.fss_naming import clean_name, credit_name_resolver  # noqa: E402
 
 FSS_DIR = REPO_ROOT / "data" / "fss"
 LAWS_DIR = REPO_ROOT / "data" / "laws"
@@ -50,6 +50,14 @@ def fmt_rate(value) -> str:
     return f"{float(value):g}"
 
 
+def eul_reul(word: str) -> str:
+    """받침 유무에 따른 목적격 조사 선택 (한글이 아니면 '을(를)')."""
+    last = word[-1]
+    if "가" <= last <= "힣":
+        return "을" if (ord(last) - ord("가")) % 28 else "를"
+    return "을(를)"
+
+
 # ----------------------------------------------------------------------
 # 공시형 (상품)
 # ----------------------------------------------------------------------
@@ -64,13 +72,12 @@ def load_products() -> list[dict]:
         for opt in data.get("optionList", []):
             options_by_code.setdefault(
                 f"{opt['fin_co_no']}:{opt['fin_prdt_cd']}", []).append(opt)
+        credit_name = credit_name_resolver(data.get("baseList", []))
         for item in data.get("baseList", []):
             key = f"{item['fin_co_no']}:{item['fin_prdt_cd']}"
-            # 신용대출은 같은 상품명이 유형별(일반/마이너스한도)로 중복 공시됨
-            # — 명명 규칙은 KB 적재(fss_to_ttl)와 공유 (ingest/fss_naming.py)
-            name = item["fin_prdt_nm"]
-            if kind == "credit":
-                name = credit_product_name(name, item.get("crdt_prdt_type_nm"))
+            # 명명 규칙은 KB 적재(fss_to_ttl)와 공유 (ingest/fss_naming.py)
+            name = credit_name(item) if kind == "credit" \
+                else clean_name(item["fin_prdt_nm"])
             products.append({
                 "kind": kind,
                 "bank": item["kor_co_nm"],
@@ -348,8 +355,8 @@ def law_evidence(law: dict, article: dict) -> dict:
 
 # 조문위치형 법령별 할당 (카테고리 최소 커버리지 보장)
 R1_QUOTA = {
-    "여신전문금융업법": 24, "외국환거래법": 18, "근로자퇴직급여 보장법": 22,
-    "자본시장과 금융투자업에 관한 법률": 22, "은행법": 14,
+    "여신전문금융업법": 26, "외국환거래법": 19, "근로자퇴직급여 보장법": 24,
+    "자본시장과 금융투자업에 관한 법률": 24, "은행법": 14,
     "예금자보호법": 14, "금융소비자 보호에 관한 법률": 10,
 }
 
@@ -367,8 +374,8 @@ def gen_article_locate(laws):  # R1: 조문 위치형
             out.append({
                 "template": "article_locate",
                 "category": law["category"], "subcategory": law["name"],
-                "question": (f"「{law['name']}」에서 '{title}'을(를) 규정한 "
-                             f"조문은 몇 조인가?"),
+                "question": (f"「{law['name']}」에서 '{title}'{eul_reul(title)} "
+                             f"규정한 조문은 몇 조인가?"),
                 "answer_type": "span", "answer": art["label"],
                 "evidence": law_evidence(law, art),
             })
@@ -393,12 +400,15 @@ def gen_definitions(laws):  # R2: 정의형 (용어 역조회)
                 # "다음 각 목의 …" 류는 참조문이지 정의가 아님 (용어 특정 불가)
                 if "다음 각" in definition or len(definition) < 25:
                     continue
+                question = (f"「{law['name']}」 {art['label']}(정의)에서 "
+                            f"“{definition}”(으)로 정의되는 용어는 무엇인가?")
+                # 정답 용어가 질문 문면(정의문·법령명 포함)에 노출되면 제외
+                if term in question:
+                    continue
                 out.append({
                     "template": "definition_term",
                     "category": law["category"], "subcategory": law["name"],
-                    "question": (f"「{law['name']}」 {art['label']}(정의)에서 "
-                                 f"“{definition}”(으)로 정의되는 "
-                                 f"용어는 무엇인가?"),
+                    "question": question,
                     "answer_type": "span", "answer": term,
                     "evidence": law_evidence(law, art),
                 })
@@ -424,12 +434,6 @@ def gen_law_meta(laws):  # R3: 법령 메타형 (시행일·소관부처·법종
             "subcategory": law["name"],
             "question": f"「{law['name']}」의 소관부처는 어디인가?",
             "answer_type": "span", "answer": law["ministry"], "evidence": meta_ev,
-        })
-        out.append({
-            "template": "law_meta", "category": law["category"],
-            "subcategory": law["name"],
-            "question": f"「{law['name']}」의 법령 종류(법률/대통령령 등)는 무엇인가?",
-            "answer_type": "span", "answer": law["law_type"], "evidence": meta_ev,
         })
     return out
 
@@ -524,7 +528,7 @@ PRODUCT_QUOTA = [
 PRODUCT_OVERFLOW = ["rate_threshold", "join_way", "loan_rate_type"]
 
 REGULATION_QUOTA = [
-    (gen_article_locate, 124), (gen_definitions, 55), (gen_law_meta, 21),
+    (gen_article_locate, 131), (gen_definitions, 55), (gen_law_meta, 14),
     (gen_penalties, 40), (None, 60),  # None = temporal import
 ]
 REGULATION_OVERFLOW = ["article_locate", "definition_term"]
@@ -574,9 +578,11 @@ def assemble() -> list[dict]:
     for i, row in enumerate(unique, 1):
         prefix = "PRD" if row["qtype"] == "공시형" else "REG"
         row["id"] = f"{prefix}-{i:04d}"
+    # unit은 스키마 일관성을 위해 항상 존재 (HF pyarrow 타입 추론 안정화)
     ordered_keys = ["id", "qtype", "category", "subcategory", "template",
                     "question", "answer_type", "answer", "unit", "evidence"]
-    return [{k: row[k] for k in ordered_keys if k in row} for row in unique]
+    return [{k: row.get(k, "") if k == "unit" else row[k]
+             for k in ordered_keys} for row in unique]
 
 
 def _fill(picked: list, leftovers: dict, overflow_order: list[str],

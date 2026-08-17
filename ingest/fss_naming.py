@@ -6,11 +6,33 @@
 """
 from __future__ import annotations
 
+import re
 
-def credit_product_name(name: str, type_nm: str | None) -> str:
-    """유형명이 상품명을 포함하면 유형명을 그대로, 아니면 괄호 병기."""
-    if not type_nm or type_nm == name:
-        return name
-    if type_nm.startswith(name):
-        return type_nm  # 예: 장기카드대출 + 장기카드대출(카드론) → 장기카드대출(카드론)
-    return f"{name}({type_nm})"
+
+def clean_name(name: str) -> str:
+    """FSS 원본 상품명의 개행·연속 공백을 단일 공백으로 정규화."""
+    return re.sub(r"\s+", " ", name or "").strip()
+
+
+def credit_name_resolver(base_list: list[dict]):
+    """신용대출 baseList → 항목별 표시 이름 함수.
+
+    같은 은행에 정규화된 상품명이 중복될 때만(일반/마이너스한도 등 유형 중복
+    공시) 유형명을 병기한다 — 항상 병기하면 "가계신용대출(일반)(일반신용대출)"
+    같은 이중 괄호가 생긴다.
+    """
+    from collections import Counter
+
+    counts = Counter(
+        (item["fin_co_no"], clean_name(item["fin_prdt_nm"])) for item in base_list)
+
+    def name_of(item: dict) -> str:
+        name = clean_name(item["fin_prdt_nm"])
+        type_nm = clean_name(item.get("crdt_prdt_type_nm") or "")
+        if counts[(item["fin_co_no"], name)] <= 1 or not type_nm or type_nm in name:
+            return name
+        if type_nm.startswith(name):
+            return type_nm  # 장기카드대출 + 장기카드대출(카드론) → 후자
+        return f"{name}({type_nm})"
+
+    return name_of

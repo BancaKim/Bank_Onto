@@ -171,8 +171,8 @@ def main() -> int:
     md.append("")
     md.append("""## 해석과 한계
 
-1. **벡터 RAG의 실패는 수치 조회형에 집중된다** (penalty 57%, credit_avg 53%,
-   law_meta 52%, rate_threshold 72%): 질문과 어휘가 겹치는 청크는 찾아도 정답
+1. **벡터 RAG의 실패는 수치 조회형에 집중된다** (penalty 57%, credit_avg 52%,
+   law_meta 57%, rate_threshold 69%): 질문과 어휘가 겹치는 청크는 찾아도 정답
    수치가 있는 바로 그 청크를 top-5 안에 못 넣는다. 코퍼스가 커질수록(법령
    1,025개 조문 추가) 이 희석은 심해진다 — 같은 벤치마크에서 법령 적재 전후로
    벡터 성적이 하락한 것이 그 증거다.

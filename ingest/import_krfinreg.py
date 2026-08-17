@@ -25,6 +25,9 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO_ROOT))
+from ingest.fss_naming import clean_name  # noqa: E402
+
 FSS_DIR = REPO_ROOT / "data" / "fss"
 OUTPUT_PATH = REPO_ROOT / "data" / "krfinreg-bank-questions.jsonl"
 DEFAULT_SOURCE = Path.home() / "research_paper" / "experiments" / "questions.jsonl"
@@ -46,7 +49,7 @@ def load_products() -> dict[tuple[str, str], dict]:
         for item in data.get("baseList", []):
             products[(item["kor_co_nm"], item["fin_prdt_cd"])] = {
                 "bank": item["kor_co_nm"],
-                "name": item["fin_prdt_nm"],
+                "name": clean_name(item["fin_prdt_nm"]),  # KB 적재와 동일 정규화
                 "join_member": item.get("join_member") or "",
                 "join_deny": JOIN_DENY_TEXT.get(
                     str(item.get("join_deny", "")).strip(), ""),

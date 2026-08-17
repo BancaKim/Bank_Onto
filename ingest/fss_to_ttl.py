@@ -26,7 +26,7 @@ from rdflib import Graph, Literal, Namespace, URIRef
 from rdflib.namespace import RDF, XSD
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from ingest.fss_naming import credit_product_name  # noqa: E402
+from ingest.fss_naming import clean_name, credit_name_resolver  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_PATH = REPO_ROOT / "data" / "market-instances.ttl"
@@ -85,6 +85,7 @@ def convert(input_dir: Path, source_note: str) -> Graph:
 
         # 상품 기본 정보
         products_by_code: dict[tuple, URIRef] = {}
+        credit_name = credit_name_resolver(data.get("baseList", []))
         for item in data.get("baseList", []):
             co_no, prdt_cd = item["fin_co_no"], item["fin_prdt_cd"]
 
@@ -104,10 +105,8 @@ def convert(input_dir: Path, source_note: str) -> Graph:
             products_by_code[(co_no, prdt_cd)] = product
             n_products += 1
             graph.add((product, RDF.type, product_cls))
-            display_name = item["fin_prdt_nm"]
-            if kind == "credit":
-                display_name = credit_product_name(
-                    display_name, item.get("crdt_prdt_type_nm"))
+            display_name = credit_name(item) if kind == "credit" \
+                else clean_name(item["fin_prdt_nm"])
             graph.add((product, PRODUCTS.hasProductName, Literal(display_name)))
             graph.add((product, PRODUCTS.hasProductCode, Literal(prdt_cd)))
             graph.add((product, PRODUCTS.isOfferedBy, bank))

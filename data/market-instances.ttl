@@ -233,7 +233,7 @@ mktd:prdt_0010006_WR0002F a products:CreditLoanProduct ;
     market:joinWay "인터넷,스마트폰,전화(텔레뱅킹),기타" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "WR0002F" ;
-    products:hasProductName "장기카드대출(카드론)" ;
+    products:hasProductName "장기카드대출" ;
     products:isOfferedBy mktd:bank_0010006 .
 
 mktd:prdt_0010016_10511008001166004 a products:TimeDepositProduct ;
@@ -425,7 +425,7 @@ mktd:prdt_0010016_WR0002F a products:CreditLoanProduct,
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "WR0002F" ;
     products:hasProductName "마이너스한도대출",
-        "장기카드대출(카드론)" ;
+        "장기카드대출" ;
     products:isOfferedBy mktd:bank_0010016 .
 
 mktd:prdt_0010017_01020400490002 a products:InstallmentSavingsProduct ;
@@ -480,8 +480,7 @@ mktd:prdt_0010017_01020400530001 a products:InstallmentSavingsProduct ;
 - 신규시 우대이율 0.05% 및 해지시 우대이율 최대 0.15%""" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "01020400530001" ;
-    products:hasProductName """BNK내맘대로 
-적금""" ;
+    products:hasProductName "BNK내맘대로 적금" ;
     products:isOfferedBy mktd:bank_0010017 .
 
 mktd:prdt_0010017_01020400660001 a products:InstallmentSavingsProduct ;
@@ -499,8 +498,7 @@ mktd:prdt_0010017_01020400660001 a products:InstallmentSavingsProduct ;
     market:preferentialCondition "*우대이율 6개월 미만 최대2.00%, 6개월 이상 2.20%" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "01020400660001" ;
-    products:hasProductName """부산이라 좋다
-Big적금""" ;
+    products:hasProductName "부산이라 좋다 Big적금" ;
     products:isOfferedBy mktd:bank_0010017 .
 
 mktd:prdt_0010017_01020400700001 a products:InstallmentSavingsProduct ;
@@ -694,7 +692,7 @@ mktd:prdt_0010017_WR0002F a products:CreditLoanProduct ;
     market:joinWay "영업점,인터넷,모집인" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "WR0002F" ;
-    products:hasProductName "장기카드대출(카드론)" ;
+    products:hasProductName "장기카드대출" ;
     products:isOfferedBy mktd:bank_0010017 .
 
 mktd:prdt_0010019_1 a products:CreditLoanProduct ;
@@ -887,7 +885,7 @@ mktd:prdt_0010019_WR0002F a products:CreditLoanProduct ;
     market:joinWay "영업점,인터넷,기타" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "WR0002F" ;
-    products:hasProductName "장기카드대출(카드론)" ;
+    products:hasProductName "장기카드대출" ;
     products:isOfferedBy mktd:bank_0010019 .
 
 mktd:prdt_0010020_101272000006 a products:TimeDepositProduct ;
@@ -914,10 +912,7 @@ mktd:prdt_0010020_101272000006 a products:TimeDepositProduct ;
 ⑨공무원연금안심통장 가입고객""" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "101272000006" ;
-    products:hasProductName """제주Dream
-정기예금
-(개인/만기
-지급식)""" ;
+    products:hasProductName "제주Dream 정기예금 (개인/만기 지급식)" ;
     products:isOfferedBy mktd:bank_0010020 .
 
 mktd:prdt_0010020_101272000057 a products:TimeDepositProduct ;
@@ -940,8 +935,7 @@ mktd:prdt_0010020_101272000057 a products:TimeDepositProduct ;
 ②신규일로부터 만기달 제외한 계약기간의 1/2이상 매월 Jbank로그인 시 0.2%제공(만기시제공)""" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "101272000057" ;
-    products:hasProductName """J정기예금
-(만기지급식)""" ;
+    products:hasProductName "J정기예금 (만기지급식)" ;
     products:isOfferedBy mktd:bank_0010020 .
 
 mktd:prdt_0010020_101272000058 a products:TimeDepositProduct ;
@@ -961,10 +955,7 @@ mktd:prdt_0010020_101272000058 a products:TimeDepositProduct ;
 (단, 이벤트시 영업점,디지털채널에 고시한 우대금리를 추가 적용할 수 있음)""" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "101272000058" ;
-    products:hasProductName """스마일드림 
-정기예금
-(개인/선이자
-지급식)""" ;
+    products:hasProductName "스마일드림 정기예금 (개인/선이자 지급식)" ;
     products:isOfferedBy mktd:bank_0010020 .
 
 mktd:prdt_0010020_12106723 a products:MortgageLoanProduct ;
@@ -1094,7 +1085,7 @@ mktd:prdt_0010020_WR0001F a products:CreditLoanProduct ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "WR0001F" ;
-    products:hasProductName "개인신용대출(일반신용대출)" ;
+    products:hasProductName "개인신용대출" ;
     products:isOfferedBy mktd:bank_0010020 .
 
 mktd:prdt_0010020_WR0002F a products:OverdraftProduct ;
@@ -1106,7 +1097,7 @@ mktd:prdt_0010020_WR0002F a products:OverdraftProduct ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "WR0002F" ;
-    products:hasProductName "개인신용대출2(마이너스한도대출)" ;
+    products:hasProductName "개인신용대출2" ;
     products:isOfferedBy mktd:bank_0010020 .
 
 mktd:prdt_0010022_10_01_20_024_0046_0000 a products:TimeDepositProduct ;
@@ -1123,8 +1114,7 @@ mktd:prdt_0010022_10_01_20_024_0046_0000 a products:TimeDepositProduct ;
 없음""" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "10-01-20-024-0046-0000" ;
-    products:hasProductName """JB 다이렉트예금통장
-(만기일시지급식)""" ;
+    products:hasProductName "JB 다이렉트예금통장 (만기일시지급식)" ;
     products:isOfferedBy mktd:bank_0010022 .
 
 mktd:prdt_0010022_10_01_20_024_0059_0000 a products:TimeDepositProduct ;
@@ -1147,8 +1137,7 @@ mktd:prdt_0010022_10_01_20_024_0059_0000 a products:TimeDepositProduct ;
 2.개인(신용)정보 수집/이용 동의한 경우(단, 상품서비스 안내수단 전체 동의한 경우에 한함) 0.10%""" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "10-01-20-024-0059-0000" ;
-    products:hasProductName """JB 123 정기예금
- (만기일시지급식)""" ;
+    products:hasProductName "JB 123 정기예금 (만기일시지급식)" ;
     products:isOfferedBy mktd:bank_0010022 .
 
 mktd:prdt_0010022_10_01_20_024_0063_0000 a products:TimeDepositProduct ;
@@ -1217,7 +1206,7 @@ mktd:prdt_0010022_CR0001A a products:CreditLoanProduct ;
     market:joinWay "영업점" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "CR0001A" ;
-    products:hasProductName "가계일반자금대출(일반신용대출)" ;
+    products:hasProductName "가계일반자금대출" ;
     products:isOfferedBy mktd:bank_0010022 .
 
 mktd:prdt_0010022_CR0001C a products:OverdraftProduct ;
@@ -1229,7 +1218,7 @@ mktd:prdt_0010022_CR0001C a products:OverdraftProduct ;
     market:joinWay "영업점" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "CR0001C" ;
-    products:hasProductName "평생종합통장(마이너스한도대출)" ;
+    products:hasProductName "평생종합통장" ;
     products:isOfferedBy mktd:bank_0010022 .
 
 mktd:prdt_0010022_WR0001A a products:JeonseLoanProduct,
@@ -1280,7 +1269,7 @@ mktd:prdt_0010022_WR0002F a products:CreditLoanProduct ;
     market:joinWay "영업점" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "WR0002F" ;
-    products:hasProductName "장기카드대출(카드론)" ;
+    products:hasProductName "장기카드대출" ;
     products:isOfferedBy mktd:bank_0010022 .
 
 mktd:prdt_0010024_21000111 a products:InstallmentSavingsProduct ;
@@ -1471,8 +1460,7 @@ mktd:prdt_0010024_21001292 a products:InstallmentSavingsProduct ;
 ④상품가입 전 마케팅동의시0.1%""" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "21001292" ;
-    products:hasProductName """오면우대! 하면우대!
-정기적금""" ;
+    products:hasProductName "오면우대! 하면우대! 정기적금" ;
     products:isOfferedBy mktd:bank_0010024 .
 
 mktd:prdt_0010024_30002130 a products:MortgageLoanProduct ;
@@ -1507,8 +1495,7 @@ mktd:prdt_0010024_30002257 a products:JeonseLoanProduct ;
     market:maxLimitNote "최대4.44억원" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "30002257" ;
-    products:hasProductName """모바일전세자금대출
-(주택금융공사)""" ;
+    products:hasProductName "모바일전세자금대출 (주택금융공사)" ;
     products:isOfferedBy mktd:bank_0010024 .
 
 mktd:prdt_0010024_30002497 a products:MortgageLoanProduct ;
@@ -1574,7 +1561,7 @@ mktd:prdt_0010024_WR0002F a products:CreditLoanProduct ;
     market:joinWay "영업점,인터넷,스마트폰,전화(텔레뱅킹),기타" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "WR0002F" ;
-    products:hasProductName "장기카드대출(카드론)" ;
+    products:hasProductName "장기카드대출" ;
     products:isOfferedBy mktd:bank_0010024 .
 
 mktd:prdt_0010026_01211210113 a products:InstallmentSavingsProduct ;
@@ -1632,8 +1619,7 @@ mktd:prdt_0010026_01211210122 a products:InstallmentSavingsProduct ;
    인 경우 : 연 1.0%p""" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "01211210122" ;
-    products:hasProductName """IBK중기근로자우대적금
-(자유적립식)""" ;
+    products:hasProductName "IBK중기근로자우대적금 (자유적립식)" ;
     products:isOfferedBy mktd:bank_0010026 .
 
 mktd:prdt_0010026_01211210129 a products:InstallmentSavingsProduct ;
@@ -1727,8 +1713,7 @@ mktd:prdt_0010026_21 a products:CreditLoanProduct ;
     market:joinWay "영업점,스마트폰,모집인" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "21" ;
-    products:hasProductName """일반신용
-대출(일반신용대출)""" ;
+    products:hasProductName "일반신용 대출" ;
     products:isOfferedBy mktd:bank_0010026 .
 
 mktd:prdt_0010026_212010144 a products:MortgageLoanProduct ;
@@ -1794,8 +1779,7 @@ mktd:prdt_0010026_31 a products:OverdraftProduct ;
     market:joinWay "영업점,스마트폰,모집인" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "31" ;
-    products:hasProductName """마이너스
-한도대출(마이너스한도대출)""" ;
+    products:hasProductName "마이너스 한도대출" ;
     products:isOfferedBy mktd:bank_0010026 .
 
 mktd:prdt_0010026_WR0002F a products:CreditLoanProduct ;
@@ -1804,7 +1788,7 @@ mktd:prdt_0010026_WR0002F a products:CreditLoanProduct ;
     market:joinWay "영업점,인터넷,스마트폰,전화(텔레뱅킹)" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "WR0002F" ;
-    products:hasProductName "장기카드대출(카드론)" ;
+    products:hasProductName "장기카드대출" ;
     products:isOfferedBy mktd:bank_0010026 .
 
 mktd:prdt_0010030_03101 a products:InstallmentSavingsProduct ;
@@ -1876,9 +1860,8 @@ mktd:prdt_0010030_1 a products:CreditLoanProduct,
     market:maxLimitNote "- LTV 70% 등" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "1" ;
-    products:hasProductName "개인신용대출(신규대출취급중단)(일반신용대출)",
-        """산은 주택대출
-(생활자금)""" ;
+    products:hasProductName "개인신용대출(신규대출취급중단)",
+        "산은 주택대출 (생활자금)" ;
     products:isOfferedBy mktd:bank_0010030 .
 
 mktd:prdt_0010030_2 a products:OverdraftProduct ;
@@ -1886,7 +1869,7 @@ mktd:prdt_0010030_2 a products:OverdraftProduct ;
     market:joinWay "영업점" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "2" ;
-    products:hasProductName "개인신용대출(마이너스한도대출)" ;
+    products:hasProductName "개인신용대출" ;
     products:isOfferedBy mktd:bank_0010030 .
 
 mktd:prdt_0010927_010200100051 a products:InstallmentSavingsProduct ;
@@ -2021,8 +2004,7 @@ mktd:prdt_0010927_KB200300000002 a products:MortgageLoanProduct ;
     market:maxLimitNote "LTV 70%" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "KB200300000002" ;
-    products:hasProductName """KB주택담보대출변동
-(일반자금)""" ;
+    products:hasProductName "KB주택담보대출변동 (일반자금)" ;
     products:isOfferedBy mktd:bank_0010927 .
 
 mktd:prdt_0010927_KB200331100045 a products:MortgageLoanProduct ;
@@ -2129,7 +2111,7 @@ mktd:prdt_0011625_CR0001A a products:CreditLoanProduct ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "CR0001A" ;
-    products:hasProductName "개인신용대출(일반신용대출)(일반신용대출)" ;
+    products:hasProductName "개인신용대출(일반신용대출)" ;
     products:isOfferedBy mktd:bank_0011625 .
 
 mktd:prdt_0011625_CR0001C a products:OverdraftProduct ;
@@ -2141,7 +2123,7 @@ mktd:prdt_0011625_CR0001C a products:OverdraftProduct ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "CR0001C" ;
-    products:hasProductName "개인신용대출(마이너스한도대출)(마이너스한도대출)" ;
+    products:hasProductName "개인신용대출(마이너스한도대출)" ;
     products:isOfferedBy mktd:bank_0011625 .
 
 mktd:prdt_0011625_WR0001A a products:JeonseLoanProduct ;
@@ -2467,7 +2449,7 @@ mktd:prdt_0013175_CR0001A a products:CreditLoanProduct ;
     market:joinWay "영업점" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "CR0001A" ;
-    products:hasProductName "가계신용대출(일반)(일반신용대출)" ;
+    products:hasProductName "가계신용대출(일반)" ;
     products:isOfferedBy mktd:bank_0013175 .
 
 mktd:prdt_0013175_CR0001B a products:OverdraftProduct ;
@@ -2479,7 +2461,7 @@ mktd:prdt_0013175_CR0001B a products:OverdraftProduct ;
     market:joinWay "영업점" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "CR0001B" ;
-    products:hasProductName "가계신용대출(마이너스대출)(마이너스한도대출)" ;
+    products:hasProductName "가계신용대출(마이너스대출)" ;
     products:isOfferedBy mktd:bank_0013175 .
 
 mktd:prdt_0013175_WR0002F a products:CreditLoanProduct ;
@@ -2488,7 +2470,7 @@ mktd:prdt_0013175_WR0002F a products:CreditLoanProduct ;
     market:joinWay "영업점,인터넷,스마트폰,전화(텔레뱅킹),기타" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "WR0002F" ;
-    products:hasProductName "장기카드대출(카드론)" ;
+    products:hasProductName "장기카드대출" ;
     products:isOfferedBy mktd:bank_0013175 .
 
 mktd:prdt_0013909_0300123202302 a products:JeonseLoanProduct ;
@@ -2750,7 +2732,7 @@ mktd:prdt_0014674_010200010000000001 a products:CreditLoanProduct ;
     market:joinWay "스마트폰" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "010200010000000001" ;
-    products:hasProductName "신용대출(일반신용대출)" ;
+    products:hasProductName "신용대출" ;
     products:isOfferedBy mktd:bank_0014674 .
 
 mktd:prdt_0014674_010200040000000001 a products:OverdraftProduct ;
@@ -2761,7 +2743,7 @@ mktd:prdt_0014674_010200040000000001 a products:OverdraftProduct ;
     market:joinWay "스마트폰" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "010200040000000001" ;
-    products:hasProductName "마이너스 통장 대출(마이너스한도대출)" ;
+    products:hasProductName "마이너스 통장 대출" ;
     products:isOfferedBy mktd:bank_0014674 .
 
 mktd:prdt_0014674_01021000300000000001 a products:MortgageLoanProduct ;
@@ -2827,8 +2809,7 @@ mktd:prdt_0014807_10120114300011 a products:TimeDepositProduct ;
  - 수협신용카드 / 당행 펀드 또는 적금 / 수협체크카드""" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "10120114300011" ;
-    products:hasProductName """Sh해양플라스틱Zero!예금
-(만기일시지급식)""" ;
+    products:hasProductName "Sh해양플라스틱Zero!예금 (만기일시지급식)" ;
     products:isOfferedBy mktd:bank_0014807 .
 
 mktd:prdt_0014807_10120114700011 a products:TimeDepositProduct ;
@@ -2887,8 +2868,7 @@ mktd:prdt_0014807_10140114300011 a products:InstallmentSavingsProduct ;
  - 수협신용카드 / 당행 펀드 / 수협체크카드""" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "10140114300011" ;
-    products:hasProductName """Sh해양플라스틱Zero!적금
-(정액적립식)""" ;
+    products:hasProductName "Sh해양플라스틱Zero!적금 (정액적립식)" ;
     products:isOfferedBy mktd:bank_0014807 .
 
 mktd:prdt_0014807_10140114700041 a products:InstallmentSavingsProduct ;
@@ -2906,8 +2886,7 @@ mktd:prdt_0014807_10140114700041 a products:InstallmentSavingsProduct ;
 2. 자동이체 납입 : 0.8% (만기시)""" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "10140114700041" ;
-    products:hasProductName """헤이(Hey)적금
-(정액적립식)""" ;
+    products:hasProductName "헤이(Hey)적금 (정액적립식)" ;
     products:isOfferedBy mktd:bank_0014807 .
 
 mktd:prdt_0014807_10141109800021 a products:InstallmentSavingsProduct ;
@@ -2952,8 +2931,7 @@ mktd:prdt_0014807_10141114300011 a products:InstallmentSavingsProduct ;
  - 수협신용카드 / 당행 펀드 / 수협체크카드""" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "10141114300011" ;
-    products:hasProductName """Sh해양플라스틱Zero!적금
-(자유적립식)""" ;
+    products:hasProductName "Sh해양플라스틱Zero!적금 (자유적립식)" ;
     products:isOfferedBy mktd:bank_0014807 .
 
 mktd:prdt_0014807_10141114700041 a products:InstallmentSavingsProduct ;
@@ -2971,8 +2949,7 @@ mktd:prdt_0014807_10141114700041 a products:InstallmentSavingsProduct ;
 2. 자동이체 납입 : 0.8% (만기시)""" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "10141114700041" ;
-    products:hasProductName """헤이(Hey)적금
-(자유적립식)""" ;
+    products:hasProductName "헤이(Hey)적금 (자유적립식)" ;
     products:isOfferedBy mktd:bank_0014807 .
 
 mktd:prdt_0014807_1130 a products:JeonseLoanProduct ;
@@ -3037,7 +3014,7 @@ mktd:prdt_0014807_601 a products:CreditLoanProduct ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "601" ;
-    products:hasProductName "개인신용대출(일반신용대출)" ;
+    products:hasProductName "개인신용대출" ;
     products:isOfferedBy mktd:bank_0014807 .
 
 mktd:prdt_0014807_804 a products:OverdraftProduct ;
@@ -3049,7 +3026,7 @@ mktd:prdt_0014807_804 a products:OverdraftProduct ;
     market:joinWay "영업점,인터넷,스마트폰" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "804" ;
-    products:hasProductName "개인신용마이너스한도대출(마이너스한도대출)" ;
+    products:hasProductName "개인신용마이너스한도대출" ;
     products:isOfferedBy mktd:bank_0014807 .
 
 mktd:prdt_0015130_030020001 a products:CreditLoanProduct ;
@@ -3297,7 +3274,7 @@ mktd:prdt_0017801_20_01_03_021_0001 a products:OverdraftProduct ;
     market:joinWay "스마트폰" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "20-01-03-021-0001" ;
-    products:hasProductName "토스뱅크 마이너스 통장대출(마이너스한도대출)" ;
+    products:hasProductName "토스뱅크 마이너스 통장대출" ;
     products:isOfferedBy mktd:bank_0017801 .
 
 mktd:prdt_0017801_20_01_03_311_0001 a products:CreditLoanProduct ;
@@ -3308,7 +3285,7 @@ mktd:prdt_0017801_20_01_03_311_0001 a products:CreditLoanProduct ;
     market:joinWay "스마트폰" ;
     market:sourceNote "금융감독원 금융상품통합비교공시 Open API (finlife.fss.or.kr)" ;
     products:hasProductCode "20-01-03-311-0001" ;
-    products:hasProductName "토스뱅크 신용대출(일반신용대출)" ;
+    products:hasProductName "토스뱅크 신용대출" ;
     products:isOfferedBy mktd:bank_0017801 .
 
 mktd:bank_0010006 a parties:Bank ;
