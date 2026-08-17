@@ -40,13 +40,20 @@ eval/              3-way RAG 벤치마크 (벡터 vs LPG vs 온톨로지)
   run_retrieval_eval.py   검색 계층 3-way → docs/benchmark-report.md
   run_market_eval.py      시장 데이터 실무 벤치마크 (질문·정답 SPARQL 자동생성)
   run_answer_eval.py      답변 계층 3-way: MCQ + LLM심판 + 유사도 (API 키 필요)
+bench/             HF 공개용 Bank-Onto-Bench v2 (1,000문항, 규정 300:공시 700)
+  fetch_laws.py      법령정보센터 DRF API로 현행 법령 7종 수집 → data/laws/*.json
+  generate.py        공시·법령 원문에서 기계 생성 (결정적, LLM 불개입, 가상개체 없음)
+  export_xlsx.py     → docs/bank-onto-bench-v2.xlsx
+data/bank-onto-bench-v2.jsonl       벤치마크 본체 (+ 같은 이름 -README.md = HF 카드)
+data/laws/         법령 원문 스냅샷 (조문 구조화 JSON)
 data/fss/sample/   가상 은행 픽스처 (FSS API 스키마 동일, 파이프라인 검증용)
 data/market-instances.ttl  변환된 시장 데이터 (현재 샘플 기준; KB가 자동 로드)
 scripts/           validate.py (구문·참조·ko레이블 검증), query.py (예시 SPARQL),
                    export_benchmark_xlsx.py (벤치마크 4종 → docs/bank-onto-benchmark-v1.xlsx)
 tests/             test_knowledge_layer.py (KB 단위 10건) +
                    test_retrievers.py (결정성·다중홉·픽스처 격리 3건) +
-                   test_krfinreg.py (이식 필드·데이터셋 무결성 3건) — 모두 API 키 불필요
+                   test_krfinreg.py (이식 필드·데이터셋 무결성 3건) +
+                   test_bench_v2.py (v2 규모·비율·균형·커버리지 5건) — 모두 API 키 불필요
 docs/              architecture.md, benchmark-report.md, market-benchmark-report.md
 ```
 
@@ -132,6 +139,7 @@ python ingest/fss_to_ttl.py --sample   # 키 없이 픽스처로 검증
 
 - 브랜치: `claude/banking-ontology-build-5zwe0q` (현재 유일한 브랜치이자 기본 브랜치)
 - 커밋 전: `python scripts/validate.py && python tests/test_knowledge_layer.py
-  && python tests/test_retrievers.py && python tests/test_krfinreg.py`
+  && python tests/test_retrievers.py && python tests/test_krfinreg.py
+  && python tests/test_bench_v2.py`
 - 벤치마크 코드를 바꿨으면 리포트 재생성 후 함께 커밋
   (`run_retrieval_eval.py`, `run_market_eval.py`)
