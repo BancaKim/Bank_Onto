@@ -55,6 +55,8 @@ class LpgGraphRetriever:
                     self._name_index.append((base.strip(), n.key))
                 if len(alias.strip()) >= 2:
                     self._name_index.append((alias.strip(), n.key))
+        # 결정적 평가를 위해 정렬 (rdflib/dict 순회 순서 의존 제거)
+        self._name_index.sort()
 
     # ------------------------------------------------------------------
     # RDF → LPG 변환
@@ -71,14 +73,14 @@ class LpgGraphRetriever:
         def key(node: URIRef) -> str:
             return kb._qname(node)
 
-        # 분류 노드
-        for cls in classes:
+        # 분류 노드 (정렬 순회 — 결정적 변환 보장)
+        for cls in sorted(classes, key=str):
             self.nodes[key(cls)] = LpgNode(
                 key=key(cls), name=label_of(kb, cls), labels=["Category"],
                 definition=kb._definition(cls),
             )
-        for cls in classes:
-            for sup in graph.objects(cls, RDFS.subClassOf):
+        for cls in sorted(classes, key=str):
+            for sup in sorted(graph.objects(cls, RDFS.subClassOf), key=str):
                 if isinstance(sup, URIRef) and sup in classes:
                     self.edges.append((key(cls), "SUBCLASS_OF", key(sup)))
 
@@ -93,10 +95,11 @@ class LpgGraphRetriever:
                 continue
             individuals.add(subj)
 
-        for ind in individuals:
+        for ind in sorted(individuals, key=str):
             node = LpgNode(key=key(ind), name=label_of(kb, ind),
                            definition=kb._definition(ind))
-            for pred, obj in graph.predicate_objects(ind):
+            for pred, obj in sorted(graph.predicate_objects(ind),
+                                    key=lambda po: (str(po[0]), str(po[1]))):
                 pname = label_of(kb, pred)
                 if pred == RDF.type and isinstance(obj, URIRef) and obj in classes:
                     node.labels.append(str(obj).rsplit("/", 1)[-1])
@@ -127,7 +130,7 @@ class LpgGraphRetriever:
                 score = lcs / len(n)
                 if score > best.get(node_key, 0):
                     best[node_key] = score
-        ranked = sorted(best.items(), key=lambda kv: kv[1], reverse=True)
+        ranked = sorted(best.items(), key=lambda kv: (-kv[1], kv[0]))
         return [k for k, _ in ranked[:limit]]
 
     # ------------------------------------------------------------------
@@ -138,24 +141,29 @@ class LpgGraphRetriever:
         if not seeds:
             return ""
 
-        visited: list[str] = list(seeds)
-        frontier = list(seeds)
+        # 시드별 독립 k-hop 탐색 — 온톨로지 리트리버와 동일한 예산 정책.
+        # 허브 노드(은행 등)에 연결된 시드가 다른 시드의 예산을 잠식하지 않는다.
+        visited: list[str] = []
         kept_edges: list[tuple[str, str, str]] = []
-        for _ in range(self.hops):
-            next_frontier = []
-            for node_key in frontier:
-                for src, etype, dst in self._adj.get(node_key, []):
-                    other = dst if src == node_key else src
-                    if (src, etype, dst) not in kept_edges:
-                        kept_edges.append((src, etype, dst))
-                    if other not in visited:
-                        if len(visited) >= self.node_cap:
-                            continue
-                        visited.append(other)
-                        next_frontier.append(other)
-            frontier = next_frontier
-            if not frontier or len(visited) >= self.node_cap:
-                break
+        for seed in seeds:
+            seed_visited = [seed]
+            frontier = [seed]
+            for _ in range(self.hops):
+                next_frontier = []
+                for node_key in frontier:
+                    for src, etype, dst in self._adj.get(node_key, []):
+                        other = dst if src == node_key else src
+                        if (src, etype, dst) not in kept_edges:
+                            kept_edges.append((src, etype, dst))
+                        if other not in seed_visited and len(seed_visited) < self.node_cap:
+                            seed_visited.append(other)
+                            next_frontier.append(other)
+                frontier = next_frontier
+                if not frontier or len(seed_visited) >= self.node_cap:
+                    break
+            for node_key in seed_visited:
+                if node_key not in visited:
+                    visited.append(node_key)
 
         lines = []
         for node_key in visited:

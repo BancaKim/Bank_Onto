@@ -40,7 +40,8 @@ eval/              3-way RAG 벤치마크 (벡터 vs LPG vs 온톨로지)
 data/fss/sample/   가상 은행 픽스처 (FSS API 스키마 동일, 파이프라인 검증용)
 data/market-instances.ttl  변환된 시장 데이터 (현재 샘플 기준; KB가 자동 로드)
 scripts/           validate.py (구문·참조·ko레이블 검증), query.py (예시 SPARQL)
-tests/test_knowledge_layer.py  KB 단위 테스트 10건 (API 키 불필요)
+tests/             test_knowledge_layer.py (KB 단위 10건) +
+                   test_retrievers.py (결정성·다중홉·픽스처 격리 3건) — 모두 API 키 불필요
 docs/              architecture.md, benchmark-report.md, market-benchmark-report.md
 ```
 
@@ -91,18 +92,22 @@ python ingest/fss_to_ttl.py --sample   # 키 없이 픽스처로 검증
   관대한 변환 + 온톨로지와 동일한 시드 매칭(LCS) 사용 — 남는 격차가 스키마 의미론의
   순수 기여분이 되도록. 벡터 베이스라인은 재현성 위해 어휘적 TF-IDF (의미 임베딩으로
   교체 가능하나 다중홉·열거·집계 실패는 청킹+유사도 패러다임 자체의 한계임을 리포트에 명시).
-- **현재 수치** (샘플 데이터): 검색 재현율 — 큐레이션 18문항 벡터 69% / LPG 92% /
-  온톨로지 100%; 시장 8문항 59% / 88% / 100%. 환각유도 질문 컨텍스트: 벡터 2,020자 vs
-  그래프·온톨로지 0자.
-- 시장 벤치마크는 질문·정답을 적재된 데이터에서 SPARQL로 자동 계산 — 실데이터로
-  갈아끼우면 벤치마크도 자동 갱신됨.
+- **현재 수치** (금감원 실데이터, 2026-08 공시·상품 211개): 검색 재현율 — 큐레이션
+  18문항 벡터 72% / LPG 89% / 온톨로지 100%; 시장 8문항 11% / 78% / 100%.
+  환각유도 질문 컨텍스트: 벡터 2,020자 vs 그래프·온톨로지 0자.
+- 시장 벤치마크는 질문·정답을 적재된 데이터에서 SPARQL로 자동 계산 — 데이터를
+  갈아끼우면 벤치마크도 자동 갱신됨. '공시된 상품' 집계는 `market:disclosureMonth`
+  조건으로 examples/ 가상 픽스처를 제외함.
+- **리트리버 결정성**: 그래프·LPG 리트리버는 이름 색인·시드 순위·이웃 순회를 모두
+  정렬해 PYTHONHASHSEED와 무관하게 동일 결과 보장 (tests/test_retrievers.py가 검증).
+  BFS 예산은 시드별 독립 할당 — 허브 노드(은행 등)에 연결된 시드가 다른 시드의
+  탐사 예산을 잠식하지 않게 함 (두 그래프 시스템에 동일 적용, 공정성 유지).
 
 ## 미완료 작업 (로컬에서 이어서)
 
-1. **실데이터 적재**: 클라우드 세션은 finlife.fss.or.kr가 이그레스 정책에 차단되어
-   샘플로만 검증됨. 로컬에서 `FSS_API_KEY=... python ingest/fss_client.py &&
-   python ingest/fss_to_ttl.py && python eval/run_market_eval.py` 실행하면
-   실데이터 기반 리포트로 갱신됨 (리포트의 "샘플 픽스처" 경고 배너가 자동 제거됨).
+1. ~~실데이터 적재~~ **완료** (2026-08-17): 금감원 실데이터 적재됨 (은행 19개,
+   상품 215개, 금리옵션 660개). 월별 공시 갱신 시 `FSS_API_KEY=...
+   python ingest/fss_client.py && python ingest/fss_to_ttl.py` 재실행.
 2. **답변 계층 실행**: `python eval/run_answer_eval.py` (ANTHROPIC_API_KEY 필요)
    → docs/answer-eval-report.md 생성. 아직 한 번도 실행되지 않음.
 3. **로드맵**: SHACL 제약, FIBO equivalentClass 정렬, 신탁·퇴직연금 모듈,
@@ -111,6 +116,7 @@ python ingest/fss_to_ttl.py --sample   # 키 없이 픽스처로 검증
 ## Git
 
 - 브랜치: `claude/banking-ontology-build-5zwe0q` (현재 유일한 브랜치이자 기본 브랜치)
-- 커밋 전: `python scripts/validate.py && python tests/test_knowledge_layer.py`
+- 커밋 전: `python scripts/validate.py && python tests/test_knowledge_layer.py
+  && python tests/test_retrievers.py`
 - 벤치마크 코드를 바꿨으면 리포트 재생성 후 함께 커밋
   (`run_retrieval_eval.py`, `run_market_eval.py`)

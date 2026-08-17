@@ -57,6 +57,9 @@ class GraphRetriever:
                         self._names.append((base.strip(), subj))
                     if len(alias.strip()) >= 2:
                         self._names.append((alias.strip(), subj))
+        # rdflib 그래프 순회 순서는 프로세스마다 달라질 수 있으므로 정렬해
+        # 리트리버 전체를 결정적으로 만든다 (재현 가능한 평가 보장).
+        self._names.sort(key=lambda item: (item[0], str(item[1])))
 
     # ------------------------------------------------------------------
     # 매칭
@@ -72,7 +75,7 @@ class GraphRetriever:
                 score = lcs / len(n)
                 if score > best.get(node, 0):
                     best[node] = score
-        ranked = sorted(best.items(), key=lambda kv: kv[1], reverse=True)
+        ranked = sorted(best.items(), key=lambda kv: (-kv[1], str(kv[0])))
         return [node for node, _ in ranked[:limit]]
 
     # ------------------------------------------------------------------
@@ -117,7 +120,7 @@ class GraphRetriever:
             lines.append(f"관련 속성: {(ko or prop['labels'] or [prop['property']])[0]} "
                          f"({prop['property']}, 범위: {', '.join(prop['range']) or '-'})")
         # 열거형(named individual)으로 정의된 하위 항목 (상환방식, 계좌상태, 채널 등)
-        for inst in list(self.graph.subjects(RDF.type, cls))[:15]:
+        for inst in sorted(self.graph.subjects(RDF.type, cls), key=str)[:15]:
             if isinstance(inst, URIRef):
                 lines.append(f"항목: {label_of(self.kb, inst)} ({self.kb._qname(inst)})")
         return "\n".join(lines)
@@ -127,7 +130,7 @@ class GraphRetriever:
         definition = self.kb._definition(prop)
         if definition:
             lines.append(f"정의: {definition}")
-        usages = list(self.graph.subject_objects(prop))[:15]
+        usages = sorted(self.graph.subject_objects(prop), key=lambda so: (str(so[0]), str(so[1])))[:15]
         for subj, obj in usages:
             subj_txt = label_of(self.kb, subj) if isinstance(subj, URIRef) else str(subj)
             obj_txt = str(obj) if isinstance(obj, Literal) else label_of(self.kb, obj)
@@ -136,13 +139,15 @@ class GraphRetriever:
 
     def _render_individual(self, ind: URIRef) -> str:
         lines = [f"[개체] {label_of(self.kb, ind)} ({self.kb._qname(ind)})"]
-        for pred, obj in self.graph.predicate_objects(ind):
+        for pred, obj in sorted(self.graph.predicate_objects(ind),
+                                key=lambda po: (str(po[0]), str(po[1]))):
             if pred == RDFS.label:
                 continue
             value = str(obj) if isinstance(obj, Literal) else \
                 f"{label_of(self.kb, obj)} ({self.kb._qname(obj)})"
             lines.append(f"- {label_of(self.kb, pred)}: {value}")
-        for subj, pred in self.graph.subject_predicates(ind):
+        for subj, pred in sorted(self.graph.subject_predicates(ind),
+                                 key=lambda sp: (str(sp[0]), str(sp[1]))):
             if isinstance(subj, URIRef) and str(subj).startswith(BANK_ONTO_NS):
                 lines.append(
                     f"- (역참조) {label_of(self.kb, subj)} ({self.kb._qname(subj)}) "
@@ -155,28 +160,34 @@ class GraphRetriever:
     # ------------------------------------------------------------------
     def _expand_individuals(self, seeds: list[URIRef], depth: int = 4,
                             cap: int = 25) -> list[URIRef]:
-        visited = list(seeds)
-        frontier = list(seeds)
-        for _ in range(depth):
-            next_frontier = []
-            for node in frontier:
-                neighbors = [
-                    obj for _, obj in self.graph.predicate_objects(node)
-                    if self._is_individual(obj)
-                ] + [
-                    subj for subj, _ in self.graph.subject_predicates(node)
-                    if self._is_individual(subj)
-                ]
-                for nb in neighbors:
-                    if nb not in visited:
-                        visited.append(nb)
-                        next_frontier.append(nb)
-                        if len(visited) >= cap:
-                            return visited
-            frontier = next_frontier
-            if not frontier:
-                break
-        return visited
+        """시드별 독립 BFS. 예산(cap)을 시드마다 따로 주어, 이웃이 많은
+        허브(예: 시장 데이터의 은행 노드)에 연결된 시드가 다른 시드의
+        탐사 예산을 잠식하지 않게 한다."""
+        merged: list[URIRef] = []
+        for seed in seeds:
+            visited = [seed]
+            frontier = [seed]
+            for _ in range(depth):
+                next_frontier = []
+                for node in frontier:
+                    neighbors = [
+                        obj for _, obj in self.graph.predicate_objects(node)
+                        if self._is_individual(obj)
+                    ] + [
+                        subj for subj, _ in self.graph.subject_predicates(node)
+                        if self._is_individual(subj)
+                    ]
+                    for nb in sorted(neighbors, key=str):
+                        if nb not in visited and len(visited) < cap:
+                            visited.append(nb)
+                            next_frontier.append(nb)
+                frontier = next_frontier
+                if not frontier or len(visited) >= cap:
+                    break
+            for node in visited:
+                if node not in merged:
+                    merged.append(node)
+        return merged
 
     # ------------------------------------------------------------------
     # 공개 API

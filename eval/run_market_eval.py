@@ -55,7 +55,9 @@ def build_market_questions(kb: BankKnowledgeBase) -> list[dict]:
     # 2) 상품 개수 집계 — '개수'는 코퍼스 어디에도 적혀 있지 않으므로,
     #    올바르게 세려면 전체 상품 목록이 컨텍스트에 있어야 한다.
     #    (근거 = 전체 상품명. SPARQL 컨텍스트에는 COUNT 결과와 목록을 함께 제공)
+    # market:disclosureMonth 조건으로 공시 데이터만 집계 (examples/ 픽스처 제외)
     q = """SELECT ?name WHERE { ?p a products:TimeDepositProduct ;
+                                    market:disclosureMonth ?m ;
                                     products:hasProductName ?name }"""
     rows = kb.run_sparql(q)
     if rows:

@@ -25,14 +25,14 @@ def label_of(kb: BankKnowledgeBase, node) -> str:
     """한국어 레이블 우선, 없으면 고유명(hasName 등), 최후에 qname."""
     if isinstance(node, Literal):
         return str(node)
-    labels = list(kb.graph.objects(node, RDFS.label))
+    labels = sorted(kb.graph.objects(node, RDFS.label), key=str)
     ko = [str(lbl) for lbl in labels if getattr(lbl, "language", None) == "ko"]
     if ko:
         return ko[0]
     if labels:
         return str(labels[0])
     for pred in _NAME_PREDICATES:
-        for name in kb.graph.objects(node, pred):
+        for name in sorted(kb.graph.objects(node, pred), key=str):
             return str(name)
     return kb._qname(node)
 
