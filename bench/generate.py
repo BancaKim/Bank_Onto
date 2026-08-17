@@ -548,6 +548,131 @@ def gen_enumerate(products):  # P15: 은행별 상품 완전 열거
 
 
 # ----------------------------------------------------------------------
+# 계산 추론 축 (v2.2) — 정답이 문서에 직접 적혀 있지 않고 계산해야만 나온다.
+# 단리 12개월 정기예금만 사용해 계산 규약이 논쟁의 여지 없이 정의되도록 한다.
+# ----------------------------------------------------------------------
+from decimal import ROUND_HALF_UP, Decimal
+
+TAX_RATE = Decimal("0.154")  # 이자소득세(지방소득세 포함) 15.4% 가정
+
+
+def _danri_deposits(products):
+    out = []
+    for p in (x for x in products if x["kind"] == "deposit"):
+        opt = term_option(p, 12)
+        if opt and opt.get("intr_rate") and opt.get("intr_rate_type_nm") == "단리":
+            out.append((p, Decimal(str(opt["intr_rate"]))))
+    return out
+
+
+def _pretax_interest(principal: int, rate: Decimal) -> Decimal:
+    """12개월 단리 세전 이자 = 원금 × 연이율."""
+    return (Decimal(principal) * rate / 100).quantize(Decimal("1"), ROUND_HALF_UP)
+
+
+def gen_calc_interest(products):  # C1: 만기 세전 이자 계산
+    out = []
+    principals = [5_000_000, 10_000_000, 30_000_000]
+    for p, rate in _danri_deposits(products):
+        principal = principals[int(pick(["0", "1", "2"], "prin", p["code"]))]
+        interest = _pretax_interest(principal, rate)
+        question = pick([
+            f"{label(p)}에 {principal:,}원을 12개월 만기로 예치하면 만기 세전 이자는 얼마인가? (단리, 공시 기본금리 기준)",
+            f"{principal:,}원을 {label(p)}에 12개월 예치할 때 받는 세전 이자를 계산하면? (단리, 공시 기본금리 기준)",
+            f"{label(p)}의 공시 기본금리(단리)로 {principal:,}원을 12개월 예치하면 세전 이자는 총 얼마인가?",
+        ], "calc_int", p["code"])
+        out.append({
+            "template": "calc_interest",
+            "category": "예금", "subcategory": "정기예금",
+            "question": question,
+            "answer_type": "numeric", "answer": str(interest), "unit": "원",
+            "evidence": evidence_of(p, "intr_rate(12개월,단리)", fmt_rate(rate)),
+        })
+    return out
+
+
+def gen_calc_after_tax(products):  # C2: 세후 이자 계산 (2단계)
+    out = []
+    principals = [10_000_000, 20_000_000, 50_000_000]
+    for p, rate in _danri_deposits(products):
+        principal = principals[int(pick(["0", "1", "2"], "prin_at", p["code"]))]
+        pretax = Decimal(principal) * rate / 100
+        after = (pretax * (1 - TAX_RATE)).quantize(Decimal("1"), ROUND_HALF_UP)
+        question = pick([
+            f"{label(p)}에 {principal:,}원을 12개월 예치하면(단리), 이자소득세 15.4%를 공제한 세후 이자는 얼마인가? (원 미만 반올림)",
+            f"{principal:,}원을 {label(p)}에 12개월 넣었을 때 세후 이자는? (단리, 이자소득세 15.4% 공제, 원 미만 반올림)",
+            f"{label(p)}의 공시 기본금리(단리) 기준, {principal:,}원 12개월 예치의 세후 수령 이자(이자소득세 15.4% 공제, 원 미만 반올림)는?",
+        ], "calc_at", p["code"])
+        out.append({
+            "template": "calc_interest_after_tax",
+            "category": "예금", "subcategory": "정기예금",
+            "question": question,
+            "answer_type": "numeric", "answer": str(after), "unit": "원",
+            "evidence": evidence_of(p, "intr_rate(12개월,단리)", fmt_rate(rate)),
+        })
+    return out
+
+
+def gen_calc_diff(products):  # C3: 두 상품 이자 차이 (조회 2회 + 계산 3회)
+    out = []
+    pool = _danri_deposits(products)
+    principal = 10_000_000
+    for (a, ra), (b, rb) in zip(pool, pool[1:]):
+        if ra == rb:
+            continue
+        diff = abs(_pretax_interest(principal, ra) - _pretax_interest(principal, rb))
+        question = pick([
+            f"{label(a)}{gwa_wa(a['name'])} {label(b)}에 각각 {principal:,}원을 12개월 예치하면(단리, 공시 기본금리) 만기 세전 이자 차이는 얼마인가?",
+            f"{principal:,}원을 12개월 예치할 때 {label(a)}{gwa_wa(a['name'])} {label(b)}의 세전 이자 차이를 계산하면? (단리, 공시 기본금리)",
+        ], "calc_diff", a["code"], b["code"])
+        out.append({
+            "template": "calc_interest_diff",
+            "category": "예금", "subcategory": "정기예금",
+            "question": question,
+            "answer_type": "numeric", "answer": str(diff), "unit": "원",
+            "evidence": {"source": FSS_SOURCE,
+                         "locator": f"{a['bank']}:{a['code']},{b['bank']}:{b['code']}:intr_rate(12개월)",
+                         "text": f"{a['name']}={fmt_rate(ra)}; {b['name']}={fmt_rate(rb)}"},
+        })
+    return out
+
+
+def gen_joint_condition(products):  # C4: 연령 × 가입경로 결합 판정
+    out = []
+    for p in products:
+        m = re.search(r"만\s?(\d{2})세\s?이상", p["join_member"])
+        ways = [w.strip() for w in p["join_way"].split(",") if w.strip()]
+        present = [c for c in CHANNELS if c in ways]
+        absent = [c for c in CHANNELS if c not in ways]
+        if not (m and present):
+            continue
+        age = int(m.group(1))
+        yes_case = (age + 4, present[0], "YES")
+        if absent and pick(["a", "b"], "joint_no", p["code"]) == "a":
+            no_case = (age + 4, absent[0], "NO")   # 경로 요건 위반
+        else:
+            no_case = (age - 4, present[0], "NO")  # 연령 요건 위반
+        for probe_age, channel, verdict in (yes_case, no_case):
+            if probe_age <= 0:
+                continue
+            question = pick([
+                f"만 {probe_age}세인 개인이 {channel} 경로로 {label(p)}에 가입하려 한다. 연령 요건과 가입 경로 요건을 모두 충족하는가? (그 외 요건은 충족 가정)",
+                f"{label(p)}에 만 {probe_age}세 개인이 {channel}{eul_reul(channel)} 통해 가입하는 경우, 연령·가입경로 요건이 동시에 충족되는가? (그 외 요건은 충족 가정)",
+            ], "joint", p["code"], verdict)
+            out.append({
+                "template": "joint_condition",
+                "category": KIND_META[p["kind"]][0],
+                "subcategory": KIND_META[p["kind"]][1],
+                "question": question,
+                "answer_type": "boolean", "answer": verdict,
+                "evidence": {"source": FSS_SOURCE,
+                             "locator": f"{p['bank']}:{p['code']}:join_member,join_way",
+                             "text": f"{p['join_member']} | {p['join_way']}"[:200]},
+            })
+    return out
+
+
+# ----------------------------------------------------------------------
 # 규정형 (법령)
 # ----------------------------------------------------------------------
 def load_laws() -> list[dict]:
@@ -752,13 +877,16 @@ def import_temporal(path: Path):  # R5: KR-FinReg-QA 법령 시간형 이식
 # 조립
 # ----------------------------------------------------------------------
 # 합계 700 (가용량 실측 기반; boolean 템플릿은 YES/NO 쌍 보존 위해 짝수)
+# v2.2: 얕은 조회형 136문항을 계산 추론 축(calc_*·joint)으로 대체
 PRODUCT_QUOTA = [
-    (gen_base_rate, 38), (gen_max_rate, 48), (gen_rate_threshold, 100),
-    (gen_join_way, 60), (gen_age_condition, 32), (gen_max_limit, 50),
-    (gen_interest_type, 40), (gen_loan_rate, 80), (gen_loan_rate_type, 60),
-    (gen_credit_rate, 32), (gen_abstain, 60),
+    (gen_base_rate, 20), (gen_max_rate, 30), (gen_rate_threshold, 84),
+    (gen_join_way, 40), (gen_age_condition, 32), (gen_max_limit, 30),
+    (gen_interest_type, 20), (gen_loan_rate, 60), (gen_loan_rate_type, 60),
+    (gen_credit_rate, 28), (gen_abstain, 60),
     (gen_compare_two, 40), (gen_agg_count, 36), (gen_agg_superlative, 1),
     (gen_enumerate, 23),
+    (gen_calc_interest, 37), (gen_calc_after_tax, 37), (gen_calc_diff, 30),
+    (gen_joint_condition, 32),
 ]
 PRODUCT_OVERFLOW = ["rate_threshold", "join_way", "loan_rate_type"]
 

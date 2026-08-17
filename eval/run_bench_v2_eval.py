@@ -48,12 +48,18 @@ def gold_strings(row: dict) -> list[str]:
         # '; '로 나열됨) — 전체가 컨텍스트에 있어야 셈·비교·열거가 가능하다
         if template in ("agg_count", "enumerate_products"):
             return [part.strip() for part in evidence_text.split(";")]
-        if template in ("compare_two_products", "agg_superlative"):
+        if template in ("compare_two_products", "agg_superlative",
+                        "calc_interest_diff"):
             gold = []
             for part in evidence_text.split(";"):
                 name, _, rate = part.strip().rpartition("=")
                 gold += [name, rate]  # 상품명과 금리값 각각이 근거
             return gold
+        if template == "joint_condition":
+            # 연령 요건(join_member)과 가입 경로(join_way) 두 필드가 모두 필요
+            name_m = re.search(r"'([^']+)'", row["question"])
+            fields = [f.strip() for f in evidence_text.split("|")]
+            return ([name_m.group(1)] if name_m else []) + fields
         product = row["evidence"]["locator"].split(":")[0]  # 은행명
         name_m = re.search(r"'([^']+)'", row["question"])
         product_name = name_m.group(1) if name_m else product
