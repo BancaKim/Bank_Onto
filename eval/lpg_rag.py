@@ -121,16 +121,27 @@ class LpgGraphRetriever:
     # ------------------------------------------------------------------
     def _match_seeds(self, question: str, limit: int = 6) -> list[str]:
         q = question.lower()
-        best: dict[str, float] = {}
+        # graph_rag.match_concepts와 동일한 정확 동치 사전필터 (결과 불변)
+        q_grams = {q[i:i + 4] for i in range(len(q) - 3)}
+        # graph_rag와 동일: 동점이면 매칭 절대 길이가 긴(특이도 높은) 이름 우선
+        best: dict[str, tuple[float, int]] = {}
         for name, node_key in self._name_index:
             n = name.lower()
-            lcs = _lcs_len(n, q)
-            threshold = len(n) if len(n) < 4 else 4
-            if len(n) >= 2 and lcs >= threshold:
+            if len(n) < 2:
+                continue
+            if len(n) < 4:
+                if n not in q:
+                    continue
+                score, lcs = 1.0, len(n)
+            else:
+                if not any(n[i:i + 4] in q_grams for i in range(len(n) - 3)):
+                    continue
+                lcs = _lcs_len(n, q)
                 score = lcs / len(n)
-                if score > best.get(node_key, 0):
-                    best[node_key] = score
-        ranked = sorted(best.items(), key=lambda kv: (-kv[1], kv[0]))
+            if (score, lcs) > best.get(node_key, (0.0, 0)):
+                best[node_key] = (score, lcs)
+        ranked = sorted(best.items(),
+                        key=lambda kv: (-kv[1][0], -kv[1][1], kv[0]))
         return [k for k, _ in ranked[:limit]]
 
     # ------------------------------------------------------------------

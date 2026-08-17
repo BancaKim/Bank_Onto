@@ -38,6 +38,12 @@ class TfidfVectorRetriever:
         self._doc_norms = [
             math.sqrt(sum(w * w for w in vec.values())) or 1.0 for vec in self._doc_vecs
         ]
+        # 역색인 (gram → [(doc_idx, weight)]): 점수 계산과 결과는 동일하고,
+        # 질의 시 전체 문서 대신 해당 gram을 포함한 문서만 순회한다.
+        self._postings: dict[str, list[tuple[int, float]]] = {}
+        for idx, vec in enumerate(self._doc_vecs):
+            for gram, weight in vec.items():
+                self._postings.setdefault(gram, []).append((idx, weight))
 
     def _vectorize(self, grams: Counter) -> dict[str, float]:
         return {g: tf * self._idf.get(g, self._default_idf) for g, tf in grams.items()}
@@ -46,12 +52,13 @@ class TfidfVectorRetriever:
         query_vec = self._vectorize(char_ngrams(query))
         query_norm = math.sqrt(sum(w * w for w in query_vec.values())) or 1.0
 
-        scored = []
-        for idx, (doc_vec, doc_norm) in enumerate(zip(self._doc_vecs, self._doc_norms)):
-            dot = sum(w * doc_vec[g] for g, w in query_vec.items() if g in doc_vec)
-            if dot > 0:
-                scored.append((dot / (query_norm * doc_norm), idx))
-        scored.sort(key=lambda pair: pair[0], reverse=True)
+        dots: dict[int, float] = {}
+        for gram, weight in query_vec.items():
+            for idx, doc_weight in self._postings.get(gram, ()):
+                dots[idx] = dots.get(idx, 0.0) + weight * doc_weight
+        scored = [(dot / (query_norm * self._doc_norms[idx]), idx)
+                  for idx, dot in dots.items() if dot > 0]
+        scored.sort(key=lambda pair: (-pair[0], pair[1]))
         return [self.chunks[idx] for _, idx in scored[:k]]
 
     def retrieve_context(self, query: str, k: int = 5) -> str:

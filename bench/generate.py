@@ -24,6 +24,9 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO_ROOT))
+from ingest.fss_naming import credit_product_name  # noqa: E402
+
 FSS_DIR = REPO_ROOT / "data" / "fss"
 LAWS_DIR = REPO_ROOT / "data" / "laws"
 THESIS_QUESTIONS = Path.home() / "research_paper" / "experiments" / "questions.jsonl"
@@ -64,10 +67,10 @@ def load_products() -> list[dict]:
         for item in data.get("baseList", []):
             key = f"{item['fin_co_no']}:{item['fin_prdt_cd']}"
             # 신용대출은 같은 상품명이 유형별(일반/마이너스한도)로 중복 공시됨
+            # — 명명 규칙은 KB 적재(fss_to_ttl)와 공유 (ingest/fss_naming.py)
             name = item["fin_prdt_nm"]
-            type_nm = item.get("crdt_prdt_type_nm") or ""
-            if kind == "credit" and type_nm and type_nm != name:
-                name = f"{name}({type_nm})"
+            if kind == "credit":
+                name = credit_product_name(name, item.get("crdt_prdt_type_nm"))
             products.append({
                 "kind": kind,
                 "bank": item["kor_co_nm"],

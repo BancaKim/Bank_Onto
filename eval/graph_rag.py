@@ -66,16 +66,28 @@ class GraphRetriever:
     # ------------------------------------------------------------------
     def match_concepts(self, question: str, limit: int = 8) -> list[URIRef]:
         q = question.lower()
-        best: dict[URIRef, float] = {}
+        # 정확 동치 사전필터: 이름 길이<4의 매칭 조건(lcs>=len)은 '이름이 질문의
+        # 부분문자열'과 동치이고, 길이>=4의 조건(lcs>=4)은 '공통 4-gram 존재'와
+        # 동치다. 4-gram 집합 교차 검사로 LCS 계산 대상을 크게 줄인다 (결과 불변).
+        q_grams = {q[i:i + 4] for i in range(len(q) - 3)}
+        # (정규화 점수, 매칭 절대 길이): 점수가 같으면 더 길게 매칭된 이름이
+        # 우선한다 — "제40조(벌칙)" 전체 매칭이 별칭 "벌칙"보다 특이도가 높다.
+        best: dict[URIRef, tuple[float, int]] = {}
         for name, node in self._names:
             n = name.lower()
-            lcs = _lcs_len(n, q)
-            threshold = len(n) if len(n) < 4 else 4
-            if lcs >= threshold:
+            if len(n) < 4:
+                if n not in q:
+                    continue
+                score, lcs = 1.0, len(n)
+            else:
+                if not any(n[i:i + 4] in q_grams for i in range(len(n) - 3)):
+                    continue
+                lcs = _lcs_len(n, q)
                 score = lcs / len(n)
-                if score > best.get(node, 0):
-                    best[node] = score
-        ranked = sorted(best.items(), key=lambda kv: (-kv[1], str(kv[0])))
+            if (score, lcs) > best.get(node, (0.0, 0)):
+                best[node] = (score, lcs)
+        ranked = sorted(best.items(),
+                        key=lambda kv: (-kv[1][0], -kv[1][1], str(kv[0])))
         return [node for node, _ in ranked[:limit]]
 
     # ------------------------------------------------------------------

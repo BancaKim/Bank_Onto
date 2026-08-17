@@ -169,14 +169,16 @@ def sheet_baselines(wb: Workbook):
     ws.append(["서브셋", "지표", "벡터 RAG", "Graph RAG(LPG)", "온톨로지 RAG",
                "출처"])
     rows = [
-        ("curated (18문항)", "근거 재현율", 0.61, 0.89, 1.00,
+        ("curated (18문항)", "근거 재현율", 0.50, 0.86, 1.00,
          "docs/benchmark-report.md"),
         ("curated NEG (2문항)", "환각유도 컨텍스트(자/문항)", 2020, 0, 0,
          "docs/benchmark-report.md"),
-        ("market (8문항)", "근거 재현율", 0.10, 0.78, 1.00,
+        ("market (8문항)", "근거 재현율", 0.12, 0.78, 1.00,
          "docs/market-benchmark-report.md"),
-        ("krfinreg_bank (판정형 71문항)", "근거 재현율", 0.88, 1.00, 1.00,
+        ("krfinreg_bank (판정형 71문항)", "근거 재현율", 0.78, 1.00, 1.00,
          "docs/krfinreg-benchmark-report.md"),
+        ("bench-v2 (채점형 880문항)", "근거 재현율", 0.83, 0.98, 0.99,
+         "docs/bench-v2-report.md"),
     ]
     for row in rows:
         ws.append(row)

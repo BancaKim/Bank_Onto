@@ -29,6 +29,8 @@ PREFIXES = {
     "ex": f"{BANK_ONTO_NS}examples/",
     "market": f"{BANK_ONTO_NS}market/",
     "mktd": f"{BANK_ONTO_NS}market/data/",
+    "regs": f"{BANK_ONTO_NS}regs/",
+    "regd": f"{BANK_ONTO_NS}regs/data/",
 }
 
 

@@ -1,0 +1,59 @@
+@prefix : <https://w3id.org/bank-onto/regs/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+#################################################################
+# 법령·규정 모듈 (Regulations Module)
+# 국가법령정보센터에서 수집한 현행 법령의 조문을 지식층에 적재하기 위한
+# 최소 스키마. 규정형 벤치마크 문항의 근거 코퍼스로 사용된다.
+#################################################################
+
+<https://w3id.org/bank-onto/regs/> a owl:Ontology ;
+    rdfs:label "법령·규정 모듈"@ko , "Regulations Module"@en .
+
+### 클래스
+
+:Statute a owl:Class ;
+    rdfs:label "법령"@ko , "statute"@en ;
+    skos:definition "국가가 제정한 법률·명령 등 성문 규범. 국가법령정보센터의 현행 법령 단위."@ko .
+
+:LegalArticle a owl:Class ;
+    rdfs:label "조문"@ko , "legal article"@en ;
+    skos:definition "법령을 구성하는 개별 조(條) 단위의 규정."@ko .
+
+### 속성
+
+:hasArticle a owl:ObjectProperty ;
+    rdfs:label "조문 보유"@ko , "has article"@en ;
+    rdfs:domain :Statute ; rdfs:range :LegalArticle .
+
+:belongsToStatute a owl:ObjectProperty ;
+    rdfs:label "소속 법령"@ko , "belongs to statute"@en ;
+    rdfs:domain :LegalArticle ; rdfs:range :Statute ;
+    owl:inverseOf :hasArticle .
+
+:articleLabel a owl:DatatypeProperty ;
+    rdfs:label "조문 번호"@ko , "article label"@en ;
+    rdfs:domain :LegalArticle ; rdfs:range xsd:string .
+
+:articleTitle a owl:DatatypeProperty ;
+    rdfs:label "조문 제목"@ko , "article title"@en ;
+    rdfs:domain :LegalArticle ; rdfs:range xsd:string .
+
+:articleText a owl:DatatypeProperty ;
+    rdfs:label "조문 본문"@ko , "article text"@en ;
+    rdfs:domain :LegalArticle ; rdfs:range xsd:string .
+
+:effectiveDate a owl:DatatypeProperty ;
+    rdfs:label "시행일자"@ko , "effective date"@en ;
+    rdfs:range xsd:date .
+
+:ministry a owl:DatatypeProperty ;
+    rdfs:label "소관부처"@ko , "competent ministry"@en ;
+    rdfs:domain :Statute ; rdfs:range xsd:string .
+
+:lawType a owl:DatatypeProperty ;
+    rdfs:label "법령 종류"@ko , "law type"@en ;
+    rdfs:domain :Statute ; rdfs:range xsd:string .

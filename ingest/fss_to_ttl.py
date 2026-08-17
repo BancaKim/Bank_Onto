@@ -25,6 +25,9 @@ from pathlib import Path
 from rdflib import Graph, Literal, Namespace, URIRef
 from rdflib.namespace import RDF, XSD
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from ingest.fss_naming import credit_product_name  # noqa: E402
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_PATH = REPO_ROOT / "data" / "market-instances.ttl"
 
@@ -101,7 +104,11 @@ def convert(input_dir: Path, source_note: str) -> Graph:
             products_by_code[(co_no, prdt_cd)] = product
             n_products += 1
             graph.add((product, RDF.type, product_cls))
-            graph.add((product, PRODUCTS.hasProductName, Literal(item["fin_prdt_nm"])))
+            display_name = item["fin_prdt_nm"]
+            if kind == "credit":
+                display_name = credit_product_name(
+                    display_name, item.get("crdt_prdt_type_nm"))
+            graph.add((product, PRODUCTS.hasProductName, Literal(display_name)))
             graph.add((product, PRODUCTS.hasProductCode, Literal(prdt_cd)))
             graph.add((product, PRODUCTS.isOfferedBy, bank))
             add_if(graph, product, MARKET.disclosureMonth, item.get("dcls_month"))

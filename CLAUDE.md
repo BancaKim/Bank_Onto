@@ -20,6 +20,7 @@ ontology/          OWL 온톨로지 모듈 (Turtle). bank-onto.ttl이 전체 imp
   transactions.ttl   거래·채널
   risk-compliance.ttl 바젤·AML/KYC·예금자보호
   market-data.ttl    금감원 공시 데이터용 확장 (금리옵션 등)
+  regulations.ttl    법령·조문 스키마 (규정형 벤치마크 근거 코퍼스용)
 knowledge/         에이전트 knowledge layer
   kb.py              BankKnowledgeBase: 검색·개념상세·계층·인스턴스·SPARQL 조회 API
   tools.py           Claude 에이전트 도구 6종 (@beta_tool, BANK_KB_TOOLS)
@@ -37,12 +38,14 @@ eval/              3-way RAG 벤치마크 (벡터 vs LPG vs 온톨로지)
   benchmark_questions.py  큐레이션 18문항 + 환각유도 2문항 (gold evidence 방식)
   mcq_questions.py   객관식 20문항 (결정적 채점용)
   run_krfinreg_eval.py    KR-FinReg-QA 은행 이식 76문항 3-way → docs/krfinreg-benchmark-report.md
+  run_bench_v2_eval.py    Bench v2 1,000문항 3-way → docs/bench-v2-report.md
   run_retrieval_eval.py   검색 계층 3-way → docs/benchmark-report.md
   run_market_eval.py      시장 데이터 실무 벤치마크 (질문·정답 SPARQL 자동생성)
   run_answer_eval.py      답변 계층 3-way: MCQ + LLM심판 + 유사도 (API 키 필요)
 bench/             HF 공개용 Bank-Onto-Bench v2 (1,000문항, 규정 300:공시 700)
   fetch_laws.py      법령정보센터 DRF API로 현행 법령 7종 수집 → data/laws/*.json
   generate.py        공시·법령 원문에서 기계 생성 (결정적, LLM 불개입, 가상개체 없음)
+  laws_to_ttl.py     법령 JSON → data/law-instances.ttl (KB 자동 로드 — 규정형 근거)
   export_xlsx.py     → docs/bank-onto-bench-v2.xlsx
 data/bank-onto-bench-v2.jsonl       벤치마크 본체 (+ 같은 이름 -README.md = HF 카드)
 data/laws/         법령 원문 스냅샷 (조문 구조화 JSON)
@@ -104,11 +107,16 @@ python ingest/fss_to_ttl.py --sample   # 키 없이 픽스처로 검증
   관대한 변환 + 온톨로지와 동일한 시드 매칭(LCS) 사용 — 남는 격차가 스키마 의미론의
   순수 기여분이 되도록. 벡터 베이스라인은 재현성 위해 어휘적 TF-IDF (의미 임베딩으로
   교체 가능하나 다중홉·열거·집계 실패는 청킹+유사도 패러다임 자체의 한계임을 리포트에 명시).
-- **현재 수치** (금감원 실데이터, 2026-08 공시·상품 211개): 검색 재현율 — 큐레이션
-  18문항 벡터 61% / LPG 89% / 온톨로지 100%; 시장 8문항 10% / 78% / 100%;
-  KR-FinReg 이식 71문항(판정형) 88% / 100% / 100%. 환각유도 질문 컨텍스트: 벡터
-  2,020자 vs 그래프·온톨로지 0자. (벡터 수치는 etcNote 등 필드 추가로 코퍼스가
-  커지며 하락했음 — 코퍼스 확장에 따른 top-k 희석은 벡터 패러다임의 구조적 한계)
+- **현재 수치** (금감원 실데이터 202608 + 법령 7종 1,025조문 적재 기준): 검색
+  재현율 — 큐레이션 18문항 벡터 50% / LPG 86% / 온톨로지 100%; 시장 8문항
+  12% / 78% / 100%; KR-FinReg 이식 71문항 78% / 100% / 100%; **Bench v2
+  880문항 83% / 98% / 99%**. 환각유도 컨텍스트: 벡터 2,020자 vs 그래프 0자.
+  벡터 수치는 코퍼스가 커질 때마다(법령 적재 등) 하락함 — top-k 희석은 벡터
+  패러다임의 구조적 한계로 리포트에 명시.
+- **리트리버 시드 매칭**: LCS 동점 시 매칭 절대 길이(특이도) 우선, 4-gram
+  사전필터는 LCS 임계와 정확 동치 (양쪽 그래프 리트리버 동일 적용). 벡터는
+  역색인 최적화 (점수 불변). Bench v2에서 LPG-온톨로지 격차가 작은 이유(단일
+  문서 조회형 위주)와 컨텍스트 크기 격차는 docs/bench-v2-report.md 해석 참조.
 - **KR-FinReg 이식 세트는 단일 상품 조회형**이라 검색 계층 변별력이 작다(LPG=온톨로지
   100% 동률). 이 세트의 목적은 답변 계층: YES/NO 판정 + ABSTAIN 5문항 보류 정확도.
   원본(202607)과 공시가 달라진 문항은 이식에서 자동 탈락시킴(정답 부패 방지).

@@ -34,4 +34,5 @@
         <https://w3id.org/bank-onto/accounts/> ,
         <https://w3id.org/bank-onto/loans/> ,
         <https://w3id.org/bank-onto/transactions/> ,
-        <https://w3id.org/bank-onto/risk/> .
+        <https://w3id.org/bank-onto/risk/> ,
+        <https://w3id.org/bank-onto/regs/> .
