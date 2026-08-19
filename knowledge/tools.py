@@ -118,6 +118,58 @@ def run_sparql_query(query: str) -> str:
     return _dumps(rows)
 
 
+_rulebook = None
+
+
+def get_rulebook():
+    global _rulebook
+    if _rulebook is None:
+        from knowledge.rules import RuleBook
+        _rulebook = RuleBook.from_kb(get_kb())
+    return _rulebook
+
+
+@beta_tool
+def check_product_eligibility(bank: str, product: str, age: int | None = None,
+                              channel: str | None = None,
+                              amount: int | None = None) -> str:
+    """상품 가입 요건(연령·가입경로·최소금액)을 규칙 엔진으로 판정한다.
+    고객이 특정 상품에 가입할 수 있는지 묻는 질문에는 반드시 이 도구를 호출한다.
+
+    반환되는 판단 패킷의 verdict는 결정적 규칙 평가 결과이며 **답변이 이 결론을
+    뒤집어서는 안 된다**: CONFIRMED/DENIED는 그대로 전달하고, UNKNOWN이면
+    단정하지 말고 missing_slots에 명시된 정보를 고객에게 요청해야 한다.
+
+    Args:
+        bank: 은행명 (예: "국민은행").
+        product: 공시 상품명 (예: "KB Star 정기예금").
+        age: 고객 나이 (만 나이, 모르면 생략).
+        channel: 가입 경로 ("영업점", "인터넷", "스마트폰", "전화(텔레뱅킹)").
+        amount: 가입(예치) 금액(원), 모르면 생략.
+    """
+    facts = {k: v for k, v in
+             (("age", age), ("channel", channel), ("amount", amount))
+             if v is not None}
+    return _dumps(get_rulebook().evaluate(bank, product, facts))
+
+
+@beta_tool
+def check_rate_claim(bank: str, product: str, claimed_rate: float,
+                     months: int = 12) -> str:
+    """'이 상품 우대금리가 연 X% 이상인가' 류의 금리 주장을 규칙 엔진으로
+    판정한다. 반환 패킷의 verdict는 공시 값에 대한 결정적 비교 결과이며
+    답변이 이를 뒤집어서는 안 된다.
+
+    Args:
+        bank: 은행명.
+        product: 공시 상품명.
+        claimed_rate: 검증할 금리 주장 (연 %).
+        months: 만기 개월수 (기본 12).
+    """
+    return _dumps(get_rulebook().check_rate_claim(bank, product, claimed_rate,
+                                                  months=months))
+
+
 BANK_KB_TOOLS = [
     search_banking_concepts,
     get_concept_details,
@@ -125,4 +177,6 @@ BANK_KB_TOOLS = [
     list_instances,
     describe_instance,
     run_sparql_query,
+    check_product_eligibility,
+    check_rate_claim,
 ]

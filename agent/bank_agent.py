@@ -34,9 +34,20 @@ search_banking_concepts로 먼저 찾으세요.
 - "어떤 종류가 있나" 형태의 질문에는 get_class_hierarchy를 사용하세요.
 - 특정 고객/계좌/계약 데이터는 list_instances와 describe_instance로 조회하세요.
 - 조인이나 필터가 필요한 복합 질의만 run_sparql_query를 사용하세요.
+- 가입 가능 여부·요건 충족·금리 주장 검증은 반드시 check_product_eligibility / \
+check_rate_claim을 호출하세요.
+
+판단 패킷 계약 (절대 규칙):
+- check_* 도구가 반환하는 판단 패킷의 verdict는 규칙 엔진의 결정적 결론입니다. \
+당신은 이 결론을 **설명할 수는 있어도 뒤집을 수는 없습니다**.
+- verdict가 CONFIRMED/DENIED이면 그 결론과 패킷의 근거(source)를 그대로 전달하세요.
+- verdict가 UNKNOWN이면 추측으로 답하지 말고, missing_slots에 명시된 정보를 \
+고객에게 요청하세요. '모른다'가 정답인 자리에서 단정하는 것은 오답입니다.
+- verdict가 NOT_APPLICABLE이면 해당 상품·규칙이 지식층에 없음을 밝히고, 일반 \
+지식으로 답할 경우 그 사실을 명시하세요.
 
 답변은 한국어로, 조회한 온톨로지 개념의 한국어 레이블을 사용해 간결하게 작성하세요. \
-답변 근거가 된 개념의 URI(qname)를 답변 끝에 참고로 표기하세요."""
+답변 근거가 된 개념의 URI(qname)와 판단 패킷의 근거 좌표를 답변 끝에 표기하세요."""
 
 
 def answer(question: str, client: anthropic.Anthropic | None = None) -> str:

@@ -1,0 +1,90 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix market: <https://w3id.org/bank-onto/market/> .
+@prefix products: <https://w3id.org/bank-onto/products/> .
+@prefix parties: <https://w3id.org/bank-onto/parties/> .
+@prefix regs: <https://w3id.org/bank-onto/regs/> .
+@prefix shapes: <https://w3id.org/bank-onto/shapes/> .
+
+#################################################################
+# SHACL 데이터 품질 게이트 (SEOCHO의 'shape graph writes' 개념 이식)
+# 적재 데이터가 이 계약을 통과해야 지식층으로 인정된다.
+# scripts/validate.py [5]단계에서 검사. KB에는 로드되지 않는다
+# (shapes/는 ontology/·data/ 밖 — 검증 전용).
+#################################################################
+
+shapes:DisclosedProductShape a sh:NodeShape ;
+    sh:targetSubjectsOf market:disclosureMonth ;
+    sh:property [
+        sh:path products:hasProductName ;
+        sh:minCount 1 ; sh:datatype xsd:string ; sh:minLength 2 ;
+        sh:message "공시 상품에는 상품명이 있어야 한다"@ko ;
+    ] ;
+    sh:property [
+        sh:path products:isOfferedBy ;
+        sh:minCount 1 ; sh:class parties:Bank ;
+        sh:message "공시 상품은 은행(parties:Bank)에 연결되어야 한다"@ko ;
+    ] .
+
+shapes:RateOptionShape a sh:NodeShape ;
+    sh:targetClass market:RateOption ;
+    sh:property [
+        sh:path market:termMonths ;
+        sh:datatype xsd:integer ; sh:minInclusive 1 ; sh:maxInclusive 120 ;
+        sh:message "만기 개월수는 1~120 범위여야 한다"@ko ;
+    ] ;
+    sh:property [
+        sh:path market:baseRateValue ;
+        sh:minInclusive 0.0 ; sh:maxInclusive 30.0 ;
+        sh:message "기본금리는 0~30% 범위여야 한다"@ko ;
+    ] ;
+    sh:property [
+        sh:path market:maxPreferentialRateValue ;
+        sh:minInclusive 0.0 ; sh:maxInclusive 30.0 ;
+        sh:message "최고 우대금리는 0~30% 범위여야 한다"@ko ;
+    ] .
+
+shapes:LendRateOptionShape a sh:NodeShape ;
+    sh:targetClass market:LendRateOption ;
+    sh:property [
+        sh:path market:lendRateMin ;
+        sh:minInclusive 0.0 ; sh:maxInclusive 30.0 ;
+        sh:message "대출 최저금리는 0~30% 범위여야 한다"@ko ;
+    ] ;
+    sh:property [
+        sh:path market:lendRateMax ;
+        sh:minInclusive 0.0 ; sh:maxInclusive 30.0 ;
+        sh:message "대출 최고금리는 0~30% 범위여야 한다"@ko ;
+    ] .
+
+shapes:LegalArticleShape a sh:NodeShape ;
+    sh:targetClass regs:LegalArticle ;
+    sh:property [
+        sh:path regs:articleLabel ;
+        sh:minCount 1 ; sh:datatype xsd:string ;
+        sh:message "조문에는 조 번호(articleLabel)가 있어야 한다"@ko ;
+    ] ;
+    sh:property [
+        sh:path regs:articleText ;
+        sh:minCount 1 ; sh:minLength 5 ;
+        sh:message "조문에는 본문이 있어야 한다"@ko ;
+    ] ;
+    sh:property [
+        sh:path regs:belongsToStatute ;
+        sh:minCount 1 ; sh:class regs:Statute ;
+        sh:message "조문은 소속 법령에 연결되어야 한다"@ko ;
+    ] .
+
+shapes:StatuteShape a sh:NodeShape ;
+    sh:targetClass regs:Statute ;
+    sh:property [
+        sh:path regs:effectiveDate ;
+        sh:minCount 1 ; sh:datatype xsd:date ;
+        sh:message "법령에는 시행일자가 있어야 한다"@ko ;
+    ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "법령에는 레이블이 있어야 한다"@ko ;
+    ] .

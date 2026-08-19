@@ -94,6 +94,37 @@ def check_labels(graph: Graph) -> list[str]:
     return missing
 
 
+def check_shacl(graph: Graph) -> list[str] | None:
+    """shapes/*.ttl의 SHACL 계약으로 적재 데이터 품질을 검사한다."""
+    try:
+        from pyshacl import validate as shacl_validate
+    except ImportError:
+        return None
+    shapes_dir = REPO_ROOT / "shapes"
+    shapes_graph = Graph()
+    for ttl in sorted(shapes_dir.glob("*.ttl")):
+        shapes_graph.parse(ttl, format="turtle")
+    # SHACL 대상은 적재 인스턴스이므로 data/*.ttl까지 합친 그래프로 검사한다
+    data_graph = Graph()
+    for triple in graph:
+        data_graph.add(triple)
+    for ttl in sorted((REPO_ROOT / "data").glob("*.ttl")):
+        data_graph.parse(ttl, format="turtle")
+    conforms, report_graph, _ = shacl_validate(
+        data_graph, shacl_graph=shapes_graph, inference="none",
+        abort_on_first=False)
+    if conforms:
+        return []
+    query = """
+        SELECT ?focus ?message WHERE {
+            ?r a <http://www.w3.org/ns/shacl#ValidationResult> ;
+               <http://www.w3.org/ns/shacl#focusNode> ?focus .
+            OPTIONAL { ?r <http://www.w3.org/ns/shacl#resultMessage> ?message }
+        }"""
+    return sorted(f"{row.focus}: {row.message or 'shape 위반'}"
+                  for row in report_graph.query(query))
+
+
 def main() -> int:
     print("=== 은행권 온톨로지 검증 (Bank_Onto Validation) ===\n")
     print("[1] Turtle 구문 검증")
@@ -126,7 +157,18 @@ def main() -> int:
     else:
         print("  이상 없음")
 
-    has_warnings = bool(undefined or missing_labels)
+    print("\n[5] SHACL 데이터 품질 게이트 (shapes/*.ttl)")
+    shacl_violations = check_shacl(graph)
+    if shacl_violations is None:
+        print("  pyshacl 미설치 — 건너뜀 (pip install pyshacl)")
+    elif shacl_violations:
+        for msg in shacl_violations[:20]:
+            print(f"  [WARN] {msg}")
+        print(f"  총 {len(shacl_violations)}건 위반")
+    else:
+        print("  이상 없음 (적재 데이터가 품질 계약을 준수)")
+
+    has_warnings = bool(undefined or missing_labels or shacl_violations)
     print(f"\n검증 완료: {'경고 있음' if has_warnings else '모든 검사 통과'}")
     return 0
 

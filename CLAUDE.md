@@ -23,7 +23,10 @@ ontology/          OWL 온톨로지 모듈 (Turtle). bank-onto.ttl이 전체 imp
   regulations.ttl    법령·조문 스키마 (규정형 벤치마크 근거 코퍼스용)
 knowledge/         에이전트 knowledge layer
   kb.py              BankKnowledgeBase: 검색·개념상세·계층·인스턴스·SPARQL 조회 API
-  tools.py           Claude 에이전트 도구 6종 (@beta_tool, BANK_KB_TOOLS)
+  rules.py           규칙 계층: 공시에서 규칙 추출 + 3값 논리 판단 패킷 엔진
+                     (LLM 불개입 — docs/knowledge-contract.md의 계약 참조)
+  tools.py           Claude 에이전트 도구 8종 (@beta_tool, BANK_KB_TOOLS —
+                     판단 도구 check_product_eligibility/check_rate_claim 포함)
 agent/bank_agent.py  claude-opus-5 + tool runner 은행 상담 에이전트 (단일질문/대화형)
 ingest/            금감원 "금융상품한눈에" Open API 적재 파이프라인
   fss_client.py      다운로드 (은행권 020000 고정, FSS_API_KEY 환경변수 필요)
@@ -53,10 +56,12 @@ data/fss/sample/   가상 은행 픽스처 (FSS API 스키마 동일, 파이프�
 data/market-instances.ttl  변환된 시장 데이터 (현재 샘플 기준; KB가 자동 로드)
 scripts/           validate.py (구문·참조·ko레이블 검증), query.py (예시 SPARQL),
                    export_benchmark_xlsx.py (벤치마크 4종 → docs/bank-onto-benchmark-v1.xlsx)
+shapes/            SHACL 데이터 품질 게이트 (validate.py [5]단계, KB에는 미로드)
 tests/             test_knowledge_layer.py (KB 단위 10건) +
                    test_retrievers.py (결정성·다중홉·픽스처 격리 3건) +
                    test_krfinreg.py (이식 필드·데이터셋 무결성 3건) +
-                   test_bench_v2.py (v2 규모·비율·균형·커버리지 5건) — 모두 API 키 불필요
+                   test_bench_v2.py (v2 규모·비율·균형·커버리지 5건) +
+                   test_rules.py (3값 논리·벤치 gold 148건 교차검증 3건) — 모두 API 키 불필요
 docs/              architecture.md, benchmark-report.md, market-benchmark-report.md
 ```
 
@@ -142,14 +147,17 @@ python ingest/fss_to_ttl.py --sample   # 키 없이 픽스처로 검증
 3. **KR-FinReg 2단계 (법령 60문항)**: ~/research_paper의 Q2_시간 문항(신구조문
    유효기간 판정)은 버전드 규칙 데이터(kb_candidates_amend.jsonl, 규칙 191개,
    valid_from/valid_to)를 TTL로 변환하는 시간 축 모듈이 선행되어야 함. 미착수.
-4. **로드맵**: SHACL 제약, FIBO equivalentClass 정렬, 신탁·퇴직연금 모듈,
-   LangGraph 포팅(발표용 프레이밍 필요 시), 의미 임베딩 벡터 베이스라인 추가.
+4. ~~SHACL 제약~~ **완료** (2026-08-19): shapes/shapes.ttl + validate [5]단계.
+   규칙 계층(knowledge/rules.py, 판단 패킷)도 완료 — docs/knowledge-contract.md.
+5. **로드맵**: 규칙 TTL 물질화, 법령 개정 이력 모듈(OUTDATED 판정), FIBO
+   equivalentClass 정렬, 신탁·퇴직연금 모듈, LangGraph 포팅, 의미 임베딩
+   벡터 베이스라인, 답변 계층에서 패킷 유무 비교(P2 vs B2 방식).
 
 ## Git
 
 - 브랜치: `claude/banking-ontology-build-5zwe0q` (현재 유일한 브랜치이자 기본 브랜치)
 - 커밋 전: `python scripts/validate.py && python tests/test_knowledge_layer.py
   && python tests/test_retrievers.py && python tests/test_krfinreg.py
-  && python tests/test_bench_v2.py`
+  && python tests/test_bench_v2.py && python tests/test_rules.py`
 - 벤치마크 코드를 바꿨으면 리포트 재생성 후 함께 커밋
   (`run_retrieval_eval.py`, `run_market_eval.py`)
