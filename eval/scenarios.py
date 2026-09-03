@@ -116,23 +116,13 @@ def context_engineer(units: list[str], question: str) -> list[str]:
     if not units:
         return []
     head, rest = ([units[0]], units[1:]) if units[0].startswith("[매칭된 개념]") else ([], units)
-    # 시드 우선: 질문에서 직접 매칭된 개념의 유닛은 그 이웃(BFS 확장분)보다 앞에 둔다.
-    # 매칭 목록은 리트리버 헤더에서 읽는다 — 질문에서 유도된 정보이지 정답 정보가 아니다.
-    seeds: set[str] = set()
-    if head:
-        for part in head[0][len("[매칭된 개념]"):].split(","):
-            label = part.strip().rsplit("(", 1)[0].strip()
-            if label:
-                seeds.add(label)
-
-    def is_seed(unit: str) -> int:
-        first = unit.split("\n", 1)[0]
-        return 0 if any(s and s in first for s in seeds) else 1
-
-    ordered = sorted(((_unit_priority(u), is_seed(u), i, u) for i, u in enumerate(rest)),
-                     key=lambda t: (t[0], t[1], t[2]))
+    # 주의: "질문에서 매칭된 시드 개체를 이웃보다 앞에" 두는 규칙은 880문항 전체에서
+    # 순손실이었다(R@4K 87%→85%; '정기예금'을 이름에 포함한 타 은행 상품이 시드로
+    # 잡혀 집계 문항의 근거를 밀어냄). 탐색 거리 순서 보존이 더 낫다.
+    ordered = sorted(((_unit_priority(u), i, u) for i, u in enumerate(rest)),
+                     key=lambda t: (t[0], t[1]))
     out, seen = [compact(h) for h in head], set()
-    for _, _, _, unit in ordered:
+    for _, _, unit in ordered:
         c = compact(unit)
         if c and c not in seen:
             seen.add(c)
