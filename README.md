@@ -149,6 +149,32 @@ python eval/run_answer_eval.py --scoring mcq # 객관식만 (결정적 채점, �
 분류 완전 열거(top-k는 완전성 미보장), 조건 필터/집계(유사도는 조건 평가가 아님),
 환각 방지(답이 없어도 top-k를 반환). 자세한 해석과 공정성 한계는 리포트 참고.
 
+## RAG 시나리오 매트릭스 (Chen et al. 2026 "Is GraphRAG Needed?" 구도)
+
+`eval/scenarios.py`는 논문의 9-시나리오 비교를 같은 지식층 위에 이식한 것이다:
+기본 RAG 변형 4종(청크 / 개체 문서 / 관계 문서 / 결합) → 하이브리드 텍스트-그래프
+→ 사전정의 KG(LPG) → 온톨로지 → 컨텍스트 엔지니어링(CE) 2종. Bench v2 880문항,
+결정적 채점. 결과: [docs/scenario-report.md](docs/scenario-report.md).
+
+| 시나리오 | R@4K | R@∞ | 평균 컨텍스트 |
+|---|---|---|---|
+| S1 기본 청크 RAG | 82% | 89% | 8K자 |
+| S6 Graph RAG (LPG) | 85% | 99% | 34K자 |
+| S7 온톨로지 (원시) | 71% | 99% | 114K자 |
+| **S9 온톨로지 + CE** | **87%** | 99% | 53K자 |
+
+논문의 두 관찰이 그대로 재현된다: ① 그래프 계열은 예산 없이는 근거를 다 가져오지만
+(99%) **컨텍스트 과잉**으로 실제 예산(4K자) 안에서는 원시 온톨로지가 기본 청크보다
+못하며, ② 컨텍스트 엔지니어링이 이를 뒤집는다(71%→87%, 컨텍스트 54% 절감).
+검색 지표만으로는 LPG와 온톨로지의 차이가 2%p라, 온톨로지의 본 강점(SPARQL·규칙
+판정으로 답을 *연산*)은 답변 계층에서 재야 한다 — `eval/run_scenario_answer_eval.py`
+(S1~S9 + 에이전틱 A1/A2, `answer_type`별 결정적 채점, API 키 필요).
+
+```bash
+python eval/run_scenario_eval.py                 # 검색 계층 9-시나리오 (키 불필요, ~7분)
+python eval/run_scenario_answer_eval.py --sample 200   # 답변 계층 (ANTHROPIC_API_KEY)
+```
+
 ## 실데이터 적재: 금융감독원 상품 공시 (합법 소스)
 
 `ingest/`는 금융감독원 **금융상품통합비교공시 "금융상품한눈에" Open API**
