@@ -1,6 +1,6 @@
 # 온톨로지 스키마 다이어그램
 
-전체 스키마(클래스 136개, 객체속성 50개, 데이터속성 54개)의 시각화.
+전체 스키마(클래스 138개, 객체속성 52개, 데이터속성 62개, 모듈 9개)의 시각화.
 계층 다이어그램의 화살표는 **상위 분류 → 하위 분류**(`rdfs:subClassOf`의 역방향),
 관계 다이어그램의 화살표는 객체속성이다. `《개체》`는 열거형 named individual.
 
@@ -15,11 +15,15 @@ graph BT
   LOANS["loans<br/>대출계약·담보·규제비율"] --> ACCOUNTS
   TX["transactions<br/>거래·채널"] --> ACCOUNTS
   RISK["risk<br/>바젤·AML/KYC·예금자보호"] --> TX
+  REGS["regs<br/>법령·조문 (규제 원문)"]
   MARKET["market<br/>금감원 공시 데이터 확장"] --> PRODUCTS
   TOP["bank-onto (진입점)"] --> LOANS
   TOP --> RISK
-  TOP --> MARKET
+  TOP --> REGS
 ```
+
+`market`은 `products`를 확장하는 데이터 모듈로, `bank-onto`의 직접 import 대상은 아니고
+KB가 디렉터리 로드로 함께 적재한다. `regs`는 다른 모듈에 의존하지 않는 독립 모듈이다.
 
 ## 2. 핵심 개념 관계도 (모듈 횡단)
 
@@ -248,7 +252,17 @@ graph TD
   end
 ```
 
-## 10. market — 공시 데이터 확장
+## 10. regs — 법령·조문 (규제 원문)
+
+`data/law-instances.ttl`에 은행 관련 법령·조문 코퍼스가 이 스키마의 인스턴스로 적재된다.
+
+```mermaid
+graph LR
+  ST["법령 Statute<br/>lawType 법령종류, ministry 소관부처,<br/>effectiveDate 시행일자"] -- hasArticle --> LA["조문 LegalArticle<br/>articleLabel 조문번호,<br/>articleTitle 제목, articleText 본문"]
+  LA -- belongsToStatute --> ST
+```
+
+## 11. market — 공시 데이터 확장
 
 ```mermaid
 graph LR
