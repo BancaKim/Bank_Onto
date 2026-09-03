@@ -63,11 +63,24 @@ _QNAME_RE = re.compile(r"(?<=\S)\s?\((?:[a-z]+:)[^\s()]+\)")
 _REVERSE_REF_RE = re.compile(r"^- \(역참조\).*$", re.MULTILINE)
 
 
+USAGE_PREVIEW_CHARS = 160
+
+
 def compact(unit: str) -> str:
     """토큰 절약 압축: URI qname 참조 제거, 역참조 행 제거, 공백 정리.
-    사실 값(수치·이름·본문)은 건드리지 않는다."""
+    개체 유닛의 사실 값(수치·이름·조문 본문)은 건드리지 않는다. 다만 속성
+    *사용처 색인*([속성] 섹션의 '- 주어 → 값' 행)은 어떤 개체가 그 속성을 갖는지
+    알려주는 목차이므로, 장문 값(조문 본문 등)은 미리보기 길이로 자른다 —
+    전문은 해당 개체 유닛에 그대로 있다."""
     text = _QNAME_RE.sub("", unit)
     text = _REVERSE_REF_RE.sub("", text)
+    if text.startswith("[속성]"):
+        lines = []
+        for line in text.split("\n"):
+            if line.startswith("- ") and len(line) > USAGE_PREVIEW_CHARS:
+                line = line[:USAGE_PREVIEW_CHARS] + "…"
+            lines.append(line)
+        text = "\n".join(lines)
     text = re.sub(r"[ \t]+", " ", text)
     text = re.sub(r"\n{2,}", "\n", text)
     return text.strip()
@@ -103,10 +116,23 @@ def context_engineer(units: list[str], question: str) -> list[str]:
     if not units:
         return []
     head, rest = ([units[0]], units[1:]) if units[0].startswith("[매칭된 개념]") else ([], units)
-    ordered = sorted(((_unit_priority(u), i, u) for i, u in enumerate(rest)),
-                     key=lambda t: (t[0], t[1]))
+    # 시드 우선: 질문에서 직접 매칭된 개념의 유닛은 그 이웃(BFS 확장분)보다 앞에 둔다.
+    # 매칭 목록은 리트리버 헤더에서 읽는다 — 질문에서 유도된 정보이지 정답 정보가 아니다.
+    seeds: set[str] = set()
+    if head:
+        for part in head[0][len("[매칭된 개념]"):].split(","):
+            label = part.strip().rsplit("(", 1)[0].strip()
+            if label:
+                seeds.add(label)
+
+    def is_seed(unit: str) -> int:
+        first = unit.split("\n", 1)[0]
+        return 0 if any(s and s in first for s in seeds) else 1
+
+    ordered = sorted(((_unit_priority(u), is_seed(u), i, u) for i, u in enumerate(rest)),
+                     key=lambda t: (t[0], t[1], t[2]))
     out, seen = [compact(h) for h in head], set()
-    for _, _, unit in ordered:
+    for _, _, _, unit in ordered:
         c = compact(unit)
         if c and c not in seen:
             seen.add(c)
