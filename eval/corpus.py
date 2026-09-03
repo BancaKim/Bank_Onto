@@ -39,6 +39,27 @@ def label_of(kb: BankKnowledgeBase, node) -> str:
 
 def build_documents(kb: BankKnowledgeBase) -> list[str]:
     """온톨로지의 모든 개체를 '개체당 하나의 텍스트 블록'으로 직렬화한다."""
+    return [text for _, text in build_entity_documents(kb)]
+
+
+def build_relation_documents(kb: BankKnowledgeBase) -> list[str]:
+    """트리플 하나를 문장 하나로 직렬화한 '관계 문서' 코퍼스
+    (논문의 relations-documents 변형). 주어·술어·목적어를 레이블로 풀어 쓴다."""
+    docs = []
+    for subj, text in build_entity_documents(kb):
+        header, *lines = text.split("\n")
+        subj_label = header[3:].rsplit(" (", 1)[0] if header.startswith("## ") else header
+        for line in lines:
+            if line.startswith("- "):
+                docs.append(f"{subj_label} — {line[2:]}")
+            elif line.startswith("정의: "):
+                docs.append(f"{subj_label} — {line}")
+    return docs
+
+
+def build_entity_documents(kb: BankKnowledgeBase) -> list[tuple[str, str]]:
+    """(개체 qname, 직렬화 텍스트) 쌍 목록 — 하이브리드 시나리오가 벡터 히트를
+    그래프 노드로 되돌릴 때 qname을 사용한다."""
     docs = []
     subjects = sorted(
         {s for s in kb.graph.subjects() if isinstance(s, URIRef)
@@ -57,7 +78,7 @@ def build_documents(kb: BankKnowledgeBase) -> list[str]:
                 continue
             value = str(obj) if isinstance(obj, Literal) else label_of(kb, obj)
             lines.append(f"- {label_of(kb, pred)}: {value}")
-        docs.append("\n".join(lines))
+        docs.append((kb._qname(subj), "\n".join(lines)))
     return docs
 
 

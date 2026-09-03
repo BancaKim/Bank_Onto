@@ -147,11 +147,15 @@ class LpgGraphRetriever:
     # ------------------------------------------------------------------
     # k-hop 이웃 탐색
     # ------------------------------------------------------------------
-    def retrieve_context(self, question: str) -> str:
-        seeds = self._match_seeds(question)
-        if not seeds:
-            return ""
+    def match_seeds(self, question: str, limit: int = 6) -> list[str]:
+        return self._match_seeds(question, limit=limit)
 
+    def expand_units(self, seeds: list[str]) -> list[str]:
+        """주어진 시드 노드 키에서 k-hop 탐색을 수행해 노드 단위 유닛 목록을
+        반환한다 (방문 순서 = 랭킹). 마지막 유닛은 엣지 목록이다.
+        하이브리드(벡터 시드 → 그래프 확장) 시나리오가 이 진입점을 쓴다."""
+        if not seeds:
+            return []
         # 시드별 독립 k-hop 탐색 — 온톨로지 리트리버와 동일한 예산 정책.
         # 허브 노드(은행 등)에 연결된 시드가 다른 시드의 예산을 잠식하지 않는다.
         visited: list[str] = []
@@ -176,21 +180,31 @@ class LpgGraphRetriever:
                 if node_key not in visited:
                     visited.append(node_key)
 
-        lines = []
+        units = []
         for node_key in visited:
             node = self.nodes.get(node_key)
             if node is None:
                 continue
             label_txt = ":".join(node.labels) if node.labels else "Node"
-            lines.append(f"({node.name}:{label_txt})")
+            lines = [f"({node.name}:{label_txt})"]
             if node.definition:
                 lines.append(f"  정의: {node.definition}")
             for prop_name, value in node.props.items():
                 lines.append(f"  {prop_name}: {value}")
+            units.append("\n".join(lines))
         visited_set = set(visited)
+        edge_lines = []
         for src, etype, dst in kept_edges:
             if src in visited_set and dst in visited_set:
                 src_name = self.nodes[src].name if src in self.nodes else src
                 dst_name = self.nodes[dst].name if dst in self.nodes else dst
-                lines.append(f"({src_name}) -[{etype}]-> ({dst_name})")
-        return "\n".join(lines)
+                edge_lines.append(f"({src_name}) -[{etype}]-> ({dst_name})")
+        if edge_lines:
+            units.append("\n".join(edge_lines))
+        return units
+
+    def retrieve_units(self, question: str) -> list[str]:
+        return self.expand_units(self._match_seeds(question))
+
+    def retrieve_context(self, question: str) -> str:
+        return "\n".join(self.retrieve_units(question))

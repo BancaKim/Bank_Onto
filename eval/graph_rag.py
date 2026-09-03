@@ -204,10 +204,12 @@ class GraphRetriever:
     # ------------------------------------------------------------------
     # 공개 API
     # ------------------------------------------------------------------
-    def retrieve_context(self, question: str) -> str:
+    def retrieve_units(self, question: str) -> list[str]:
+        """랭킹된 컨텍스트 유닛(섹션) 목록. 매칭 개념 → 클래스/속성 렌더링 →
+        BFS 이웃 개체 순. 시나리오 평가(Hit@k·MRR·예산 컷)에 쓰인다."""
         matched = self.match_concepts(question)
         if not matched:
-            return ""  # 매칭 개념 없음 → 정직하게 빈 컨텍스트 (환각 방지)
+            return []  # 매칭 개념 없음 → 정직하게 빈 컨텍스트 (환각 방지)
 
         sections = ["[매칭된 개념] " + ", ".join(
             f"{label_of(self.kb, n)}({self.kb._qname(n)})" for n in matched)]
@@ -223,5 +225,7 @@ class GraphRetriever:
         if individuals:
             for ind in self._expand_individuals(individuals):
                 sections.append(self._render_individual(ind))
+        return sections
 
-        return "\n\n".join(sections)
+    def retrieve_context(self, question: str) -> str:
+        return "\n\n".join(self.retrieve_units(question))

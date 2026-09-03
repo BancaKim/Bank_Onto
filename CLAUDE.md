@@ -45,6 +45,13 @@ eval/              3-way RAG 벤치마크 (벡터 vs LPG vs 온톨로지)
   run_retrieval_eval.py   검색 계층 3-way → docs/benchmark-report.md
   run_market_eval.py      시장 데이터 실무 벤치마크 (질문·정답 SPARQL 자동생성)
   run_answer_eval.py      답변 계층 3-way: MCQ + LLM심판 + 유사도 (API 키 필요)
+  scenarios.py            RAG 시나리오 매트릭스 9종 (Chen et al. 2026 "Is GraphRAG Needed?"
+                          구도 이식): S1 청크 / S2 개체문서 / S3 관계문서 / S4 결합 / S5 하이브리드
+                          / S6 LPG / S7 온톨로지 / S8·S9 컨텍스트 엔지니어링(CE). 공통 인터페이스
+                          retrieve(q)->유닛 목록, assemble(예산 컷), retrieval_metrics(Hit@1·MRR·R@B)
+  run_scenario_eval.py    시나리오 9종 검색 평가 (Bench v2 880문항, 예산 2K/4K/8K) → docs/scenario-report.md
+  run_scenario_answer_eval.py  시나리오 + 에이전틱 A1/A2 답변 평가, answer_type별 결정적 채점
+                          (API 키 필요) → docs/scenario-answer-report.md
 bench/             HF 공개용 Bank-Onto-Bench v2 (1,000문항, 규정 300:공시 700)
   fetch_laws.py      법령정보센터 DRF API로 현행 법령 7종 수집 → data/laws/*.json
   generate.py        공시·법령 원문에서 기계 생성 (결정적, LLM 불개입, 가상개체 없음)
